@@ -1,0 +1,8 @@
+#!/usr/bin/env php
+<?php
+
+use Frontastic\Catwalk\Catwalk;
+
+$autoloader = require_once __DIR__ . "/../vendor/autoload.php";
+
+Catwalk::runCommandline(__DIR__ . '/..', $autoloader);

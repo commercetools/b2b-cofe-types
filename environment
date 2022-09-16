@@ -22,3 +22,4 @@ smtp_sender=no-reply@frontastic.cloud
 http_client_timeout=1
 
 version=2022.03.17.06.50
+is_frontastic_nextjs=1

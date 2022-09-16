@@ -1,0 +1,12 @@
+---
+###############################################################################
+# ATTENTION: Auto-generated. Do not edit manually. Changes will be overwritten.
+###############################################################################
+- name: Provision Customer Catwalks
+  hosts: catwalk_frontastic
+  become: yes
+  roles:
+  - role: website/_generic.catwalk.frontastic.io
+    customer: "b2bdemo"
+    project: "demo"
+    is_frontastic_nextjs: true

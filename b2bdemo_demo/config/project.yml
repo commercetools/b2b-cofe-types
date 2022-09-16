@@ -1,0 +1,121 @@
+projectId: demo
+name: 'Composable B2B Demo'
+customer: b2bdemo
+apiKey: $2y$10$VTWrVy8yCnt.ILm6VmGjjeDK8M4F791iAy7RQS34otWYr5bYZTMmG
+previewUrl: null
+preview:
+  endpoint: 'https://demo-b2bdemo.frontastic.io/preview'
+  view: 'https://demo-b2bdemo.frontend.site'
+publicUrl: null
+webpackPort: 3001
+ssrPort: 8001
+configuration:
+  product:
+    engine: commercetools
+    clientId: nJIPfHoT9_GlC29EfL75zdkg
+    clientSecret: tUrh_yyjWn7RcVY0MRXMbe6h7S9MPiz0
+    projectKey: frontastic-1
+    authUrl: 'https://auth.sphere.io'
+    hostUrl: 'https://api.sphere.io'
+  productSearch: {  }
+  account:
+    engine: commercetools
+    clientId: nJIPfHoT9_GlC29EfL75zdkg
+    clientSecret: tUrh_yyjWn7RcVY0MRXMbe6h7S9MPiz0
+    projectKey: frontastic-1
+    authUrl: 'https://auth.sphere.io'
+    hostUrl: 'https://api.sphere.io'
+  cart:
+    engine: commercetools
+    clientId: nJIPfHoT9_GlC29EfL75zdkg
+    clientSecret: tUrh_yyjWn7RcVY0MRXMbe6h7S9MPiz0
+    projectKey: frontastic-1
+    authUrl: 'https://auth.sphere.io'
+    hostUrl: 'https://api.sphere.io'
+  wishlist:
+    engine: commercetools
+    clientId: nJIPfHoT9_GlC29EfL75zdkg
+    clientSecret: tUrh_yyjWn7RcVY0MRXMbe6h7S9MPiz0
+    projectKey: frontastic-1
+    authUrl: 'https://auth.sphere.io'
+    hostUrl: 'https://api.sphere.io'
+  search:
+    engine: commercetools
+    clientId: nJIPfHoT9_GlC29EfL75zdkg
+    clientSecret: tUrh_yyjWn7RcVY0MRXMbe6h7S9MPiz0
+    projectKey: frontastic-1
+    authUrl: 'https://auth.sphere.io'
+    hostUrl: 'https://api.sphere.io'
+  content:
+    engine: contentful
+    accessToken: 3d50038afea30f11997a73f887c4aa12d7d411d9da6825dabcc250b78623a530
+    previewToken: 7391f414d8febe45caf58672ddb65ae62b2c37d525c10205669ba57c6f47bfa6
+    spaceId: 2yke74xvylnq
+  media:
+    engine: cloudinary
+    apiKey: 183832318368184
+    apiSecret: 93R2n-_itjETBA3o1OSN0X-w56g
+    autoTaggingMinConfidence: 0.8
+    autoTaggingService: ''
+    cloudName: dlwdq84ig
+    mediaPoolName: b2bdemo
+  github:
+    url: 'https://github.com/frontastic-developers/customer-b2bdemo'
+  cloudinary:
+    apiKey: 183832318368184
+    apiSecret: 93R2n-_itjETBA3o1OSN0X-w56g
+    autoTaggingMinConfidence: 0.8
+    autoTaggingService: ''
+    cloudName: dlwdq84ig
+    mediaPoolName: b2bdemo
+  commercetools:
+    clientId: nJIPfHoT9_GlC29EfL75zdkg
+    clientSecret: tUrh_yyjWn7RcVY0MRXMbe6h7S9MPiz0
+    projectKey: frontastic-1
+    authUrl: 'https://auth.sphere.io'
+    hostUrl: 'https://api.sphere.io'
+  contentful:
+    accessToken: 3d50038afea30f11997a73f887c4aa12d7d411d9da6825dabcc250b78623a530
+    previewToken: 7391f414d8febe45caf58672ddb65ae62b2c37d525c10205669ba57c6f47bfa6
+    spaceId: 2yke74xvylnq
+  smtp:
+    host: smtp.mailgun.org
+    port: 587
+    encryption: tls
+    user: postmaster@mailing.frontastic.cloud
+    password: 2acf9dd7a69cc699b1484b22f1b2fe6c-c1fe131e-bb1f026f
+    sender: no-reply@frontastic.cloud
+    client_host: 'https://demo-b2bdemo.frontastic.io.netlify.app'
+data: {  }
+languages:
+  - en_GB
+defaultLanguage: en_GB
+projectSpecific:
+  - Frontastic.Backstage.ApiBundle.Domain.CustomerData
+  - Frontastic.Backstage.ApiBundle.Domain.ReplicationStatus
+  - Frontastic.Backstage.CustomAppBundle.Domain.AppData
+  - Frontastic.Backstage.DeveloperBundle.Domain.App
+  - Frontastic.Backstage.DeveloperBundle.Domain.CustomStream
+  - Frontastic.Backstage.DeveloperBundle.Domain.DraftSchema
+  - Frontastic.Backstage.DeveloperBundle.Domain.Machine
+  - Frontastic.Backstage.DeveloperBundle.Domain.Tastic
+  - Frontastic.Backstage.FacetBundle.Domain.Facet
+  - Frontastic.Backstage.MasterBundle.Domain.KitDefinition
+  - Frontastic.Backstage.MasterBundle.Domain.PageMatcher
+  - Frontastic.Backstage.MasterBundle.Domain.PageMatcherRules
+  - Frontastic.Backstage.ProjectConfigurationBundle.Domain.ProjectConfiguration
+  - Frontastic.Backstage.ProjectConfigurationBundle.Domain.Schema
+  - Frontastic.Backstage.RedirectBundle.Domain.Redirect
+  - Frontastic.Backstage.StageBundle.Domain.Blueprint
+  - Frontastic.Backstage.StageBundle.Domain.Layout
+  - Frontastic.Backstage.StageBundle.Domain.Node
+  - Frontastic.Backstage.StageBundle.Domain.NodesTreeCache
+  - Frontastic.Backstage.StageBundle.Domain.Page
+  - Frontastic.Backstage.UserBundle.Domain.Group
+  - Frontastic.Backstage.UserBundle.Domain.User
+endpoints:
+  -
+    name: demo
+    url: 'https://demo-b2bdemo.frontastic.io/api/endpoint'
+    push: true
+    environment: staging

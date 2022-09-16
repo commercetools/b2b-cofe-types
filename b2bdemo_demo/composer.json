@@ -1,0 +1,23 @@
+{
+    "name": "frontastic-catwalk/b2bdemo-demo",
+    "license": "None",
+    "config": {
+        "discard-changes": true
+    },
+    "require": {
+        "frontastic/catwalk": "*",
+        "frontastic/common": "*"
+    },
+    "require-dev":  {
+    },
+    "autoload": {
+        "psr-4": {
+            "B2bdemo\\": ["src/php", "../b2bdemo/src/php"]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "B2bdemo\\": ["test/php", "../b2bdemo/test/php"]
+        }
+    }
+}

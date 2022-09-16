@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="API Hub: b2bdemo Composable B2B Demo" basedir="./" default="test">
+
+    <property name="frontastic_basedir" value="${basedir}/.." />
+    <property name="integration_dir" value="${basedir}/../paas/integration" />
+    <property name="catwalk_dir" value="${basedir}/vendor/frontastic/catwalk" />
+
+    <!--
+        Include local project properties.
+    -->
+    <property file="${basedir}/environment.local" />
+    <property file="${basedir}/../environment.local" />
+    <property file="${basedir}/environment" />
+    <property file="${basedir}/../environment" />
+
+    <property name="dbdeploy.deltadir" value="${catwalk_dir}/src/schema/" />
+
+    <!--
+        Import main target defintions (extension points)
+    -->
+    <import file="${integration_dir}/main.xml" />
+
+    <!--
+        Enable used modules
+    -->
+    <import file="${integration_dir}/build-commons/modules/dbdeploy.xml" />
+    <import file="${integration_dir}/build-commons/modules/composer.xml" />
+    <import file="${integration_dir}/symfony.xml" />
+</project>
