@@ -1,0 +1,37 @@
+b2bdemo_test ansible_ssh_host=10.1.250.5 ansible_ssh_user=deploy ansible_python_interpreter=/usr/bin/python3
+
+[monitor_frontastic]
+b2bdemo_test
+
+[catwalk_frontastic]
+b2bdemo_test
+
+[cache_frontastic]
+b2bdemo_test
+
+[all:vars]
+web_dir=/var/www
+web_user=www-data
+worker_user=www-data
+
+customer=b2bdemo
+customer_secret=$2y$10$VTWrVy8yCnt.ILm6VmGjjeDK8M4F791iAy7RQS34otWYr5bYZTMmG
+# TODO: We need to get rid of this or give it a better name
+secret=$2y$10$VTWrVy8yCnt.ILm6VmGjjeDK8M4F791iAy7RQS34otWYr5bYZTMmG
+
+cache_dir=/var/cache/frontastic
+log_dir=/var/log/frontastic
+
+memcache_interface_ip=127.0.0.1
+
+smtp_host=smtp.mailgun.org
+smtp_port=587
+smtp_encryption=tls
+
+is_vm=False
+is_docker=False
+is_production=False
+is_staging=True
+is_development=False
+is_multitenant_apihub=False
+
