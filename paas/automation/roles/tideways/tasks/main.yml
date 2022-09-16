@@ -1,0 +1,55 @@
+---
+- block:
+  - name: "Remove Deprecated Debian Repository to sources.list.d"
+    apt_repository: >
+      repo='deb http://s3-eu-west-1.amazonaws.com/tideways/packages debian main beta'
+      state=absent
+
+  - name: "Remove Deprecated Debian Repository to sources.list.d"
+    apt_repository: >
+      repo='deb https://packages.tideways.com/apt-packages debian main beta'
+      state=absent
+
+  - name: "Add Debian Repository to sources.list.d"
+    apt_repository: >
+      repo='deb https://packages.tideways.com/apt-packages-main any-version main beta'
+      state=absent
+
+  - name: "Add Repository Key"
+    apt_key: >
+      url=https://packages.tideways.com/key.gpg
+      state=present
+
+  - name: "Add Debian Repository to sources.list.d"
+    apt_repository: >
+      repo='deb https://packages.tideways.com/apt-packages-main any-version main'
+      state=present
+
+  - name: "Setup Daemon Defaults"
+    notify: "Restart Tideways Daemon"
+    template: >
+      src=tideways.default.j2
+      dest=/etc/default/tideways-daemon
+
+  - name: "Install Tideways Packages"
+    apt:
+      pkg:
+        - tideways-php
+        - tideways-daemon
+        - tideways-cli
+      state: latest
+      update_cache: yes
+    notify:
+      - "Restart Tideways Daemon"
+
+  - name: "Force dpkg-reconfigure"
+    command: >
+      dpkg-reconfigure --frontend noninteractive tideways-php
+    notify: Restart PHP-FPM
+
+  - name: "Configure tideways for FPM"
+    template:
+      src: 40-tideways.ini.j2
+      dest: "/etc/php/{{ php_version }}/fpm/conf.d/40-tideways.ini"
+    notify: Restart PHP-FPM
+  when: not is_docker and (tideways_keys is defined or tideways_key is defined)

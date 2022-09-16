@@ -1,0 +1,58 @@
+---
+- name: "Add key for Node.js repo"
+  apt_key:
+    id: 9FD3B784BC1C6FC31A8A0A1C1655A0AB68576280
+    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    state: present
+
+- name: "Add repo"
+  template:
+    src=nodesource.list.j2
+    dest=/etc/apt/sources.list.d/nodesource.list
+    owner=root
+    group=root
+    mode=0644
+  register: aptrepo
+
+- name: "Update System (Debian)"
+  apt:
+    update_cache: yes
+    upgrade: dist
+  when: aptrepo.changed
+
+- name: "Install Node.js"
+  apt:
+    pkg: nodejs
+    state: latest
+
+- name: "Install / update JavaScript tools"
+  command: "npm install -g yarn babel-cli nodemon"
+  changed_when: false
+
+- name: "Install / update full-icu with unsafe-perm"
+  command: "npm install --unsafe-perm=true -g full-icu"
+  changed_when: false
+
+- name: Install JavaScript development tools
+  block:
+  - name: "Updated JavaScript tools"
+    command: "yarn global upgrade"
+    changed_when: false
+
+  - name: "Install / update JavaScript development tools"
+    command: "yarn global add webpack babel-cli nodemon"
+    changed_when: false
+
+  - stat:
+      path: "{{ web_dir }}/frontastic"
+    register: application
+
+  - name: "Check out Frontastic"
+    git:
+      repo: git@github.com:FrontasticGmbH/frontastic.git
+      dest: "{{ web_dir }}/frontastic"
+      accept_hostkey: yes
+    become: yes
+    become_user: "{{ web_user }}"
+    when: has_paas_modifications|bool and application.stat.exists == False
+  when: is_vm|bool

@@ -1,0 +1,99 @@
+---
+# Just create a dummy, if no file exists, yet. Correct file from customer.
+- name: "Copy Webpack Port Mapping"
+  copy:
+    src: "webpack_ports.conf"
+    dest: "/etc/nginx/includes.d/webpack_ports.conf"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    mode: 0644
+    force: no
+  tags: ["serverConfig"]
+  notify: Restart Nginx
+
+# Just create a dummy, if no file exists, yet. Correct file from customer.
+- name: "Copy Domain to Project mapping"
+  copy:
+    src: "domain_to_project.conf"
+    dest: "/etc/nginx/includes.d/domain_to_project.conf"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    mode: 0644
+    force: yes
+  tags: [ "serverConfig" ]
+  notify: Restart Nginx
+
+# Just create a dummy, if no file exists, yet. Correct file will be generated based on the customer configuration.
+- name: "Copy Customer Adjustment File"
+  copy:
+    src: "customer_adjustments.conf"
+    dest: "/etc/nginx/includes.d/customer_adjustments.conf"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    mode: 0664
+    force: no
+  tags: ["serverConfig"]
+  notify: Restart Nginx
+
+- name: "Backstage | Generate Vhosts"
+  template:
+    src=php-default.conf.j2
+    dest={{ nginx_vhost_directory }}/20_backstage.conf
+    owner={{ web_user }}
+    group={{ web_user }}
+    mode=0644
+  vars:
+    is_backstage: True
+    is_catwalk: False
+    is_landingpage: False
+  tags: ["serverConfig", "serverBackstage"]
+  notify: Restart Nginx
+
+- name: Catwalk | Remove old configuration
+  file:
+    path: "{{ nginx_vhost_directory }}/20_catwalk.conf"
+    state: absent
+  tags: ["serverConfig"]
+  notify: Restart Nginx
+
+- name: "Catwalk | Generate Vhosts"
+  template:
+    src=php-default.conf.j2
+    dest={{ nginx_vhost_directory }}/30_catwalk.conf
+    owner={{ web_user }}
+    group={{ web_user }}
+    mode=0644
+  vars:
+    is_backstage: False
+    is_catwalk: True
+    is_landingpage: False
+  tags: ["serverConfig"]
+  notify: Restart Nginx
+
+- name: "Services | Generate Vhosts"
+  template:
+    src=php-default.conf.j2
+    dest={{ nginx_vhost_directory }}/10_services.conf
+    owner={{ web_user }}
+    group={{ web_user }}
+    mode=0644
+  vars:
+    is_backstage: False
+    is_catwalk: False
+    is_landingpage: False
+  tags: ["serverConfig"]
+  notify: Restart Nginx
+
+- name: "Landingpage | Generate Vhosts"
+  template:
+    src=php-default.conf.j2
+    dest={{ nginx_vhost_directory }}/20_landingpage.conf
+    owner={{ web_user }}
+    group={{ web_user }}
+    mode=0644
+  vars:
+    is_backstage: False
+    is_catwalk: False
+    is_landingpage: True
+  tags: ["serverConfig"]
+  notify: Restart Nginx

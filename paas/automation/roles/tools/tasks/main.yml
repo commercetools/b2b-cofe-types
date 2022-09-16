@@ -1,0 +1,161 @@
+---
+- name: "Install Tools"
+  apt:
+    pkg:
+      - figlet
+      - landscape-common
+      - apt-transport-https
+      - vim
+      - acl
+      - htop
+      - iotop
+      - jq
+      - sysstat
+      - tzdata
+      - bash-completion
+      - software-properties-common
+      - silversearcher-ag
+      - unzip
+    state: present
+
+- name: "Install Development Tools"
+  apt:
+    pkg:
+      - curl
+      - tree
+      - unzip
+      - rsync
+    state: present
+  when: is_vm|bool
+
+- name: "Install Linux headers for VirtualBox guest additions"
+  apt:
+    pkg:
+      - linux-headers-generic
+    state: present
+  when: is_vm|bool and not is_docker|bool
+
+- name: "Configure timezone file"
+  copy: content="{{ timezone }}" dest=/etc/timezone
+  changed_when: false
+
+- name: "Reconfigure timezone"
+  command: dpkg-reconfigure -f noninteractive tzdata
+  changed_when: false
+
+- name: "Install locales package"
+  apt:
+    pkg:
+      - locales-all
+      - locales
+  when: is_docker|bool
+
+- name: "Ensure de_DE locale exists"
+  locale_gen:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "de_DE"
+    - "de_DE.UTF-8"
+
+- name: "Set VIM as default editor"
+  command: update-alternatives --set editor /usr/bin/vim.basic
+  changed_when: false
+
+- name: "Set hostname"
+  template: >
+    src=hostname.j2
+    dest=/etc/hostname
+  when: not is_docker
+
+- name: "Add hosts"
+  lineinfile:
+    dest: "/etc/hosts"
+    regexp: ' {{ item }}$'
+    line: "127.0.1.1 {{item}}"
+    state: present
+  with_items:
+    - "{{ host }}"
+    - "mail.{{ host }}"
+  when: not is_docker
+  tags: config
+
+- name: "Add development local hosts"
+  lineinfile:
+    dest: "/etc/hosts"
+    regexp: ' {{ item }}$'
+    line: "127.0.1.1 {{item}}"
+    state: present
+    unsafe_writes: yes
+  with_items: "{{ vhosts | default([]) }}"
+  when: is_vm and not is_docker
+  tags: config
+
+- name: "Set target environment"
+  set_fact:
+    target_environment: "{% if is_vm and not is_docker %}sandbox{% elif is_staging%}staging{% else %}production{% endif %}"
+  tags: [ 'reverse-proxy-config', 'config' ]
+
+- name: "Add reverse proxy hosts"
+  lineinfile:
+    dest: "/etc/hosts"
+    regexp: ' {{ item }}.frontastic.internal # Reverse proxy added by ansible$'
+    line: "{{ reverse_proxies.target_ip[target_environment] }} {{item}}.frontastic.internal # Reverse proxy added by ansible"
+    state: present
+  with_items:
+    - "{{ reverse_proxies.hosts }}"
+  when: reverse_proxies.target_ip[target_environment] is defined and reverse_proxies.hosts is defined
+  tags: [ 'reverse-proxy-config', 'config' ]
+
+- name: "Remove superfluous reverse proxies"
+  lineinfile:
+    dest: "/etc/hosts"
+    regexp: ' # Reverse proxy added by ansible$'
+    state: absent
+  when: reverse_proxies.target_ip[target_environment] is not defined or reverse_proxies.hosts is not defined
+  tags: [ 'reverse-proxy-config', 'config' ]
+
+- name: "Download fixuid"
+  get_url:
+    url: https://github.com/boxboat/fixuid/releases/download/v0.4/fixuid-0.4-linux-amd64.tar.gz
+    dest: /tmp/fixuid.tar.gz
+    checksum: sha256:d4555f5ba21298819af24ed351851a173fff02b9c0bd5dfcef32f7e22ef06401
+  when: is_docker|bool
+
+- name: "Extract fixuid"
+  unarchive:
+    src: /tmp/fixuid.tar.gz
+    dest: /usr/local/bin
+  when: is_docker|bool
+
+- name: "Set fixuid permissions"
+  file:
+    path: /usr/local/bin/fixuid
+    owner: root
+    group: root
+    mode: '4755'
+  when: is_docker|bool
+
+- name: "Create fixuid config directory"
+  file: path=/etc/fixuid state=directory mode=0755
+  when: is_docker|bool
+
+- name: "Create fixuid config"
+  copy:
+    content: "user: vagrant\ngroup: vagrant\n"
+    dest: /etc/fixuid/config.yml
+  when: is_docker|bool
+
+- name: "Add .bash_profile to vagrant user"
+  vars:
+    type: Docker
+  template:
+    src: bashrc.j2
+    dest: /home/vagrant/.bash_profile
+  when: is_docker|bool
+
+- name: Creates cache directory
+  file: path={{ cache_dir }} state=directory mode=0777
+
+- name: Creates log directory
+  file: path={{ log_dir }} state=directory mode=0777

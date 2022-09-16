@@ -1,0 +1,19 @@
+apps:
+  - name: "{{ project }}-ssr"
+    script: /var/www/frontastic/{{ customer }}_{{ project }}/bin/server.js
+    cwd: "{{ root }}"
+{% if ssr_node_instances[project] is defined %}
+    instances: {{ ssr_node_instances[project] }}
+{% elif ssr_node_instances is defined %}
+    instances: {{ ssr_node_instances }}
+{% else %}
+    instances: 4
+{% endif %}
+    max_memory_restart: {{ ssr_memory_limit | default('1024M') }}
+    max_restarts: 10
+    min_uptime: "10s"
+    exec_mode: cluster
+    error_file: "{{ log_dir }}/{{ customer }}_{{ project }}/ssr-err.log"
+    out_file: "{{ log_dir }}/{{ customer }}_{{ project }}/ssr-out.log"
+    env:
+      NODE_ENV: production

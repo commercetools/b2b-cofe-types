@@ -1,0 +1,10 @@
+---
+- name: Update apt cache
+  apt: update_cache=yes
+
+- name: Install PHP
+  apt:
+    pkg:
+      - "redis"
+    state: latest
+  when: not is_production and not is_staging

@@ -1,0 +1,18 @@
+---
+# tasks file for kibana
+- name: customer_name
+  debug: msg="{{ customer }}"
+- name: checkout latest code
+  local_action: shell chdir /home/deploy/infrastructure && GIT_SSH_COMMAND='ssh -i /home/deploy/.ssh/id_ed25519 -o IdentitiesOnly=yes' git pull
+  become: false
+  register: git_pull
+- name: git pull result
+  debug: msg="{{ git_pull.stdout }}"
+- name: check resource existence
+  local_action: shell cd /home/deploy/infrastructure/terraform/kibana && terraform state list | egrep '*{{ customer }}*' | cat
+  become: false
+  register: state_result
+- name: debug_state
+  debug: msg="{{ state_result.stdout }}"
+- include: add_tasks.yml
+  when: '"{{ customer }}" not in state_result.stdout'

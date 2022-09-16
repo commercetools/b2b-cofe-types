@@ -1,0 +1,15 @@
+server {
+    listen 443 ssl;
+    server_name ~^.*$;
+    return 301 http://frontastic.io$request_uri;
+}
+
+server {
+    listen *:80;
+    server_name ~^.*$;
+
+    include includes.d/php-fpm.conf;
+
+    root "{{ web_dir }}/default/htdocs";
+    index "index.php";
+}

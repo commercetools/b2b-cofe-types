@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Mock Catwalk" basedir="./" default="test">
+
+    <target name="clean"/>
+    <target name="initialize"/>
+    <target name="prepare"/>
+    <target name="test"/>
+    <target name="test-dynamic"/>
+    <target name="test-unit"/>
+    <target name="test-spec"/>
+    <target name="test-feature"/>
+    <target name="test-static"/>
+    <target name="package"/>
+    <target name="deploy"/>
+</project>

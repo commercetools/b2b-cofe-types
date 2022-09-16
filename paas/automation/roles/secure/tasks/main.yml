@@ -1,0 +1,136 @@
+---
+- name: Change root password
+  command: passwd -d root
+  changed_when: false
+
+- name: "Install Tools"
+  apt:
+    pkg:
+      - fail2ban
+      - openssh-server
+      - sudo
+    state: latest
+    update_cache: yes
+
+- name: "Fail2ban SSH jail config for dev machines"
+  copy:
+    src: fail2ban_jail_ssh.local
+    dest: /etc/fail2ban/jail.d/ssh.local
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
+  when: is_vm
+
+- name: Fetch vagrant public key
+  fetch: src=/home/{{ deploy_user }}/.ssh/authorized_keys dest=vagrant.pub flat=yes
+  when: is_vm and (deploy_user != "root")
+
+- name: Add vagrant key to deploy user
+  authorized_key: 'user={{ deploy_user }} key={{ lookup("file", "vagrant.pub") }}'
+  when: is_vm and (deploy_user != "root")
+
+- name: Add user {{ deploy_user }} to sudoers
+  lineinfile:
+    dest: /etc/sudoers
+    line: "{{ deploy_user }} ALL=(ALL) ALL"
+    insertbefore: "^#includedir /etc/sudoers\\.d"
+    validate: '/usr/sbin/visudo -cf %s'
+    state: present
+
+- name: Add vagrant user to sudoers
+  lineinfile:
+    dest: /etc/sudoers
+    line: "vagrant ALL=(ALL) NOPASSWD: ALL"
+    state: present
+  when: is_vm and (deploy_user != "root")
+
+- name: Create sshd run directory
+  file:
+    path: /var/run/sshd
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+  when: is_docker|bool
+
+- name: Remove sudo group rights
+  lineinfile:
+    dest: /etc/sudoers
+    regexp: "^%sudo"
+    state: absent
+
+- name: Remove admin group rights
+  lineinfile:
+    dest: /etc/sudoers
+    regexp: "^%admin"
+    state: absent
+
+- name: Change SSHD port
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^Port"
+    line: "Port {{ ssh_port }}"
+    state: present
+  notify: Restart SSH
+
+- name: Disallow password authentication
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication no"
+    state: present
+  when: not is_vm
+  notify: Restart SSH
+
+- name: Enable password authentication for VM
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication yes"
+    state: present
+  when: is_vm|bool
+  notify: Restart SSH
+
+- name: Disallow root SSH access
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin"
+    line: "PermitRootLogin no"
+    state: present
+  notify: Restart SSH
+
+- name: Do not accept client locale vars
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^AcceptEnv LANG LC_"
+    line: "# AcceptEnv LANG LC_*"
+    state: present
+    backrefs: yes
+  notify: Restart SSH
+
+- name: Increase maximum number of SSH sessions
+  lineinfile:
+      dest: /etc/ssh/sshd_config
+      regexp: "^MaxSessions"
+      line: "MaxSessions 256"
+      state: present
+  notify: Restart SSH
+
+- name: "Copy sshd config to enable banner at ssh-login"
+  copy:
+    src: ssh-config/sshd_config
+    dest: "/etc/ssh/"
+    mode: "0644"
+  when: not is_docker and not is_vm
+  notify: Restart SSH
+
+- name: "Copy sshd login banner text"
+  copy:
+    src: "ssh-config/{{ item }}"
+    dest: "/etc/"
+    mode: "0644"
+  with_items:
+  - issue.net
+  - issue
+  when: not is_docker and not is_vm
+  notify: Restart SSH

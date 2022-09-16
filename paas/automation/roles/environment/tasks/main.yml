@@ -1,0 +1,10 @@
+---
+- name: "Create root configuration override"
+  template: >
+    src=environment.local.j2
+    dest={{ root }}/environment.local
+    mode=0644
+  become: yes
+  become_user: "{{ web_user }}"
+  tags: ["config"]
+  when: is_vm|bool

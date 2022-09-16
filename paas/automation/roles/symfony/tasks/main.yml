@@ -1,0 +1,8 @@
+---
+- cron:
+    name: "Add cron job to clean orphaned symfony caches"
+    user: "{{ web_user }}"
+    minute: "41"
+    hour: "*"
+    job: "/var/www/frontastic/paas/catwalk/bin/console frontastic:clear:orphaned-system-caches"
+    state: "present"

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <!--
+         Initialize extension, which install composer PHP dependencies
+    -->
+    <target name="-composer:install-or-update" depends="-composer:install, -composer:self-update" />
+
+    <target name="-composer:install" depends="-composer:exists" unless="${-composer.exists}">
+        <get src="https://getcomposer.org/composer-stable.phar"
+             dest="${basedir}/composer.phar" />
+
+        <chmod file="${basedir}/composer.phar" perm="ugo+rx"/>
+    </target>
+
+    <target name="-composer:remove-non-tracked-lock-file" depends="-composer:exists">
+        <tool-exists executable="${executable.git}" />
+
+        <if>
+            <and>
+                <!-- No .git directory in Frontastic Machines -->
+                <available file="${frontastic_basedir}/.git" />
+                <available property="composer" file="composer.lock" />
+            </and>
+            <then>
+                <exec executable="${executable.git}" resultproperty="composerLockUntracked" error="/dev/null">
+                    <arg value="ls-files" />
+                    <arg value="--error-unmatch" />
+                    <arg value="${basedir}/composer.lock" />
+                </exec>
+            </then>
+        </if>
+
+        <if>
+            <and>
+                <isset property="composerLockUntracked" />
+                <not>
+                    <equals arg1="0" arg2="${composerLockUntracked}" />
+                </not>
+            </and>
+            <then>
+                <delete file="${basedir}/composer.lock" />
+            </then>
+        </if>
+    </target>
+
+    <target name="-composer:self-update" depends="-composer:exists" if="${-composer.exists}" unless="offline">
+        <exec executable="${executable.php}" failonerror="true">
+            <arg value="${basedir}/composer.phar" />
+            <arg value="selfupdate" />
+        </exec>
+    </target>
+
+    <target name="-composer:exists">
+        <available file="${basedir}/composer.phar"
+                   property="-composer.exists" />
+    </target>
+
+    <target name="composer:install" depends="-composer:install-or-update, -composer:remove-non-tracked-lock-file" extensionOf="-prepare:before~hook" unless="offline">
+        <tool-exists executable="${executable.php}" />
+
+        <condition property="composer.optimize" value="--apcu-autoloader --optimize-autoloader" else="">
+            <or>
+                <equals arg1="${env}" arg2="prod" />
+                <equals arg1="${env}" arg2="staging" />
+            </or>
+        </condition>
+
+        <condition property="composer.optimize-autoload" value="--apcu --optimize" else="">
+            <or>
+                <equals arg1="${env}" arg2="prod" />
+                <equals arg1="${env}" arg2="staging" />
+            </or>
+        </condition>
+
+        <exec executable="flock" failonerror="true">
+            <env key="COMPOSER_MEMORY_LIMIT" value="-1" />
+            <arg value="--exclusive" />
+            <arg value="/tmp/composer" />
+            <arg value="${executable.php}" />
+            <arg value="${basedir}/composer.phar" />
+            <arg value="--prefer-dist" />
+            <arg value="--no-interaction" />
+            <arg value="--no-progress" />
+            <arg line="${composer.optimize}" />
+            <arg value="install" />
+        </exec>
+
+        <exec executable="${executable.php}" failonerror="true">
+            <env key="COMPOSER_MEMORY_LIMIT" value="-1" />
+            <arg value="${basedir}/composer.phar" />
+            <arg line="${composer.optimize-autoload}" />
+            <arg value="dump-autoload" />
+        </exec>
+    </target>
+</project>

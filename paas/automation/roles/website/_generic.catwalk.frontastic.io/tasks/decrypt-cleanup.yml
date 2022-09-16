@@ -1,0 +1,10 @@
+- name: "Check if a crypted project.yml exists"
+  stat:
+    path: "{{ item.path|replace('.decrypted','.crypt') }}"
+  register: cryptedProjectYml
+
+- name: "Remove decrypted project.yml when *.crypt file was removed."
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  when: ( is_production or is_staging ) and cryptedProjectYml.stat.exists == False

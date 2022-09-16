@@ -1,0 +1,7 @@
+---
+- name: Restart PHP-FPM
+  service: name={{ php_service }} state=restarted
+
+- name: Restart Nginx
+  service: name=nginx state=restarted
+  when: not is_docker

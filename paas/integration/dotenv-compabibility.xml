@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Compatibility with Symfony Dotenv">
+
+    <!-- Symfony 4 configuration works entirely on .env files in which
+         variables are not allowed to contain . chars. This ant task produces
+         compatibility for Build Commons tasks -->
+
+    <property name="database.host" value="${database_host}" />
+    <property name="database.port" value="${database_port}" />
+    <property name="database.name" value="${database_name}" />
+    <property name="database.user" value="${database_user}" />
+    <property name="database.password" value="${database_password}" />
+
+    <property name="tideways.key" value="${tideways_key}" />
+
+    <property name="mailer.transport" value="${mailer_transport}" />
+
+    <property name="test-unit.fail-on-violation" value="${test_unit_fail_on_violation}" />
+    <property name="test-feature.fail-on-violation" value="${test_feature_fail_on_violation}" />
+    <property name="test-static-cpd.fail-on-violation" value="${test_static_cpd_fail_on_violation}" />
+    <property name="test-static-checkstyle.fail-on-violation" value="${test_static_checkstyle_fail_on_violation}" />
+    <property name="test-static-pmd.fail-on-violation" value="${test_static_pmd_fail_on_violation}" />
+    <property name="test-static-pdepend.fail-on-violation" value="${test_static_pdepend_fail_on_violation}" />
+    <property name="test-static-phpstan.fail-on-violation" value="${test_static_phpstan_fail_on_violation}" />
+
+</project>

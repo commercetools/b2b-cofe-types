@@ -1,0 +1,128 @@
+---
+- name: Check if MySQL is already present.
+  stat: path=/etc/init.d/mysql
+  register: mysql_present
+
+- name: Set MySQL root password before installing
+  debconf: name='mysql-server' question='mysql-server/root_password' value='{{ mysql_root_password|quote }}' vtype='password'
+  changed_when: false
+  when: not is_production and not is_staging
+
+- name: Confirm MySQL root password before installing
+  debconf: name='mysql-server' question='mysql-server/root_password_again' value='{{ mysql_root_password|quote }}' vtype='password'
+  changed_when: false
+  when: not is_production and not is_staging
+
+- name: Upgrade MySQL server on docker to not run into failres during installation / upgrade
+  shell: mysql_upgrade -u root -proot --verbose --skip-version-check
+  changed_when: false
+  ignore_errors: yes
+  when: is_docker|bool
+
+- name: Ensure MySQL packages are present.
+  apt:
+    pkg:
+      - mysql-server
+      - mysql-common
+      - libmysqlclient-dev
+      - libssl-dev
+    state: present
+  register: deb_mysql_install_packages
+  when: not is_production and not is_staging
+
+- name: Ensure MySQL packages are present.
+  apt:
+    pkg:
+      - python3-pip
+      - python3-pymysql
+      - python3-mysqldb
+    state: present
+
+- name: Ensure MySQL Python package is installed for ansible managing MySQL
+  pip:
+    name: PyMySQL
+    state: present
+    executable: /usr/bin/pip3
+  when: is_docker|bool
+
+- name: Delete innodb log files created by apt package after initial install.
+  file:
+    path: "{{ mysql_datadir }}/{{ item }}"
+    state: absent
+  with_items:
+    - ib_logfile0
+    - ib_logfile1
+  when: mysql_present.stat.exists == false and not is_production and not is_staging
+
+- name: Ensure MySQL is started and enabled on boot.
+  service: "name={{ mysql_daemon }} state=started enabled=1"
+  register: mysql_service_configuration
+  when: not is_production and not is_staging
+
+- name: Ensure MySQL directories have correct owner
+  file:
+      path: "{{ item }}"
+      owner: mysql
+      recurse: yes
+  ignore_errors: yes
+  with_items:
+      - "{{ mysql_datadir }}"
+      - "/var/run/mysqld"
+  when: is_docker|bool
+
+- name: Ensure MySQL run directory is writeable
+  file:
+      path: "/var/run/mysqld"
+      mode: '0777'
+  ignore_errors: yes
+  when: is_docker|bool
+
+- name: Weird fix for mysql directories
+  command: chown -R mysql /var/run/mysqld /var/lib/mysql
+  args:
+    warn: off
+  when: is_docker|bool
+
+- name: Since the service module before seems to fail on docker we start MySQL again manually
+  # intentionally using not the service module here because the systemd wrapper in the container reports the running state of services not reliable
+  command: service mysql start
+  args:
+    warn: off
+  ignore_errors: yes
+  when: is_docker|bool
+
+- name: Create .my.cnf
+  template:
+    src: "my.cnf.j2"
+    dest: "/root/.my.cnf"
+    owner: root
+    group: root
+    mode: 0400
+  when: not is_production and not is_staging
+
+- name: Ensure native auth plugin
+  lineinfile:
+    path: /etc/mysql/mysql.conf.d/mysqld.cnf
+    regexp: '^default_authentication_plugin'
+    insertafter: '^\[mysqld\]'
+    line: 'default_authentication_plugin=mysql_native_password'
+  when: not is_production and not is_staging
+
+- name: Remove anonymous MySQL users.
+  mysql_user:
+    check_implicit_admin: yes
+    login_user: "{{mysql_root_username }}"
+    login_password: "{{mysql_root_password }}"
+    name: ""
+    host: "{{ item }}"
+    state: absent
+  with_items: '{{ mysql_hosts }}'
+  when: not is_production and not is_staging
+
+- name: Remove MySQL test database.
+  mysql_db:
+    login_user: "{{mysql_root_username }}"
+    login_password: "{{mysql_root_password }}"
+    name: "test"
+    state: absent
+  when: not is_production and not is_staging

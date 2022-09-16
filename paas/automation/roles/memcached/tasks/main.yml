@@ -1,0 +1,11 @@
+---
+- name: "Install memcached (Debian)"
+  apt: pkg=memcached
+
+- name: Configure Network Interface
+  lineinfile:
+    dest: /etc/memcached.conf
+    regexp: "^-l 127.0.0.1"
+    line: "-l {{ memcache_interface_ip }}"
+    state: present
+  notify: Restart Memcached

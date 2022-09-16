@@ -1,0 +1,24 @@
+env={{ is_vm|ternary("dev", "prod") }}
+
+{% if is_customer_vm %}
+backstage=https://{% if customer_demo_name is defined %}backstage-{{ customer_demo_name }}.demo{% else %}{{ customer }}{% endif %}.frontastic.io
+{% elif is_vm %}
+backstage=http://{{ customer }}.frontastic.io.local
+{% else %}
+backstage=https://{{ customer }}.frontastic.io
+{% endif %}
+secret={{ secret }}
+
+opsgenie={{ opsgenie }}
+
+use_file_config={{ is_customer_vm|ternary("true", "false") }}
+
+cache_dir={{ cache_dir }}
+log_dir={{ log_dir }}
+
+{% if is_production %}
+minInterval=10
+maxInterval=120
+maxDataCount=100
+adaptionFactor=1.333
+{% endif %}

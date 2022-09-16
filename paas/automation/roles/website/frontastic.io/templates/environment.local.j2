@@ -1,0 +1,10 @@
+env={{ is_vm|ternary("dev", "prod") }}
+
+memcache_ip={{ memcache_interface_ip }}
+
+customer_vm={{ is_customer_vm|ternary("true", "false") }}
+customer={{ customer }}
+
+{% if customer_demo_name is defined %}
+customer_demo_name={{ customer_demo_name }}
+{% endif %}

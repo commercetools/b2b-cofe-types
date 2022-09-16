@@ -1,0 +1,68 @@
+---
+- name: Provision Machines with Webserver
+  hosts: landing_frontastic:catwalk_frontastic
+  become: yes
+  roles:
+    - nginx
+    - nginx_vhost
+#    - deployment_keys
+
+- name: Provision Landing Page
+  hosts: landing_frontastic
+  become: yes
+  roles:
+    - website/frontastic.io
+
+- name: Provision Catwalk Infrastructure
+  hosts: catwalk_frontastic
+  become: yes
+  roles:
+    - mysql
+    - javascript
+    - symfony
+    - go
+    - website/catwalk.frontastic.io
+    - deployhost
+    - redis
+    - { role: logrotate, when: not is_vm and not is_docker, tags: [ "logstash" ] }
+    - { role: logstash, when: not is_vm and not is_docker, tags: [ "logstash" ] }
+    - { role: metricbeat, when: not is_vm and not is_docker, tags: [ "logstash" ] }
+    - { role: google_fluentd, when: not is_vm and not is_docker, tags: [ "logstash" ] }
+    - {
+        role: nginx_customer_adjustments,
+        redirect_domains: "{{ nginx_adjustments.redirect_domains | default([]) }}",
+        ignore_locations: "{{ nginx_adjustments.ignore_locations | default([]) }}",
+        removed_locations: "{{ nginx_adjustments.removed_locations | default([]) }}",
+        redirect_locations: "{{ nginx_adjustments.redirect_locations | default([]) }}",
+        proxy_locations: "{{ nginx_adjustments.proxy_locations | default([]) }}",
+        domain_to_project: "{{ nginx_adjustments.domain_to_project | default([]) }}",
+        when: (
+          nginx_adjustments.redirect_domains is defined or
+          nginx_adjustments.ignore_locations is defined or
+          nginx_adjustments.removed_locations is defined or
+          nginx_adjustments.redirect_locations is defined or
+          nginx_adjustments.proxy_locations is defined or
+          nginx_adjustments.domain_to_project is defined
+        )
+      }
+    - { role: google_opsagent, when: not is_vm and not is_docker, tags: [ "google_opsagent" ] }
+#    - { role: kibana, when: not is_vm and not is_docker, tags: [ "google_opsagent" ] }
+
+- name: Provision Replicator
+  hosts: replicator_frontastic
+  become: yes
+  roles:
+    - { role: supervisord, tags: [ "replicator" ] }
+    - { role: daemon/replicator.frontastic.io, tags: [ "replicator" ] }
+
+- name: Provision Memcache servers
+  hosts: cache_frontastic
+  become: yes
+  roles:
+    - memcached
+
+- name: Provision Sandbox foo
+  hosts: catwalk_frontastic
+  become: yes
+  roles:
+    - { role: sandbox, when: is_vm and not is_docker, tags: [ "config" ] }

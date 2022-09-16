@@ -1,0 +1,25 @@
+#- module: php_fpm
+#  metricsets:
+#  - pool
+#  #- process
+#  enabled: true
+#  period: 10s
+#  status_path: "/fpm_status"
+#  hosts: ["127.0.0.1:8987"]
+## Fetch opcache
+#- module: http
+#  metricsets:
+#    - json
+#  period: 10s
+#  hosts: ["127.0.0.1:8987"]
+#  namespace: "opcache"
+#  path: "/opcache.php"
+#
+## Fetch apcu stats
+#- module: http
+#  metricsets:
+#    - json
+#  period: 10s
+#  hosts: ["127.0.0.1:8987"]
+#  namespace: "apcu"
+#  path: "/apcu.php"

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Project libraries">
+
+    <property name="project_library_basedir" value="${basedir}" />
+    <condition property="copy-build-to-dist" value="${copy-build-to-dist}" else="false">
+        <isset property="copy-build-to-dist" />
+    </condition>
+
+    <target name="project-libraries:bootstrap" extensionOf="-initialize:main~hook">
+        <tool-exists executable="yarn" />
+
+        <exec executable="yarn" failonerror="true" dir="${project_library_basedir}">
+            <env key="CI" value="true" />
+
+            <arg value="--network-timeout" />
+            <arg value="1000000000" />
+
+            <!-- This is a workaround for ENOENT errors: https://github.com/yarnpkg/yarn/issues/2629 -->
+            <arg value="--mutex" />
+            <arg value="network" />
+            <arg value="--network-concurrency" />
+            <arg value="1" />
+
+            <arg value="install" />
+        </exec>
+    </target>
+
+    <target name="project-libraries:test" unless="${production}" extensionOf="-test-unit:main~hook">
+        <tool-exists executable="yarn" />
+
+        <exec executable="yarn" dir="${project_library_basedir}">
+            <arg value="run" />
+            <arg value="lint" />
+        </exec>
+        <exec executable="yarn" dir="${project_library_basedir}" failonerror="true">
+            <arg value="run" />
+            <arg value="test" />
+            <env key="CI" value="true" />
+        </exec>
+    </target>
+
+    <target name="project-libraries:package" depends="initialize" extensionOf="-package:before~hook">
+        <tool-exists executable="yarn" />
+
+        <exec executable="yarn" dir="${project_library_basedir}" failonerror="true">
+            <arg value="run" />
+            <arg value="build" />
+        </exec>
+
+        <if>
+            <equals arg1="${copy-build-to-dist}" arg2="true" />
+            <then>
+                <copy todir="${basedir}/dist" overwrite="true">
+                    <fileset dir="${basedir}/build">
+                        <include name="*.js" />
+                    </fileset>
+                </copy>
+
+                <retry retrycount="3" retrydelay="1000">
+                    <exec executable="git" failonerror="false" dir="${project_library_basedir}/build">
+                        <arg value="add" />
+                        <arg value="*.js" />
+                        <arg value="*.js.map" />
+                    </exec>
+                </retry>
+            </then>
+        </if>
+    </target>
+</project>

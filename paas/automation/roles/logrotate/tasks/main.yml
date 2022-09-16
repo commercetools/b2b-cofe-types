@@ -1,0 +1,52 @@
+---
+- name: "Install logrotate packages"
+  apt:
+    pkg:
+    - logrotate
+    state: latest
+    update_cache: yes
+  when: not is_docker and not is_vm
+
+- name: "Copy general logrotate config"
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/{{ item }}"
+    mode: "0644"
+  with_items:
+  - "logrotate.conf"
+  when: not is_docker and not is_vm
+
+- name: "Copy service specific logrotate config"
+  template:
+    src: "logrotate.d/{{ item }}.j2"
+    dest: "/etc/logrotate.d/{{ item }}"
+    mode: "0644"
+  with_items:
+    - "customer_logs.conf"
+    - "php.conf"
+    - "php-fpm.conf"
+  when: not is_docker and not is_vm
+
+- name: "Cleanup from previous invalid role definition"
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "/etc/logstash.d"
+    - "/etc/logrotate.d/php-fpm"
+    - "/etc/logrotate.d/php7.2-fpm"
+    - "/etc/logrotate.d/php7.4-fpm"
+    - "/etc/logrotate.d/php.conf.j2"
+    - "/etc/logrotate.d/php-fpm.conf.j2"
+    - "/etc/logrotate.d/prometheus"
+    - "/etc/logrotate.d/prometheus-node-exporter"
+  when: not is_docker and not is_vm
+
+- name: "Execute logrotate every hour"
+  copy:
+    src: "logrotate-hourly"
+    dest: "/etc/cron.hourly/logrotate-hourly"
+    mode: "0755"
+  when: not is_docker and not is_vm
+
+

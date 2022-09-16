@@ -1,0 +1,1 @@
+TIDEWAYS_DAEMON_EXTRA="--retry-on-network-failure --server={{ tideways_url }} {% if tideways_debug %}--debug{% endif %} {% if tideways_insecure %}--insecure{% endif %} {% if is_vm %}--env=vagrant{% elif is_staging %}--env=staging{% endif %}"

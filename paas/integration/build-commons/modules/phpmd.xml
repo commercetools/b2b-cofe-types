@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <target name="phpmd.run">
+        <php-tool-installed executable="phpmd" package="phpmd/phpmd" />
+
+        <fileset id="test-static-pmd.fileset" dir="${srcdir}" casesensitive="no">
+            <include name="**/*.php" />
+        </fileset>
+
+        <pathconvert pathsep="," property="test-static-pmd.files" refid="test-static-pmd.fileset"/>
+
+        <exec executable="${bindir}/phpmd" failonerror="false" resultproperty="phpmd.return-value" dir="${srcdir}">
+            <arg value="${test-static-pmd.files}" />
+            <arg value="xml" />
+            <arg value="codesize,design" />
+            <arg line="--reportfile" />
+            <arg line="${logdir}/pmd.xml" />
+        </exec>
+
+        <condition property="phpmd.command-failed" else="false">
+            <and>
+                <isfailure code="${phpmd.return-value}"/>
+            </and>
+        </condition>
+
+        <condition property="phpmd.failed" else="false">
+            <and>
+                <istrue value="${test-static-pmd.fail-on-violation}"/>
+                <istrue value="${phpmd.command-failed}"/>
+            </and>
+        </condition>
+    </target>
+
+    <target name="phpmd.output" if="${phpmd.command-failed}">
+        <loadfile property="phpmd.output" srcFile="${logdir}/pmd.xml"/>
+        <echo>${phpmd.output}</echo>
+    </target>
+
+    <target name="phpmd.fail" if="${phpmd.failed}">
+        <fail>PHPMD failed with errors.</fail>
+    </target>
+
+    <target name="phpmd" depends="phpmd.run, phpmd.output, phpmd.fail" extensionOf="-test-static:main~hook" />
+</project>

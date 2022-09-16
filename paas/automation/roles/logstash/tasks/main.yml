@@ -1,0 +1,84 @@
+---
+- name: "Add logstash repository Key"
+  apt_key:
+    url: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    state: present
+  when: not is_docker and not is_vm and (is_digital_ocean is undefined or not is_digital_ocean)
+
+- name: "Remove logstash 7.x repository from sources.list.d"
+  apt_repository:
+    repo: "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
+    state: absent
+  when: not is_docker and not is_vm and (is_digital_ocean is undefined or not is_digital_ocean)
+
+- name: "Add logstash repository to sources.list.d"
+  apt_repository:
+    repo: "deb https://artifacts.elastic.co/packages/6.x/apt stable main"
+    mode: "0644"
+    state: present
+  when: not is_docker and not is_vm and (is_digital_ocean is undefined or not is_digital_ocean)
+
+- name: "Install logstash packages"
+  apt:
+    pkg:
+      - logstash
+    state: latest
+    update_cache: yes
+  when: not is_docker and not is_vm and (is_digital_ocean is undefined or not is_digital_ocean)
+
+- name: "add logstash user to adm group to access system logs"
+  user:
+    name: logstash
+    groups: adm
+    append: yes
+
+- name: "Generate logstash output config"
+  template:
+    src: "99-output.conf.j2"
+    dest: "/etc/logstash/conf.d/99-output.conf"
+    mode: "0664"
+  when: not is_docker and not is_vm and (is_digital_ocean is undefined or not is_digital_ocean)
+
+- name: "Generate logstash input config system logs"
+  template:
+    src: "10-input-system.conf.j2"
+    dest: "/etc/logstash/conf.d/10-input-system.conf"
+    mode: "0664"
+  when: not is_docker and not is_vm and (is_digital_ocean is undefined or not is_digital_ocean)
+
+- name: "Copy generic logstash config"
+  copy:
+    src: conf.d
+    dest: /etc/logstash/
+    mode: "0664"
+  when: not is_docker and not is_vm and (is_digital_ocean is undefined or not is_digital_ocean)
+
+- name: Make sure logstash service is running
+  service:
+    state: started
+    enabled: yes
+    name: "logstash"
+  when: not is_docker and not is_vm and (is_digital_ocean is undefined or not is_digital_ocean)
+
+- name: create directory logstash.service.d
+  file:
+    path: /etc/systemd/system/logstash.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "Generate logstash reduced cpu config"
+  template:
+    src: "override.conf.j2"
+    dest: "/etc/systemd/system/logstash.service.d/override.conf"
+    owner: root
+    group: root
+    mode: "0644"
+  when: not is_docker and not is_vm and (is_digital_ocean is undefined or not is_digital_ocean)
+
+- name: Restart logstash service and do a daemon reload
+  systemd:
+    name: logstash.service
+    state: restarted
+    daemon_reload: yes

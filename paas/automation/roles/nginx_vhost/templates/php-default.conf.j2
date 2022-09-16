@@ -1,0 +1,201 @@
+{% set is_catwalk = is_catwalk|default(False) %}
+{% set is_backstage = is_backstage|default(False) %}
+{% set is_landingpage = is_landingpage|default(False) %}
+{% set is_service = not is_catwalk and not is_backstage and not is_landingpage %}
+
+{% if is_vm %}
+include includes.d/webpack_ports.conf;
+{% endif %}
+
+include includes.d/domain_to_project.conf;
+
+# Expires map
+map $sent_http_content_type $expires {
+    default                    max;
+    text/html                  epoch;
+    text/css                   max;
+    application/javascript     max;
+    ~font/                     max;
+    ~image/                    max;
+}
+
+server {
+    listen *:80;
+    server_name ~^(www\.){% if not is_vm %}?{% endif %}(?<domain>{% if is_service %}(status|managementconsole)\.{% else %}{% if not is_landingpage %}{% if is_catwalk %}[^\.\-]+\-{% endif %}[^\.\-]+\.{% endif %}{% endif %}(frontastic\.(io|io\.local|rocks|live)))$;
+    return 301 http{% if not is_vm %}s{% endif %}://$domain$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name ~^(www\.)(?<domain>{% if is_service %}(status|managementconsole)\.{% else %}{% if not is_landingpage %}{% if is_catwalk %}[^\.\-]+\-{% endif %}[^\.\-]+\.{% endif %}{% endif %}(frontastic\.(io|io\.local|rocks|live)))$;
+
+    include includes.d/ssl/frontastic.io.conf;
+
+    return 301 https://$domain$request_uri;
+}
+
+server {
+{% if is_vm %}
+    listen *:80;
+    listen 443 ssl http2;
+{% else %}
+    listen 443 ssl http2;
+{% endif %}
+
+{% if is_catwalk %}
+    server_name ~^(?<domain>{% if not is_landingpage %}(?<application>[^\.\-]+)\-((?<machine_label>[^\.]+)\-)?(?<customer>[^\.\-]+)\.{% endif %}(frontastic\.(?<tld>io|io\.local|rocks|live|dev)))|(.+)$;
+
+    if ($http_x_frontastic_customer) {
+        set $customer $http_x_frontastic_customer;
+    }
+
+    if ($http_x_frontastic_project) {
+        set $application $http_x_frontastic_project;
+    }
+
+    # If there is a domain to project mapping we do a force overwrite here
+    # See includes.d/domain_to_project.conf and <customer>/automation/group_vars/all.yml
+    if ($map_application) {
+        set $customer "$map_customer";
+        set $application "$map_application";
+    }
+{% else %}
+    server_name ~^(?<domain>{% if is_service %}(?<application>status|managementconsole)\.{% else %}{% if not is_landingpage %}{% if is_catwalk %}(?<application>[^\.\-]+)\-(?<customer>[^\.\-]+){% else %}(?<application>[^\.\-]+){% endif %}\.{% endif %}{% endif %}(frontastic\.(io|io\.local|rocks|live)))$;
+{% endif %}
+
+{% if is_production or is_staging %}
+    set $redirect_host "$http_x_public_host";
+    if ($redirect_host = "") {
+        set $redirect_host "$host";
+    }
+    if ($http_x_forwarded_proto = "http") {
+        return 301 https://$redirect_host$request_uri;
+    }
+{% endif %}
+
+    access_log "/var/log/nginx/frontastic_access.log"{% if is_production or is_staging %} main{% endif %};
+
+{% if is_vm %}
+    include includes.d/ssl/frontastic.dev.conf;
+{% else %}
+    include includes.d/ssl/frontastic.io.conf;
+{% endif %}
+{% if is_catwalk %}
+    include includes.d/customer_adjustments.conf;
+{% endif %}
+    include includes.d/php-fpm.conf;
+
+    fastcgi_read_timeout 5m;
+
+{% if is_landingpage %}
+    location ~ ^/docs {
+        return 301 https://docs.frontastic.cloud/;
+    }
+{% endif %}
+
+{% if is_vm %}
+    set $catwalk_host $host;
+    if ($tld = "dev") {
+        set $catwalk_host $application-$customer.frontastic.io.local;
+    }
+
+    # Required for webpack hot reload
+    location ~ ^/webpack/ {
+        proxy_pass http://127.0.0.1:$webpack_port;
+        proxy_http_version 1.1;
+    }
+
+    location ~ ^/[A-Za-z0-9._-]+\.hot-update\.(json|js)$ {
+        proxy_pass http://127.0.0.1:$webpack_port;
+        proxy_http_version 1.1;
+    }
+
+    # Required for webpack hot reload
+    location ~ ^/sockjs-node/ {
+        proxy_pass http://127.0.0.1:$webpack_port;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+
+{% endif %}
+{% if is_catwalk %}
+    location ~ ^/assets/ {
+        expires $expires;
+
+        # We fall back to "similar" asset files using a PHP controller without
+        # any caching to also serve assets during a deployment when the server
+        # delivering the HTML and the server delivering the assets might be on
+        # different versions – without any caching.
+        if (!-e $request_filename) {
+            rewrite ^(.+)$ /index.php$1 last;
+            break;
+        }
+    }
+
+    location ~* ^/(\.well-known/)?apple-app-site-association {
+        default_type 'application/json';
+
+        if (!-e $request_filename) {
+            rewrite ^(.+)$ /index.php$1 last;
+            break;
+        }
+    }
+
+    location ~* /(1x|null|undefined/service-worker.js)$ {
+        return 200;
+    }
+{% endif %}
+    location ~ ^/ {
+        if (-f $request_filename) {
+            break;
+        }
+
+        if (!-e $request_filename) {
+            rewrite ^(.+)$ /index.php$1 last;
+            break;
+        }
+    }
+
+    ##
+    # Best nginx configuration for improved security(and performance). Complete
+    # blog post here http://tautt.com/best-nginx-configuration-for-security/
+    ##
+
+    # Don't send the nginx version number in error pages and Server header
+    server_tokens off;
+
+    # Config to don't allow the browser to render the page inside an frame or iframe
+    # and avoid click-jacking http://en.wikipedia.org/wiki/Clickjacking
+    # If you need to allow same domain [i]frames, you can use SAMEORIGIN.
+    # https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
+    # If cross domain frames are needed please look into migrating to
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors
+{#
+    Catwalk uses in-app CSP headers to control frame-ancestors as we use cross domain iframes for backstage previews.
+#}
+{% if not is_catwalk %}
+    add_header X-Frame-Options SAMEORIGIN;
+{% endif %}
+
+    # Prevent MIME type sniffing
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
+    add_header X-Content-Type-Options nosniff;
+
+    # This header enables the Cross-site scripting (XSS) filter built into most recent web browsers.
+    # It's usually enabled by default anyway, so the role of this header is to re-enable the filter for
+    # this particular website if it was disabled by the user.
+    # https://www.owasp.org/index.php/List_of_useful_HTTP_headers
+    add_header X-XSS-Protection "1; mode=block";
+
+    index index.php index.html;
+{% if is_landingpage %}
+    root "/var/www/frontastic/paas/landingpage/public";
+{% elif is_backstage %}
+    root "/var/www/frontastic/saas/backstage/public";
+{% elif is_catwalk %}
+    root "/var/www/frontastic/${customer}_${application}/public";
+{% else %}
+    root "/var/www/frontastic/saas/${application}/public";
+{% endif %}
+}

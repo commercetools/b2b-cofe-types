@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <target name="phpstan.run">
+        <php-tool-installed executable="phpstan" package="phpstan/phpstan" />
+
+        <exec executable="${bindir}/phpstan" failonerror="false" dir="${basedir}" resultproperty="phpstan.return-value" output="${logdir}/phpstan.xml" logError="true">
+            <arg value="analyse" />
+            <arg value="--no-interaction" />
+            <arg value="--no-progress" />
+            <arg value="--error-format=checkstyle" />
+        </exec>
+
+        <condition property="phpstan.command-failed" else="false">
+            <and>
+                <isfailure code="${phpstan.return-value}"/>
+            </and>
+        </condition>
+
+        <condition property="phpstan.failed" else="false">
+            <and>
+                <istrue value="${test-static-phpstan.fail-on-violation}"/>
+                <istrue value="${phpstan.command-failed}"/>
+            </and>
+        </condition>
+    </target>
+
+    <target name="phpstan.output" if="${phpstan.command-failed}">
+        <loadfile property="phpstan.output" srcFile="${logdir}/phpstan.xml"/>
+        <echo>${phpstan.output}</echo>
+    </target>
+
+    <target name="phpstan.fail" if="${phpstan.failed}">
+        <fail>PHPStan failed with errors.</fail>
+    </target>
+
+    <target name="phpstan" depends="phpstan.run, phpstan.output, phpstan.fail" extensionOf="-test-static:main~hook" />
+</project>

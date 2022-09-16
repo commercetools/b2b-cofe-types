@@ -1,0 +1,3 @@
+---
+root: "{{ web_dir }}/frontastic/paas/catwalk"
+customer_repo: "git@github.com:frontastic-developers/customer-{{ customer }}.git"

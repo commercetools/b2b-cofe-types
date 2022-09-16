@@ -1,0 +1,17 @@
+---
+- name: "Ensure API hub directory exists"
+  file:
+    path: "{{ root }}/extensions/dist"
+    state: "directory"
+    recurse: "yes"
+    owner: "{{ web_user }}"
+  tags: ["config"]
+
+- name: "Copy most recent build of API hub extension runner"
+  copy:
+    src: "extension-runner.min.js"
+    dest: "{{ root }}/extensions/dist/extension-runner.min.js"
+    owner: "{{ web_user }}"
+    mode: 0755
+  tags: ["config"]
+  notify: "Restart Supervisord"

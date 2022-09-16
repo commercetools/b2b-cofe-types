@@ -1,0 +1,14 @@
+env={{ is_vm|ternary("dev", is_staging|ternary("staging", "prod")) }}
+
+secret={{ customer_secret|default(secret) }}
+
+smtp_host={{ smtp_host|default('localhost') }}
+smtp_port={{ smtp_port|default('1025') }}
+smtp_encryption={{ smtp_encryption|default('') }}
+smtp_user={{ smtp_user|default('') }}
+smtp_password={{ smtp_password|default('') }}
+
+memcache_ip={{ memcache_interface_ip }}
+
+cache_dir={{ cache_dir }}
+log_dir={{ log_dir }}

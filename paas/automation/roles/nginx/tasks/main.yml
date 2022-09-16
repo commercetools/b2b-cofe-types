@@ -1,0 +1,102 @@
+---
+- name: Install Nginx
+  apt:
+    pkg: "nginx"
+    state: latest
+
+- name: "Generate /etc/nginx/nginx.conf"
+  template:
+    src: "nginx.conf.j2"
+    dest: "/etc/nginx/nginx.conf"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    mode: "0644"
+  notify: Restart Nginx
+
+- name: "Delete possible default Nginx vhosts"
+  file:
+    path: "{{ nginx_vhost_directory }}/{{ item }}"
+    state: absent
+  with_items:
+    - default
+    - www.domain.de.conf.example
+  notify: Restart Nginx
+
+- name: "Create Nginx directories"
+  file:
+    path: "/etc/nginx/{{ item }}"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    state: directory
+  with_items:
+    - includes.d
+  notify: Restart Nginx
+
+- name: "Copy php-fpm.conf to /etc/nginx/includes.d"
+  template:
+    src: "{{ item }}.conf.j2"
+    dest: "/etc/nginx/includes.d/{{ item }}.conf"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    mode: "0644"
+  with_items:
+    - php-fpm
+  notify: Restart Nginx
+
+- name: "Copy certificate base files"
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/nginx/ssl/"
+    owner: "{{ web_user }}"
+    mode: "0600"
+  with_items:
+    - dhparam.pem
+  notify: Restart Nginx
+
+- name: "Create main document root directory"
+  file:
+    path: "/var/www/frontastic"
+    state: directory
+    owner: "{{ web_user }}"
+    mode:  "0755"
+  ignore_errors: yes
+
+- name: "Create default web directory"
+  file:
+    path: "{{ web_dir }}/default/htdocs/"
+    state: directory
+    owner: "{{ web_user }}"
+
+- name: "Create default log directory"
+  file:
+    path: "/var/log/nginx"
+    state: directory
+    owner: "{{ web_user }}"
+    mode:  "0755"
+
+- name: "Copy index.php"
+  copy:
+    src: "{{ item }}"
+    dest: "{{ web_dir }}/default/htdocs/"
+    owner: "{{ web_user }}"
+    mode: "0644"
+  with_items:
+    - index.php
+
+- name: "Copy metric status vhost"
+  template:
+    src: "status.conf.j2"
+    dest: "{{ nginx_vhost_directory }}/20_status.conf"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    mode: "0644"
+  notify: Restart Nginx
+
+- name: "Copy default Vhosts"
+  template:
+    src: "90_default.conf.j2"
+    dest: "{{ nginx_vhost_directory }}/90_default.conf"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    mode: "0644"
+  notify: Restart Nginx

@@ -1,0 +1,25 @@
+#!/usr/bin/env php
+<?php
+
+if ($argc < 3) {
+    echo "Usage: ", $argv[0], " <mysqlRootPassword> <database>", PHP_EOL;
+    exit(64);
+}
+
+$preSql = escapeshellarg(str_replace('%databaseName%', $argv[2], file_get_contents(__DIR__ . '/migrateCollation.sql')));
+$alterStatements = `echo $preSql | mysql -u root -p${argv[1]} | grep '^ALTER'`;
+
+echo $alterStatements;
+
+echo PHP_EOL, "Are you sure you want to execute these ALTER statements?", PHP_EOL, PHP_EOL, "Type 'yes' to continue: ";
+$handle = fopen ("php://stdin","r");
+$line = fgets($handle);
+if(trim($line) != 'yes'){
+    exit(0);
+}
+fclose($handle);
+
+echo PHP_EOL, "Thank you, continuing...", PHP_EOL;
+$alterStatements = escapeshellarg($alterStatements);
+passthru("echo $alterStatements | mysql -u root -p${argv[1]}");
+

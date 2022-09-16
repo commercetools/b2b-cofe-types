@@ -1,0 +1,9 @@
+- name: install systemctl.py
+  copy: src="files/systemctl3.py" dest="/usr/bin/systemctl" mode=o+x
+  become: yes
+  when: is_docker|bool
+
+- name: make systemctl replacement executable
+  file: dest="/usr/bin/systemctl" mode=+x
+  become: yes
+  when: is_docker|bool

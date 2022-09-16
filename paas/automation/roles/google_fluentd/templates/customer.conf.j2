@@ -1,0 +1,44 @@
+<source>
+  @type tail
+  format none
+  path /var/log/frontastic/{{ customer }}_*/{% if is_production %}prod{% else %}staging{% endif %}/frontend.log
+  pos_file /var/lib/google-fluentd/pos/frontend.pos
+  read_from_head true
+  tag customer-frontend
+</source>
+
+<source>
+  @type tail
+  format none
+  path /var/log/frontastic/{{ customer }}_*/ssr.log
+  pos_file /var/lib/google-fluentd/pos/ssr.pos
+  read_from_head true
+  tag customer-ssr
+</source>
+
+<source>
+  @type tail
+  format none
+  path /var/log/frontastic/responses.log
+  pos_file /var/lib/google-fluentd/pos/responses.pos
+  read_from_head true
+  tag customer-responses
+</source>
+
+<source>
+  @type tail
+  format none
+  path /var/log/frontastic/supervisord.log
+  pos_file /var/lib/google-fluentd/pos/supervisord.pos
+  read_from_head true
+  tag customer-supervisord
+</source>
+
+<source>
+  @type tail
+  format none
+  path /var/log/frontastic/json.log
+  pos_file /var/lib/google-fluentd/pos/json.pos
+  read_from_head true
+  tag customer-json
+</source>

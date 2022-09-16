@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Frontastic Base Build File" basedir="./" default="test">
+
+    <property name="frontastic_basedir" value="${basedir}/../.." />
+
+    <import file="${frontastic_basedir}/paas/integration/dotenv-compabibility.xml" optional="true" />
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <pathelement location="${frontastic_basedir}/paas/integration/libraries/ant-contrib.jar" />
+        </classpath>
+    </taskdef>
+
+    <!--
+        Import main target defintions (extension points)
+    -->
+    <import file="${frontastic_basedir}/paas/integration/build-commons/main.xml" optional="true" />
+
+    <import file="${frontastic_basedir}/paas/integration/documentation.xml" optional="true" />
+
+    <target name="-announce:name" extensionOf="-clean:before~hook">
+        <exec executable="figlet" failIfExecutionFails="false" failonerror="false">
+            <arg value="${ant.project.name}" />
+        </exec>
+    </target>
+</project>

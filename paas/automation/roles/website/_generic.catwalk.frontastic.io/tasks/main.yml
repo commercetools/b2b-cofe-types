@@ -1,0 +1,72 @@
+---
+- name: "Ensure global json.log is owned by web user"
+  file:
+    path: "/var/log/frontastic/json.log"
+    state: "touch"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+  become: yes
+  tags: ["config"]
+
+- name: "Ensure project log directory exists"
+  file:
+    path: "/var/log/frontastic/{{ customer }}_{{ project }}"
+    state: "directory"
+    recurse: "yes"
+    owner: "{{ web_user }}"
+  tags: ["config", "new-project"]
+
+- name: "Ensure customer log directory exists"
+  file:
+    path: "/var/log/frontastic/{{ customer }}"
+    state: "directory"
+    recurse: "yes"
+    owner: "{{ web_user }}"
+  tags: ["config", "new-project"]
+
+- name: "Create application configuration {{ project }}-{{ customer }}"
+  template: >
+    src=environment.local.j2
+    dest={{ root }}/environment.local
+    mode=0644
+  become: yes
+  become_user: "{{ web_user }}"
+  tags: ["config", "new-project"]
+
+- cron:
+    name: "Add project cron job"
+    user: "{{ web_user }}"
+    minute: "*"
+    hour: "*"
+    job: "/var/www/frontastic/{{ customer }}_{{ project }}/bin/console frontastic:cron:run"
+    cron_file: "{{ customer }}_{{ project }}"
+    state: "present"
+  tags: ["new-project"]
+
+- name: "Find encrypted project.yml files"
+  find:
+    paths: "/var/www/frontastic/{{ customer }}_{{ project }}/config/"
+    patterns: "project.*.crypt"
+  register: encryptedProjectConfigFiles
+  when: is_production or is_staging
+  tags: ["config", "new-project", "decrypt-project-yml"]
+
+- name: "Decrypt encrypted project.yml extensions on staging / production"
+  include: "decrypt.yml"
+  with_items: "{{ encryptedProjectConfigFiles.files }}"
+  when: ( is_production or is_staging ) and encryptedProjectConfigFiles is defined
+  tags: ["config", "new-project", "decrypt-project-yml"]
+
+- name: "Find decrypted project.yml files"
+  find:
+    paths: "/var/www/frontastic/{{ customer }}_{{ project }}/config/"
+    patterns: "project.*.decrypted"
+  register: decryptedProjectConfigFiles
+  when: is_production or is_staging
+  tags: ["config", "new-project", "decrypt-project-yml"]
+
+- name: "Decrypt encrypted project.yml extensions on staging / production"
+  include: "decrypt-cleanup.yml"
+  with_items: "{{ decryptedProjectConfigFiles.files }}"
+  when: ( is_production or is_staging ) and decryptedProjectConfigFiles is defined
+  tags: ["config", "new-project", "decrypt-project-yml"]

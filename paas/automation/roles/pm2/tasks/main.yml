@@ -1,0 +1,10 @@
+---
+- name: "Install / update pm2 with unsafe-perm"
+  command: "npm install --unsafe-perm=true -g pm2"
+  changed_when: false
+
+- name: "Create pm2 ecosystem file"
+  template:
+    src: "ecosystem.yaml.j2"
+    dest: "{{ root }}/pm2.yaml"
+    mode: 0644

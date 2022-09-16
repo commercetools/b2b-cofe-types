@@ -1,0 +1,17 @@
+<source>
+  @type tail
+  format none
+  path /var/log/php{{ php_version|default('7.4') }}-fpm.log
+  pos_file /var/lib/google-fluentd/pos/php{{ php_version|default('7.4') }}-fpm.pos
+  read_from_head true
+  tag php-fpm
+</source>
+
+<source>
+  @type tail
+  format none
+  path /var/log/php.log
+  pos_file /var/lib/google-fluentd/pos/php.pos
+  read_from_head true
+  tag php-general
+</source>

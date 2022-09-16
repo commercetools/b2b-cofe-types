@@ -1,0 +1,28 @@
+---
+- name: "Generate Customer specific Server adjustments"
+  template:
+    src: "customer_adjustments.conf.j2"
+    dest: "/etc/nginx/includes.d/customer_adjustments.conf"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    mode: 0644
+  tags: ["serverConfig", "nginx-customer-adjustments"]
+  notify: Restart Nginx
+  when: (
+    nginx_adjustments is defined and (
+    nginx_adjustments.redirect_domains is defined or
+    nginx_adjustments.ignore_locations is defined or
+    nginx_adjustments.removed_locations is defined or
+    nginx_adjustments.redirect_locations is defined or
+    nginx_adjustments.proxy_locations is defined ) )
+
+- name: "Generate Customer specific Domain to Project mapping"
+  template:
+    src: "domain_to_project.conf.j2"
+    dest: "/etc/nginx/includes.d/domain_to_project.conf"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    mode: 0644
+  tags: ["serverConfig", "nginx-customer-adjustments"]
+  notify: Restart Nginx
+  when: nginx_adjustments is defined and nginx_adjustments.domain_to_project is defined

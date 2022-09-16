@@ -1,0 +1,35 @@
+---
+- name: Source VM specific configuration when available
+  hosts: all
+  gather_facts: no
+  tasks:
+    - include_vars:
+        file: "../../.vm.yml"
+      when: is_vm|bool
+      tags:
+        - always
+
+- name: Check for required variables
+  hosts: all
+  gather_facts: no
+  tasks:
+    - assert: { that: "{{ item }} is defined" }
+      with_items:
+        - "customer"
+        - "customer_secret"
+      tags:
+        - always
+
+- name: Bootstrap
+  import_playbook: playbooks/bootstrap.yml
+
+- name: Basic Server Setup
+  import_playbook: playbooks/basics.yml
+
+- name: Common Services and Components
+  import_playbook: playbooks/common.yml
+
+- name: Customer Catwalks
+  import_playbook: "{{ customer_provision_file }}"
+  vars:
+    customer_provision_file: "../../.customer_provision.yml"

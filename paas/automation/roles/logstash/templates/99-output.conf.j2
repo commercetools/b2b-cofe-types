@@ -1,0 +1,10 @@
+output {
+        tcp {
+                codec => json_lines
+                # On Prod instances host entry is 10.100.1.5
+
+                # On Staging instances host entry is 10.200.1.5
+                host => "{% if is_production is defined and is_production %}10.100.1.5{% else %}10.200.1.5{% endif %}"
+                port => 24230
+        }
+}

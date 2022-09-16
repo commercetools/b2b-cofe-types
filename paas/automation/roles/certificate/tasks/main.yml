@@ -1,0 +1,91 @@
+---
+- name: "Ensure live certificates are readable by daemons"
+  file:
+      path: "{{ item }}"
+      state: "directory"
+      owner: root
+      group: "{{ worker_user }}"
+      mode: 0750
+  with_items:
+  - /etc/letsencrypt/live/frontastic.io
+  - /etc/letsencrypt/live/frontastic.dev
+
+- name: "Ensure live certificates are readable by daemons"
+  file:
+    path: "{{ item }}"
+    state: "directory"
+    owner: root
+    group: "{{ worker_user }}"
+    mode: 0750
+  with_items:
+  - /etc/letsencrypt/live
+
+- name: "Copy *.frontastic.io certificate"
+  copy:
+      src: "{{ role_path }}/../../../../saas/automation/roles/certificate-files/files/frontastic.io/{{ item }}"
+      dest: "/etc/letsencrypt/live/frontastic.io/{{ item }}"
+      owner: root
+      group: "{{ worker_user }}"
+      mode: 0640
+  when: not is_vm
+  with_items:
+      - "{{ certificate_files }}"
+  notify: Restart Nginx
+  tags: ["renew-https-certificates-live-and-io"]
+
+- name: "Copy *.frontastic.rocks certificate"
+  copy:
+    src: "frontastic.rocks/{{ item }}"
+    dest: "/etc/letsencrypt/live/frontastic.io/{{ item }}"
+    owner: root
+    group: "{{ worker_user }}"
+    mode: 0640
+  when: is_vm|bool
+  with_items:
+  - "{{ certificate_files }}"
+  notify: Restart Nginx
+
+- name: "Copy *.frontastic.dev certificate"
+  copy:
+    src: "frontastic.dev/{{ item }}"
+    dest: "/etc/letsencrypt/live/frontastic.dev/{{ item }}"
+    owner: root
+    group: "{{ worker_user }}"
+    mode: 0640
+  when: is_vm|bool
+  with_items:
+  - "{{ certificate_files }}"
+  notify: Restart Nginx
+
+- name: "Create Nginx SSL config directory"
+  file:
+    path: /etc/nginx/includes.d/ssl/
+    state: "directory"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    recurse: yes
+
+- name: "Create Nginx SSL config for frontastic.io"
+  template:
+    src: "ssl.conf.j2"
+    dest: "/etc/nginx/includes.d/ssl/frontastic.io.conf"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    mode: "0644"
+  vars:
+    domain: "frontastic.io"
+  notify:
+    - Restart Nginx
+
+- name: "Create Nginx SSL config for frontastic.dev"
+  template:
+    src: "ssl.conf.j2"
+    dest: "/etc/nginx/includes.d/ssl/frontastic.dev.conf"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    mode: "0644"
+  when: is_vm|bool
+  vars:
+    domain: "frontastic.dev"
+  notify:
+    - Restart Nginx

@@ -1,0 +1,39 @@
+{% if backstage_customers is defined %}
+{% for customer in backstage_customers %}
+[program:replicator-{{ customer }}]
+process_name=%(program_name)s%(process_num)02d
+command={{ root }}/bin/replicate -v --filter {{ customer }}
+autorestart=true
+startsecs=1
+killasgroup=true
+stopasgroup=true
+stdout_logfile={{ log_dir }}/replicator.{{ customer }}.log
+stderr_logfile={{ log_dir }}/replicator.{{ customer }}.log
+user={{ web_user }}
+numprocs=1
+
+
+{% endfor %}
+{% else %}
+[program:replicator]
+process_name=%(program_name)s%(process_num)02d
+directory={{ root }}
+{% if is_staging %}
+command={{ root }}/bin/replicate --filter demo
+{% else %}
+{% if replicator_exclude_pattern is defined %}
+command={{ root }}/bin/replicate --exclude "{{ replicator_exclude_pattern }}" -v
+{% else %}
+command={{ root }}/bin/replicate -v
+{% endif %}
+{% endif %}
+autorestart=true
+startsecs=1
+killasgroup=true
+stopasgroup=true
+stdout_logfile={{ log_dir }}/replicator.log
+stderr_logfile={{ log_dir }}/replicator.log
+user={{ web_user }}
+numprocs=1
+
+{% endif %}

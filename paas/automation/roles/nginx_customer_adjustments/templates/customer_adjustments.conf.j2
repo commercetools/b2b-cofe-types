@@ -1,0 +1,49 @@
+{% if ignore_locations is defined %}
+# Ignored locations
+{% for ignore_location in ignore_locations %}
+location ~* {{ ignore_location.pattern }} {
+    return 200;
+}
+{% endfor %}
+{% endif %}
+{% if removed_locations is defined %}
+# Removed locations
+{% for removed_location in removed_locations %}
+location ~* {{ removed_location.pattern }} {
+    return 410;
+}
+{% endfor %}
+{% endif %}
+{% if redirect_locations is defined %}
+# Redirect locations
+{% for redirect_location in redirect_locations %}
+location ~* {{ redirect_location.pattern }} {
+    return 301 https://$redirect_host{{ redirect_location.target }};
+}
+{% endfor %}
+{% endif %}
+
+{% if proxy_locations is defined %}
+# Proxy locations
+{% for location in proxy_locations %}
+location  ~* {{ location.pattern }} {
+   proxy_pass {{ location.pass }};
+   proxy_http_version 1.1;
+   proxy_set_header Upgrade $http_upgrade;
+   proxy_set_header Connection 'upgrade';
+   proxy_set_header Host {{ location.host }};
+   proxy_cache_bypass $http_upgrade;
+}
+{% endfor %}
+{% endif %}
+
+{% if is_production or is_staging %}
+{% if redirect_domains is defined %}
+# Domain rewrites
+{% for redirect in redirect_domains %}
+if ($host ~* {{ redirect.pattern }}) {
+    return 301 https://{{ redirect.domain }}$request_uri;
+}
+{% endfor %}
+{% endif %}
+{% endif %}

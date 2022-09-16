@@ -1,0 +1,33 @@
+---
+- name: Test for already changed SSH port
+  local_action: shell nc -z -w5 {{ ansible_host }} {{ ansible_port }}
+  register: original_ssh_port
+  changed_when: false
+  become: false
+  ignore_errors: yes
+  tags: ["config", "serverConfig"]
+  when: not is_vm
+
+- name: Set ansible_port to {{ ssh_port }}
+  set_fact: ansible_port="{{ ssh_port }}"
+  when: not is_vm and original_ssh_port is failure
+  tags: ["config", "serverConfig"]
+
+- name: Set credentials to {{ deploy_user }}
+  set_fact:
+    ansible_user: "{{ deploy_user }}"
+    ansible_sudo_pass: "{{ deploy_password }}"
+    ansible_become_pass: "{{ deploy_password }}"
+  when: is_vm or original_ssh_port is failure
+  tags: ["config", "serverConfig"]
+
+- name: Gathering facts (delayed)
+  setup:
+  become: true
+  tags: ["config", "serverConfig"]
+
+- name: Fallback for older repositories that do not define this variable.
+  set_fact:
+    has_paas_modifications: true
+  when: has_paas_modifications is not defined
+  tags: ["config", "serverConfig"]

@@ -1,0 +1,55 @@
+---
+- block:
+  - name: "Add Repository Key"
+    apt_key:
+      url: "https://download.newrelic.com/548C16BF.gpg"
+      state: present
+
+  - name: "Add Debian Repository to sources.list.d"
+    apt_repository:
+      repo: 'deb https://apt.newrelic.com/debian/ newrelic non-free'
+      state: present
+
+  - name: "Configure Newrelic Extension for FPM"
+    template:
+      src: 40-newrelic.ini.j2
+      dest: "/etc/php/{{ php_version }}/fpm/conf.d/40-newrelic.ini"
+
+  - name: "Install Newrelic Extension"
+    apt:
+      pkg:
+        - newrelic-php5
+      state: latest
+      update_cache: yes
+    notify:
+      - "Restart Nginx"
+      - "Restart PHP-FPM"
+
+  ##############################################################################
+  # STUPID CHECK/HACK THAT NEWRELIC WAS REALLY INSTALLED, SEE HERE:
+  #
+  # https://docs.newrelic.com/docs/agents/php-agent/troubleshooting/agent-stops-working-after-updating-php
+  ##############################################################################
+  - name: "Check if Newrelic Extension was really installed"
+    shell: "php-fpm{{ php_version }} -m | grep newrelic"
+    register: is_newrelic_installed
+    failed_when: is_newrelic_installed.rc not in [0,1]
+
+  - block:
+    - name: "Reinstall Hack, remove Extension first"
+      apt:
+        pkg:
+          - newrelic-php5
+        state: absent
+
+    - name: "Reinstall Newrelic Extension"
+      apt:
+        pkg:
+          - newrelic-php5
+        state: latest
+      notify:
+        - "Restart Nginx"
+        - "Restart PHP-FPM"
+    when: is_newrelic_installed.stdout == ""
+
+  when: newrelic_license is defined

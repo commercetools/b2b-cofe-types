@@ -1,0 +1,48 @@
+---
+- block:
+  - name: "Add metricbeat repository Key"
+    apt_key:
+      url: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+      state: present
+
+  - name: "Remove metricbeat 7.x repository from sources.list.d"
+    apt_repository:
+      repo: "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
+      state: absent
+
+  - name: "Add metricbeat repository to sources.list.d"
+    apt_repository:
+      repo: "deb https://artifacts.elastic.co/packages/6.x/apt stable main"
+      state: present
+
+  - name: "Install metricbeat packages"
+    apt:
+      pkg:
+        - metricbeat
+      state: latest
+      update_cache: yes
+
+  - name: "Generate metricbeat yml config module"
+    template:
+      src: "metricbeat.yml.j2"
+      dest: "/etc/metricbeat/metricbeat.yml"
+      mode: "0644"
+
+  - name: "Copy metricbeat monitoring modules config"
+    copy:
+      src: "{{ item }}"
+      dest: "/etc/metricbeat/modules.d/{{ item }}"
+      mode: "0644"
+    with_items:
+      - "system.yml"
+      - "php.yml"
+
+  - name: Make sure metricbeat service is running
+    service:
+      state: started
+      enabled: yes
+      name: "metricbeat"
+  tags: [ "requires-become-pass" ]
+  become: true
+  when: not is_docker and not is_vm and (is_digital_ocean is undefined or not is_digital_ocean)
+

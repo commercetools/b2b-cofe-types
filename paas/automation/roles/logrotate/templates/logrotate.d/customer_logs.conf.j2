@@ -1,0 +1,23 @@
+/var/log/frontastic/*.log /var/log/frontastic/*/*.log /var/log/frontastic/*/*/*.log {
+    create 0644 www-data adm
+    rotate 3
+    maxage 5
+    hourly
+    missingok
+    notifempty
+    compress
+    delaycompress
+    create
+}
+
+/var/log/frontastic/replicator.*.log {
+    create 0644 www-data adm
+    rotate 3
+    maxage 5
+    hourly
+    missingok
+    notifempty
+    compress
+    delaycompress
+    create
+}

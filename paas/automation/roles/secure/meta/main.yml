@@ -1,0 +1,8 @@
+---
+dependencies:
+  - role: user
+    user: "{{ deploy_user }}"
+    password: "{{ deploy_password }}"
+  - role: user
+    user: root
+    home: /root

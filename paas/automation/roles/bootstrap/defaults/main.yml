@@ -1,0 +1,6 @@
+---
+deploy_user: "deploy"
+default_ssh_port: 22
+ssh_port: 2222
+ansible_port: "{{ default_ssh_port }}"
+is_vm: false

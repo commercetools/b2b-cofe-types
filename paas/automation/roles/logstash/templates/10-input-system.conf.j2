@@ -1,0 +1,15 @@
+input {
+    file {
+        path => [
+            "/var/log/syslog",
+            "/var/log/nginx/access.log",
+            "/var/log/php{{ php_version|default('7.4') }}-fpm.log",
+            "/var/log/php.log",
+            "/var/log/auth.log",
+            "/var/log/fail2ban.log",
+            "/var/log/mail.log",
+            "/var/log/tideways/daemon.log"
+        ]
+        sincedb_path => "/var/lib/logstash/system.pos"
+    }
+}

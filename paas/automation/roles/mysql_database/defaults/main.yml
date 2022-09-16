@@ -1,0 +1,7 @@
+---
+mysql_root_username: root
+# - { name: example, collation: utf8mb4_unicode_ci, encoding: utf8mb4 }
+mysql_databases: []
+
+# - { name: example, host: 127.0.0.1, password: secret, priv: *.*:USAGE }
+mysql_users: []

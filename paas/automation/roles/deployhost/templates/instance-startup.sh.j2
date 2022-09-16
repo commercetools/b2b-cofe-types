@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# REMOVE PREPARE CACHES AND GIT METADATA FROM LIVE INSTANCES
+if [[ "${HOSTNAME}" =~ ^catwalk-{{ customer }}-instance-group- ]]
+then
+    echo "Removing superfluous resources from instance group machine"
+    echo "* /var/www/.cache"
+    echo "* /var/www/.composer"
+    echo "* /var/www/frontastic/.git"
+    rm -rf /var/www/.cache /var/www/.composer /var/www/frontastic/.git
+fi
+
+if [[ "${HOSTNAME}" == "catwalk-{{ customer }}-deployhost" ]]
+then
+    echo "Stopping superfluous services on deployhost"
+    echo "* supervisorctl processes"
+    echo "* supervisor"
+    echo "* nginx"
+    echo "* php7.4-fpm"
+    sh -c 'sleep 60 ; supervisorctl stop all ; service supervisor stop ; service nginx stop ; service php7.4-fpm stop' &
+fi
+
+# CLEAR ALL LOG FILES DURING BOOT TIME
+echo "Cleaning all log files from rebooted machine"
+echo -n > /var/log/syslog
+find /var/log -iname '*.log' -exec truncate --size 0 {} \;
+
+echo "${HOSTNAME}" > /tmp/hostname.log

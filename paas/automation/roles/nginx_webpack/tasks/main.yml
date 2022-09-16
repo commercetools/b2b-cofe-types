@@ -1,0 +1,11 @@
+---
+- name: "Generate Webpack Port Mapping"
+  template:
+    src: "webpack_ports.conf.j2"
+    dest: "/etc/nginx/includes.d/webpack_ports.conf"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    mode: 0644
+  tags: ["serverConfig", "new-project"]
+  notify: Restart Nginx
+

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Frontastic Automation" basedir="./" default="build">
+
+    <property name="frontastic_basedir" value="${basedir}/../.." />
+
+    <!--
+        Import main target defintions (extension points)
+    -->
+    <import file="${frontastic_basedir}/paas/integration/main.xml" />
+
+    <property environment="env" />
+    <property name="test-unit.fail-on-violation" value="true" />
+
+    <target name="-check-if-cron-build">
+        <condition property="run" value="true">
+            <equals arg1="${env.TRAVIS_EVENT_TYPE}" arg2="cron"/>
+        </condition>
+    </target>
+
+    <target name="build" if="${run}" depends="-check-if-cron-build">
+        <tstamp>
+            <format property="version" pattern="yyyy-MM-dd-HH-mm" />
+        </tstamp>
+
+        <exec executable="docker" failonerror="true" dir="${basedir}">
+            <arg value="build" />
+            <arg value="-f" />
+            <arg value="Dockerfile" />
+            <arg value="-t" />
+            <arg value="${version}" />
+            <arg value="." />
+        </exec>
+
+        <exec executable="docker" failonerror="true" dir="${basedir}" outputProperty="imageId">
+            <arg value="images" />
+            <arg value="-q" />
+            <arg value="${version}" />
+        </exec>
+
+        <exec executable="docker" failonerror="true" dir="${basedir}">
+            <arg value="tag" />
+            <arg value="${imageId}" />
+            <arg value="frontastic/frontastic" />
+        </exec>
+
+        <exec executable="docker" failonerror="true" dir="${basedir}">
+            <arg value="push" />
+            <arg value="frontastic/frontastic" />
+        </exec>
+    </target>
+</project>

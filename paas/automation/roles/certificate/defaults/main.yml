@@ -1,0 +1,10 @@
+---
+letsencrypt_mail: devops@frontastic.cloud
+letsencrypt_test: ""
+letsencrypt_exec: "/usr/sbin/letsencrypt"
+
+certificates_dir: "/etc/letsencrypt/live"
+
+certificate_files: ["cert.pem","chain.pem","fullchain.pem","privkey.pem"]
+
+is_vm: false

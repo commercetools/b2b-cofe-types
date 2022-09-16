@@ -1,0 +1,56 @@
+[PHP]
+engine = On
+
+short_open_tag = Off
+
+disable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,
+
+zend.enable_gc = On
+expose_php = Off
+
+variables_order = "EGPCS"
+request_order = "GP"
+register_argc_argv = Off
+
+auto_globals_jit = On
+
+{% if is_vm %}
+post_max_size = 64M
+{% else %}
+post_max_size = 8M
+{% endif %}
+
+default_mimetype = "text/html"
+default_charset = "UTF-8"
+
+file_uploads = On
+upload_max_filesize = 4M
+max_file_uploads = 20
+
+allow_url_fopen = On
+allow_url_include = Off
+
+default_socket_timeout = 60
+
+{% if  is_production or is_staging %}
+auto_prepend_file=/var/www/internal/auto_prepend.php
+{% endif %}
+
+[mail function]
+SMTP = localhost
+smtp_port = 25
+
+mail.add_x_header = Off
+
+[Session]
+session.save_handler = files
+session.use_strict_mode = 0
+session.use_cookies = 1
+session.use_only_cookies = 1
+session.gc_maxlifetime = 86400
+
+{% if is_vm %}
+session.cookie_secure = 0
+{% else %}
+session.cookie_secure = 1
+{% endif %}

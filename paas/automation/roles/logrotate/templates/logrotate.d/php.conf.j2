@@ -1,0 +1,14 @@
+/var/log/php.log {
+    # To make logfile readable for logstash change file permission to 0664 root root
+    create 0644 root adm
+    rotate 3
+    maxage 5
+    hourly
+    missingok
+    notifempty
+    compress
+    delaycompress
+    postrotate
+        /usr/lib/php/php{{ php_version|default('7.4') }}-fpm-reopenlogs
+    endscript
+}

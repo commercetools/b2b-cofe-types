@@ -1,0 +1,3 @@
+---
+# defaults file for kibana
+extra_features_flag: '0'

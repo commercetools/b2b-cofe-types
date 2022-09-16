@@ -1,0 +1,6 @@
+---
+- import_tasks: production.yml
+  when: not is_vm
+
+- import_tasks: development.yml
+  when: is_vm|bool

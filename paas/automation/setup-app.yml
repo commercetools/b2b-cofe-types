@@ -1,0 +1,69 @@
+---
+- name: Source VM specific configuration when available
+  hosts: all
+  tasks:
+    - include_vars:
+        file: "../../.vm.yml"
+      when: is_vm
+
+- name: Check for required variables
+  hosts: all
+  tasks:
+    - assert: { that: "{{ item }} is defined" }
+      with_items:
+        - "customer"
+        - "customer_secret"
+
+# TODO this might be removed because the one in mysql task is sufficient
+- name: Ensure MySQL directories have correct owner
+  hosts: all
+  become: yes
+  tasks:
+    - file:
+        path: "{{ item }}"
+        owner: mysql
+        recurse: yes
+      with_items:
+        - "/var/lib/mysql"
+        - "/var/run/mysqld"
+
+# TODO this might be removed because the one in mysql task is sufficient
+- name: Ensure MySQL run directory is writeable
+  hosts: all
+  become: yes
+  tasks:
+    - file:
+        path: "/var/run/mysqld"
+        mode: '0777'
+      ignore_errors: yes
+
+- name: Setup environment
+  hosts: all
+  gather_facts: no
+  become: yes
+  tags: backstage
+  roles:
+    - environment
+    - php7
+
+- name: Provision Landing Page
+  hosts: landing_frontastic
+  become: yes
+  roles:
+    - website/frontastic.io
+
+- name: Provision Catwalk Infrastructure
+  hosts: catwalk_frontastic
+  become: yes
+  roles:
+    - website/catwalk.frontastic.io
+
+- name: Provision Replicator
+  hosts: replicator_frontastic
+  become: yes
+  roles:
+    - supervisord
+    - daemon/replicator.frontastic.io
+
+- name: Customer Catwalks
+  import_playbook: ../../.customer_provision.yml

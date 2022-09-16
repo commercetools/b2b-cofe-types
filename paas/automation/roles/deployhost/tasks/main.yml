@@ -1,0 +1,26 @@
+---
+- name: "Cleanup from previous startup script"
+  file:
+    path: "/usr/local/bin/instance-group-startup.sh"
+    state: absent
+
+- name: "Copy Instance Group startup script"
+  template:
+    src: "instance-startup.sh.j2"
+    dest: "/usr/local/bin/instance-startup.sh"
+    mode: "0755"
+
+- name: "Clear esources during reboots"
+  cron:
+    cron_file: "instance-startup"
+    name: "Clear resources during reboots"
+    user: "root"
+    special_time: reboot
+    job: "sleep 60 && /usr/local/bin/instance-startup.sh > /tmp/instance-startup.log"
+    state: "present"
+
+#- name: "Set deployhost hostname"
+#  template:
+#    src: hostname.j2
+#    dest: /etc/hostname
+#  when: is_staging|bool or is_production|bool

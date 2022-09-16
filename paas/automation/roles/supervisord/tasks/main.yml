@@ -1,0 +1,29 @@
+---
+- name: "Install supervisord (Debian)"
+  apt: pkg=supervisor
+  when: (ansible_os_family == 'Debian')
+
+- name: "Create required supervisord directories"
+  file: state=directory recurse=yes path={{ item }}
+  with_items:
+    - "{{ log_dir }}"
+    - /etc/supervisor/conf.d
+
+- name: "Create supervisord.conf"
+  template: >
+    src=supervisord.conf
+    dest={{ supervisord_conf_file }}
+  notify: "Restart Supervisord"
+
+- name: Find all project related configurations
+  find:
+    paths: /etc/supervisor/conf.d/
+    patterns: "{{ customer }}-*-*.conf"
+  register: supervisorConfigs
+
+- name: Clean up configurations of orphaned projects
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ supervisorConfigs.files }}"
+  when: replicator_projects is defined and item.path is not regex("-({{ replicator_projects | join("|") }})-")

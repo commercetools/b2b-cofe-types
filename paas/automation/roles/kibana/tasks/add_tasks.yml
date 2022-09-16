@@ -1,0 +1,59 @@
+---
+# tasks file for kibana
+- name: customer_name
+  debug: msg="{{ customer }}"
+- name: password_gen
+  local_action: shell date +%s | sha256sum | base64 | head -c 10 ; echo
+  become: false
+  register: passwd
+- name: add resource block for current customer in tf
+  local_action:
+    module: blockinfile
+    path: ~/infrastructure/terraform/kibana/main.tf 
+    marker:  "# {mark} Adding Customer {{ customer }}"
+    block: |
+      module "{{ customer }}_userspace" {
+       source = "./modules/userspace"
+       cus_name = "{{ customer }}"
+      }
+      module "{{ customer }}_role" {
+        source = "./modules/role"
+        customer_name = "{{ customer }}"
+        optional_features = ""
+      }
+      module "{{ customer }}_user" {
+        source = "./modules/user"
+        user_name = "{{ customer }}"
+        role_name = "{{ customer }}"
+        name = "{{ customer }}"
+        password = "{{ passwd.stdout }}"
+      }
+  become: false
+- name: Init
+  local_action: shell chdir ~/infrastructure/terraform/kibana && terraform init
+  become: false
+  register: init
+- name: "Display output: Init Terraform"
+  debug:
+    msg: "{{ init.stdout }}"
+- name: Create Resource - Apply Plan
+  local_action: shell chdir ~/infrastructure/terraform/kibana && terraform apply -var='customer={{ customer }}' -auto-approve
+  become: false
+  register: create
+- name: "Display output: Create Resources"
+  debug:
+    msg: "{{ create.stdout }}"
+- name: git status
+  local_action: shell chdir ~/infrastructure/terraform/kibana && git status
+  become: false
+  register: git_status
+- name: show git_status
+  debug: msg="{{ git_status.stdout }}"
+- name: checkin tf config
+  local_action: shell chdir /home/deploy/infrastructure && git commit -am "{{ customer }} provisioned" && GIT_SSH_COMMAND='ssh -i /home/deploy/.ssh/id_ed25519 -o IdentitiesOnly=yes' git push
+  become: false
+  register: git_push
+  when: '"Changes not staged" in git_status.stdout'
+- name: git result
+  debug: msg="{{ git_push }}"
+  when: git_push is defined

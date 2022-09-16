@@ -1,0 +1,22 @@
+---
+ssh_keys:
+  - kiki.pub
+  - kore.pub
+  - manu.pub
+  - raymond.pub
+  - schaumiii.pub
+  - sissi.pub
+  - sven.pub
+  - toby.pub
+  - kirill.pub
+  - michael.pub
+  - markus.pub
+  - subham.pub
+  - asad.pub
+  - terence.pub
+  - panos.pub
+  - melanie.pub
+former_employees_ssh_keys:
+  - volker.pub
+  - helder.pub
+  - sanja.pub

@@ -1,0 +1,24 @@
+---
+- block:
+  - stat:
+      path: "{{ web_dir }}/frontastic"
+    register: application
+
+  - name: "Check out Frontastic"
+    git:
+      repo: git@github.com:FrontasticGmbH/frontastic.git
+      dest: "{{ web_dir }}/frontastic"
+      accept_hostkey: yes
+    when: application.stat.exists == False
+    become: yes
+    become_user: "{{ web_user }}"
+
+  - name: "Create library configuration"
+    template: >
+      src=environment.local.j2
+      dest={{ root }}/environment.local
+      mode=0644
+    become: yes
+    become_user: "{{ web_user }}"
+    tags: ["config"]
+  when: has_paas_modifications|bool

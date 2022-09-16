@@ -1,0 +1,56 @@
+---
+- stat: path={{ root }}
+  register: application
+  when: has_paas_modifications|bool
+
+- name: "Check out Frontastic"
+  git:
+    repo: git@github.com:FrontasticGmbH/frontastic.git
+    dest: "{{ root }}/../"
+    accept_hostkey: yes
+  when: has_paas_modifications|bool and application.stat.exists == False
+  become: yes
+  become_user: "{{ web_user }}"
+
+- name: "Create root if necessary"
+  file: >
+    path={{ root }}
+    mode=0755
+    state=directory
+  become: yes
+  become_user: "{{ web_user }}"
+  tags: ["config"]
+
+- name: "Create application configuration"
+  template: >
+    src=environment.local.j2
+    dest={{ root }}/environment.local
+    mode=0644
+  become: yes
+  become_user: "{{ web_user }}"
+  tags: ["config"]
+
+- name: "Copy supervisor programs"
+  template:
+    src: "replicator.conf.j2"
+    dest: "/etc/supervisor/conf.d/replicator.conf"
+    mode: 0664
+  notify: "Restart Supervisord"
+  tags: ['new-project', "new-customer"]
+
+- name: "Copy over most recent replicator.phar"
+  copy:
+    src: "replicator.phar"
+    dest: "{{ root }}/replicator.phar"
+    owner: "{{ web_user }}"
+    mode: 0755
+  when: is_customer_vm or is_vm
+  tags: ["config"]
+  notify: "Restart Supervisord"
+
+- name: "Make sure replicator.phar cache is cleared"
+  ansible.builtin.file:
+    path: "/var/cache/frontastic/replicator.phar"
+    state: "absent"
+  when: is_customer_vm or is_vm
+  tags: ["config"]

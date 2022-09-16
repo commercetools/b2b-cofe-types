@@ -1,0 +1,24 @@
+env=prod
+upstream=true
+
+locale=de
+
+test_unit_fail_on_violation=true
+test_feature_fail_on_violation=true
+test_static_checkstyle_fail_on_violation=true
+test_static_pmd_fail_on_violation=false
+test_static_pdepend_fail_on_violation=true
+test_static_phpstan_fail_on_violation=true
+
+keep_old_assets=false
+
+# not compatible with xdebug 3
+test_static_cpd_fail_on_violation=false
+
+# Default email sender
+smtp_sender=no-reply@frontastic.cloud
+
+# Default HTTP client timeout in seconds
+http_client_timeout=1
+
+version=2022.03.17.06.50

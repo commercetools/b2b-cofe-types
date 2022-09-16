@@ -1,0 +1,50 @@
+---
+- name: Add authorized user keys
+  authorized_key:
+    user: "{{ user }}"
+    state: present
+    key: "{{ lookup('file', item) }}"
+  with_items: "{{ ssh_keys }}"
+
+- name: Remove keys of former employees
+  authorized_key:
+    user: "{{ user }}"
+    state: absent
+    key: "{{ lookup('file', item) }}"
+  with_items: "{{ former_employees_ssh_keys }}"
+  when: former_employees_ssh_keys is defined
+
+- name: Check if deployment key exists local
+  local_action: stat path="/home/deploy/frontastic/saas/automation/roles/ansible/files/ssh/{{ customer }}_id_ed25519"
+  become: no
+  register: stat_result
+  when: customer is defined
+
+- name: Create deployment key directory
+  file:
+    path: "/var/www/.ssh"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    state: directory
+    mode: 0700
+  when: stat_result.stat is defined and stat_result.stat.exists == True
+
+- name: Create the deployment key
+  copy:
+    src: "/home/deploy/frontastic/saas/automation/roles/ansible/files/ssh/{{ item.src }}"
+    dest: "/var/www/.ssh/{{ item.target }}"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+      mode: 0600
+  with_items:
+    - {src: "{{ customer }}_id_ed25519", target: "id_ed25519"}
+    - {src: "{{ customer }}_id_ed25519.pub", target: "id_ed25519.pub"}
+    - {src: "config_deployhost", target: "config"}
+  when: stat_result.stat is defined and stat_result.stat.exists == True
+
+- name: Add authorized user keys
+  authorized_key:
+    user: "{{ web_user }}"
+    state: present
+    key: "{{ lookup('file', '/home/deploy/frontastic/saas/automation/roles/ansible/files/ssh/id_ed25519.pub') }}"
+  when: stat_result.stat is defined and stat_result.stat.exists == True

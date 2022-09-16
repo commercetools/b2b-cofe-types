@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <!--
+         Test-Unit: Run PHPUnit tests, if phpunit.xml is available in the project root.
+    -->
+    <target name="-phpunit:check">
+        <available file="${basedir}/phpunit.xml" property="-phpunit:active"/>
+    </target>
+
+    <target name="phpunit" extensionOf="-test-unit:main~hook" depends="-phpunit:check" if="-phpunit:active">
+        <php-tool-installed executable="phpunit" package="phpunit/phpunit" />
+
+        <exec executable="${bindir}/phpunit" failonerror="${test-unit.fail-on-violation}" dir="${basedir}">
+            <arg value="--configuration" />
+            <arg value="${basedir}/phpunit.xml" />
+            <arg value="--log-junit" />
+            <arg value="${logdir}/junit.xml" />
+        </exec>
+    </target>
+
+    <!-- not compatible with xdebug 3 -->
+<!--
+    <target name="-phpunit:coverage" extensionOf="-test-static:main~hook" depends="-phpunit:check" if="-phpunit:coverage:active">
+        <php-tool-installed executable="phpunit" package="phpunit/phpunit" />
+
+        <exec executable="${bindir}/phpunit" failonerror="${test-unit.fail-on-violation}" dir="${basedir}">
+            <arg value="&#45;&#45;configuration" />
+            <arg value="${basedir}/phpunit.xml" />
+            <arg value="&#45;&#45;coverage-clover" />
+            <arg value="${logdir}/clover.xml" />
+            <arg value="&#45;&#45;coverage-html" />
+            <arg value="${builddir}/coverage" />
+            <arg value="&#45;&#45;coverage-text" />
+        </exec>
+    </target>
+-->
+</project>

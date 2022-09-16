@@ -1,0 +1,17 @@
+---
+- name: Provision Basic Setup
+  hosts: all
+  gather_facts: no
+  become: yes
+  tags: backstage
+  roles:
+    - update
+    - secure
+    - tools
+    - mailer
+    - environment
+    - git
+    - java
+    - php7
+    - tideways
+    - newrelic

@@ -1,0 +1,14 @@
+---
+project_name: "{{ customer }}_{{ project }}"
+
+root: "{{ web_dir }}/frontastic/{{ customer }}_{{ project }}"
+customer_root: "{{ web_dir }}/frontastic/{{ customer }}"
+
+catwalk_mysql_host: "{{ cloud_mysql_host | default('localhost') }}"
+catwalk_mysql_user: "{{ cloud_mysql_user | default(customer + '_' + project) }}"
+catwalk_mysql_pass: "{{ cloud_mysql_pass | default(customer + '_' + project) }}"
+catwalk_mysql_db: "{{ cloud_mysql_db | default(customer + '_' + project) }}"
+
+catwalk_webpack_start_all: false
+
+is_frontastic_nextjs: false

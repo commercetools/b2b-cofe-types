@@ -1,0 +1,92 @@
+user {{ web_user }};
+worker_processes 4;
+pid /var/run/nginx.pid;
+
+events {
+    worker_connections 768;
+}
+
+http {
+
+    ##
+    # Basic Settings
+    ##
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    types_hash_max_size 2048;
+
+    client_max_body_size 32m;
+
+    # Tune nginx keepalives to work with the GCP HTTP(S) Load Balancer:
+    keepalive_timeout 650;
+    keepalive_requests 10000;
+
+    # Frontastic staging and esp. dev host names can become quite long
+    server_names_hash_bucket_size 128;
+    # In development Frontastic maps host names to webpack ports
+    map_hash_bucket_size 128;
+
+    # server_name_in_redirect off;
+
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    ##
+    # Logging Settings
+    ##
+    access_log /var/log/nginx/access.log;
+    error_log /var/log/nginx/error.log;
+
+    log_format main '$http_x_forwarded_for ($remote_addr) - $remote_user [$time_iso8601] '
+                    '"$request" $status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" $request_time "$http_x_cloud_trace_context"';
+
+    ##
+    # Gzip Settings
+    ##
+    gzip on;
+    gzip_disable "msie6";
+
+    gzip_comp_level 8;
+    gzip_min_length 1100;
+    gzip_buffers 16 8k;
+    gzip_proxied any;
+    gzip_vary on;
+    gzip_http_version 1.1;
+    gzip_types
+        text/plain
+        text/css
+        text/js
+        text/xml
+        text/javascript
+        application/javascript
+        application/x-javascript
+        application/json
+        application/xml
+        application/rss+xml
+        image/svg+xml;
+
+    ##
+    # Virtual Host Configs
+    ##
+    include /etc/nginx/conf.d/*.conf;
+    include /etc/nginx/sites-enabled/10_*;
+    include /etc/nginx/sites-enabled/20_*;
+    include /etc/nginx/sites-enabled/30_*;
+    include /etc/nginx/sites-enabled/90_default.conf;
+
+    {% if is_vm %}
+    # Xdebug
+        proxy_read_timeout 1200;
+        proxy_connect_timeout 1200;
+        send_timeout 1200;
+        client_body_timeout 1200;
+        client_header_timeout 1200;
+        fastcgi_connect_timeout 1200;
+        fastcgi_read_timeout 1200;
+        fastcgi_send_timeout 1200;
+    #_xdebug
+    {% endif %}
+}
+

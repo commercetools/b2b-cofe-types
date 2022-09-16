@@ -1,0 +1,28 @@
+---
+host: frontastic.io.local
+
+couchdb_admin_user: admin
+couchdb_admin_password: admin
+
+mysql_root_username: root
+mysql_root_password: root
+
+deploy_user: vagrant
+deploy_password: vagrant
+
+grafana_user: admin
+grafana_password: admin
+
+tideways_partner_user:
+tideways_partner_password:
+tideways_partner_ssokey:
+
+customer: demo
+
+type: VM
+
+ssh_port: 22
+
+#tideways_keys:
+#  apollo_de: Foo
+#  apollo_at: Bar

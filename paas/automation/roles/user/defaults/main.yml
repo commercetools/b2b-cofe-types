@@ -1,0 +1,27 @@
+---
+ssh_keys:
+  - kiki.pub
+  - kore.pub
+  - manu.pub
+  - raymond.pub
+  - schaumiii.pub
+  - sissi.pub
+  - sven.pub
+  - toby.pub
+  - kirill.pub
+  - michael.pub
+  - markus.pub
+  - subham.pub
+  - asad.pub
+  - john.pub
+  - terence.pub
+  - melanie.pub
+  - panos.pub
+former_employees_ssh_keys:
+  - volker.pub
+  - helder.pub
+  - sanja.pub
+home: "/home/{{ user }}"
+shell: /bin/bash
+password: null
+type: Live

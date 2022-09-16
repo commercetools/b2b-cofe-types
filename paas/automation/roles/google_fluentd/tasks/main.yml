@@ -1,0 +1,58 @@
+---
+- block:
+  - name: "Google Fluentd Repo Script Download"
+    get_url:
+      url: "https://dl.google.com/cloudagents/add-logging-agent-repo.sh"
+      dest: .
+
+  - name: "Google Fluentd"
+    shell: "bash add-logging-agent-repo.sh"
+
+  - name: Install Google's fluentd
+    apt:
+      pkg:
+      - "google-fluentd"
+      state: present
+
+  - name: Remove default Google's fluentd modules
+    apt:
+      purge: true
+      pkg:
+      - "google-fluentd-catch-all-config"
+      state: absent
+
+  - name: Ensure config.d directory exists
+    file:
+      path: "/etc/google-fluentd/config.d"
+      mode: 0644
+      state: directory
+
+  - name: Create fluentd module configs
+    copy:
+      src: "{{ item }}"
+      dest: "/etc/google-fluentd/config.d/{{ item }}"
+      mode: 0644
+    with_items:
+    - "auth.conf"
+    - "fail2ban.conf"
+    - "mail.conf"
+    - "nginx.conf"
+    - "syslog.conf"
+    - "tideways.conf"
+
+  - name: Create fluentd module configs from templates
+    template:
+      src: "{{ item }}.j2"
+      dest: "/etc/google-fluentd/config.d/{{ item }}"
+      mode: 0644
+    with_items:
+    - "php.conf"
+    - "customer.conf"
+
+  - name: Create main fluentd config
+    template:
+      src: "google-fluentd.conf.j2"
+      dest: "/etc/google-fluentd/google-fluentd.conf"
+      mode: 0644
+    notify: Restart Google Fluentd
+  when: is_staging or is_production

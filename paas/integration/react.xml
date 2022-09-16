@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="React">
+    <condition property="keep-old-assets" value="${keep_old_assets}" else="false">
+        <isset property="keep_old_assets" />
+    </condition>
+
+    <target name="-react:yarn-manually-disabled">
+        <condition property="yarn-manually-disabled" else="false">
+            <equals arg1="${env.DISABLE_YARN_INSTALL}" arg2="1" />
+        </condition>
+    </target>
+
+    <target name="-react:should-yarn-install" depends="-react:yarn-manually-disabled">
+        <echo message="DISABLE_YARN_INSTALL: ${env.DISABLE_YARN_INSTALL}" />
+        <condition property="perform-yarn-install" else="false">
+            <and>
+                <isfalse value="${production}" />
+                <not>
+                    <istrue value="${yarn-manually-disabled}" />
+                </not>
+            </and>
+        </condition>
+    </target>
+
+    <target name="react:bootstrap" if="${perform-yarn-install}" extensionOf="-initialize:main~hook" depends="-react:should-yarn-install">
+        <tool-exists executable="yarn" />
+
+        <echo>Executing global yarn install for all workspaces</echo>
+        <echo>That might take some time, but its the only yarn install we need now</echo>
+        <echo>Please hang on and maybe get cold beverage ...</echo>
+
+        <!-- Perform global js-install -->
+        <!-- This is actually a global task but since Catwalk is used everywhere, we are doing it here -->
+        <exec executable="yarn" failonerror="true" dir="${frontastic_basedir}">
+            <env key="CI" value="true" />
+
+            <arg value="--network-timeout" />
+            <arg value="1000000000" />
+
+            <!-- This is a workaround for ENOENT errors: https://github.com/yarnpkg/yarn/issues/2629 -->
+            <arg value="--mutex" />
+            <arg value="network" />
+            <arg value="--network-concurrency" />
+            <arg value="1" />
+
+            <arg value="install" />
+        </exec>
+    </target>
+
+    <target name="-react:message-no-yarn-install" if="${yarn-manually-disabled}" extensionOf="-prepare:before~hook" depends="-react:yarn-manually-disabled">
+        <echo>!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! yarn install DISABLED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</echo>
+        <echo>! You will need to install JS dependencies by yourself using `yarn install` in checkout root !</echo>
+        <echo>!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</echo>
+    </target>
+
+    <target name="react:start">
+        <tool-exists executable="yarn" />
+
+        <exec executable="yarn" failonerror="true" dir="${basedir}">
+            <arg value="start" />
+        </exec>
+    </target>
+
+    <target name="react:test" unless="${production}" extensionOf="-test-unit:main~hook">
+        <tool-exists executable="yarn" />
+
+        <exec executable="yarn" failonerror="true" dir="${basedir}">
+            <env key="CI" value="true" />
+
+            <arg value="run" />
+            <arg value="test" />
+        </exec>
+    </target>
+
+    <target name="react:check" unless="${production}" extensionOf="-test-static:main~hook">
+        <tool-exists executable="yarn" />
+
+        <exec executable="yarn" failonerror="${test_static_checkstyle_fail_on_violation}" dir="${basedir}">
+            <env key="CI" value="true" />
+
+            <arg value="run" />
+            <arg value="check-typescript" />
+        </exec>
+
+        <exec executable="yarn" failonerror="${test_static_checkstyle_fail_on_violation}" dir="${basedir}">
+            <env key="CI" value="true" />
+
+            <arg value="run" />
+            <arg value="check" />
+        </exec>
+    </target>
+
+    <target name="-check-is-project-or-backstage" unless="${production}">
+        <condition property="is-project">
+            <and>
+                <or>
+                    <available property="is-project" file="${basedir}/config/customers" />
+                    <available property="is-project" file="${basedir}/config/project.yml" />
+                </or>
+                <not>
+                    <contains string="${basedir}" substring="_developer"/>
+                </not>
+            </and>
+        </condition>
+    </target>
+
+    <target name="react:package" depends="initialize, -check-is-project-or-backstage" if="${is-project}" extensionOf="-package:before~hook">
+        <tool-exists executable="yarn" />
+
+        <exec executable="yarn" failonerror="true" dir="${basedir}">
+            <env key="CI" value="false" />
+            <env key="PUBLIC_URL" value="/" />
+
+            <arg value="run" />
+            <arg value="build" />
+            <arg value="server" />
+        </exec>
+
+        <copy todir="${basedir}/bin/" >
+            <fileset dir="${builddir}/assets/js" includes="server.js"/>
+            <fileset dir="${builddir}/assets/js" includes="server.js.map"/>
+        </copy>
+
+        <retry retrycount="3" retrydelay="1000">
+            <exec executable="git" failonerror="true" dir="${basedir}">
+                <arg value="add" />
+                <arg value="${basedir}/bin/server.js" />
+            </exec>
+        </retry>
+
+        <retry retrycount="3" retrydelay="1000">
+            <exec executable="git" failonerror="false" dir="${basedir}">
+                <arg value="add" />
+                <arg value="${basedir}/bin/server.js.map" />
+            </exec>
+        </retry>
+
+        <exec executable="yarn" failonerror="true" dir="${basedir}">
+            <env key="CI" value="false" />
+            <env key="PUBLIC_URL" value="/" />
+
+            <arg value="run" />
+            <arg value="build" />
+            <arg value="main" />
+        </exec>
+
+        <if>
+            <equals arg1="${keep-old-assets}" arg2="false" />
+            <then>
+                <retry retrycount="3" retrydelay="1000">
+                    <exec executable="git" failonerror="true" dir="${basedir}">
+                        <arg value="rm" />
+                        <arg value="-r" />
+                        <arg value="--force" />
+                        <arg value="--ignore-unmatch" />
+                        <arg value="${basedir}/public/assets/js/*" />
+                        <arg value="${basedir}/public/assets/css/*" />
+                        <arg value="${basedir}/public/service-worker.js" />
+                        <arg value="${basedir}/public/assets/media/*" />
+                    </exec>
+                </retry>
+            </then>
+        </if>
+
+        <copy todir="${basedir}/public/assets/" >
+            <fileset dir="${builddir}/assets" includes="**"/>
+        </copy>
+
+        <copy todir="${basedir}/public/" >
+            <fileset dir="${builddir}" includes="service-worker.js"/>
+        </copy>
+
+        <foreach target="-inject-into-layout" param="asset">
+            <fileset dir="${builddir}/assets">
+                <include name="**/main.*.js" />
+                <include name="**/*~main.*.chunk.js" />
+                <include name="**/main.*.css" />
+                <include name="**/*~main.*.css" />
+            </fileset>
+        </foreach>
+
+        <retry retrycount="3" retrydelay="1000">
+            <exec executable="git" failonerror="true" dir="${basedir}">
+                <arg value="add" />
+                <arg value="${basedir}/public/service-worker.js" />
+                <arg value="${basedir}/public/assets/js/*" />
+                <arg value="${basedir}/public/assets/css/*" />
+                <arg value="${basedir}/templates/layout.html.twig" />
+            </exec>
+        </retry>
+
+        <retry retrycount="3" retrydelay="1000">
+            <exec executable="git" failonerror="false" dir="${basedir}">
+                <arg value="add" />
+                <arg value="${basedir}/public/assets/media/*" />
+            </exec>
+        </retry>
+    </target>
+
+    <target name="-inject-into-layout">
+        <pathconvert property="asset-local-path">
+            <path location="${asset}"/>
+            <globmapper from="${builddir}/*" to="/*" />
+        </pathconvert>
+
+        <!-- Create a regular expression from the asset path to match any asset
+             hash and use that later to find the old asset (hash) in the layout
+             and replace it -->
+        <loadresource property="asset-regexp">
+            <propertyresource name="asset-local-path"/>
+            <filterchain>
+                <tokenfilter>
+                    <filetokenizer/>
+                    <replaceregex pattern="\.[0-9a-f]{8}\." replace="\.[0-9a-f]{8}\." />
+                </tokenfilter>
+            </filterchain>
+        </loadresource>
+
+        <echo>Inject asset: ${asset-local-path}</echo>
+
+        <replaceregexp
+            file="${basedir}/templates/layout.html.twig"
+            match="${asset-regexp}"
+            flags="g"
+            replace="${asset-local-path}" />
+    </target>
+</project>

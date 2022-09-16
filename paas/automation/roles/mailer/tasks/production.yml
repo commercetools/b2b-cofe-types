@@ -1,0 +1,22 @@
+---
+- name: "Install SSMTP"
+  apt:
+    pkg:
+      - ssmtp
+    state: present
+
+- name: "Configure SSMTP"
+  lineinfile: >
+    dest=/etc/ssmtp/ssmtp.conf
+    regexp={{ item.option }}
+    state=present
+    line={{ item.option }}={{ item.value }}
+  with_items:
+    - { option: 'root', value: 'devops@frontastic.cloud' }
+    - { option: 'mailhub', value: '{{ smtp_host|default("smtp.mailgun.org") }}:{{ smtp_port|default("465") }}' }
+    - { option: 'rewriteDomain', value: 'mailing.frontastic.cloud' }
+    - { option: 'hostname', value: 'frontastic.io' }
+    - { option: 'FromLineOverride', value: 'no' }
+    - { option: 'AuthUser', value: '{{ smtp_user|default("") }}' }
+    - { option: 'AuthPass', value: '{{ smtp_password|default("") }}' }
+    - { option: 'UseTLS', value: '{{ "YES" if smtp_encryption == "tls" else "NO" }}' }

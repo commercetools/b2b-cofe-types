@@ -1,0 +1,51 @@
+---
+- name: "Check if git checkout exists"
+  stat:
+    path: "{{ web_dir }}/frontastic/build.xml"
+  register: checkout_stats
+
+- block:
+  - name: "Accept github.com Host Key"
+    shell: "ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts"
+    become: yes
+    become_user: "{{ web_user }}"
+
+  - name: "Ensure the checkout is empty"
+    file:
+      path: "{{ web_dir }}/frontastic"
+      state: absent
+
+  - name: "Checkout project source if not present"
+    git:
+      repo: "{{ customer_repo }}"
+      dest: "{{ web_dir }}/frontastic"
+    become: yes
+    become_user: "{{ web_user }}"
+
+  - name: "Create application configuration"
+    template:
+      dest: "{{ web_dir }}/frontastic/environment.local"
+      src: "environment.local.j2"
+      mode: 0644
+    become: yes
+    become_user: "{{ web_user }}"
+  when: checkout_stats.stat.exists == False
+
+- block:
+  - name: "Create application configuration"
+    template:
+      dest: "{{ root }}/environment.local"
+      src: "environment.local.j2"
+      mode: 0644
+    become: yes
+    become_user: "{{ web_user }}"
+
+  - name: "Remove legacy Catwalk Yarn Supervisord"
+    file:
+      path: "/etc/supervisor/conf.d/catwalk-yarn.conf"
+      state: "absent"
+
+  - stat:
+      path: "{{ web_dir }}/frontastic/paas/landingpage/build.xml"
+    register: landingpage_stats
+  when: has_paas_modifications|bool

@@ -1,0 +1,38 @@
+---
+- name: "Remove SSMTP in development"
+  apt:
+    pkg: "ssmtp"
+    state: "absent"
+
+- name: Ensure mailhog install directory exists.
+  file:
+    path: "{{ mailhog_install_dir }}"
+    owner: root
+    group: root
+    state: directory
+    mode: 0755
+
+- name: Download MailHog and mhsendmail binaries.
+  get_url:
+    url: "{{ item.url }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - url: "{{ mailhog_binary_url }}"
+      dest: "{{ mailhog_install_dir }}/mailhog"
+    - url: "{{ mhsendmail_binary_url }}"
+      dest: "{{ mailhog_install_dir }}/mhsendmail"
+
+- name: Remove mailhog systemd unit file into place (does not work on docker)
+  file:
+    path: /etc/systemd/system/mailhog.service
+    state: absent
+
+- name: "Copy supervisor programs"
+  template:
+    src: "mailhog.conf.j2"
+    dest: "/etc/supervisor/conf.d/mailhog.conf"
+    mode: 0644
+  notify: "Restart Supervisord"

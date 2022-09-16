@@ -1,0 +1,5 @@
+map $catwalk_host $webpack_port {
+{% for mapping in webpack_hosts %}
+    {{ mapping.host }} {{ mapping.port }};
+{% endfor %}
+}

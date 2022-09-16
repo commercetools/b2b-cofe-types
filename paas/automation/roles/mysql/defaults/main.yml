@@ -1,0 +1,13 @@
+---
+mysql_datadir: /var/lib/mysql
+mysql_daemon: mysql
+mysql_socket: /var/run/mysqld/mysqld.sock
+
+mysql_root_username: root
+mysql_root_password: ""
+
+mysql_hosts:
+ - "{{ host }}"
+ - "127.0.0.1"
+ - "::1"
+ - "localhost"

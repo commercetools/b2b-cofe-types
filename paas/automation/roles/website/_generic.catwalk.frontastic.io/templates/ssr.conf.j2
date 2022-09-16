@@ -1,0 +1,19 @@
+{% if not is_single_ssr_server_project|default(false) %}
+[program:{{ project }}-ssr]
+process_name=%(program_name)s%(process_num)02d
+directory={{ root }}
+environment=PM2_HOME={{ root }}
+command=/usr/bin/pm2 start --no-daemon {{ root }}/pm2.yaml
+autorestart=true
+startsecs=5
+stdout_logfile={{ log_dir }}/{{ customer }}_{{ project }}/ssr.log
+stderr_logfile={{ log_dir }}/{{ customer }}_{{ project }}/ssr.log
+user={{ web_user }}
+stopsignal=KILL
+stopasgroup=true
+{% if is_vm %}
+numprocs=0
+{% else %}
+numprocs=1
+{% endif %}
+{% endif %}

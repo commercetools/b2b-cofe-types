@@ -1,0 +1,11 @@
+# In case of dev machines we are more relaxed with retries to avoid getting
+# banned during initial setup. Still we try to trade-off for min security
+# against brute-force.
+
+[sshd]
+
+maxretry = 20
+
+[selinux-ssh]
+
+maxretry = 20

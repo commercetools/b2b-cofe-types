@@ -1,0 +1,2 @@
+---
+root: "{{ web_dir }}/frontastic/saas/api-hub"

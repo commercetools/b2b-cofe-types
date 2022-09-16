@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <target name="apidocs" extensionOf="-package:main~hook">
+        <php-tool-installed executable="apidocs" package="frontastic/apidocs" />
+
+        <exec executable="${bindir}/apidocs" dir="${basedir}" />
+
+        <retry retrycount="3" retrydelay="1000">
+            <exec executable="git" dir="${basedir}">
+                <arg value="add" />
+                <arg value="${basedir}/docs" />
+            </exec>
+        </retry>
+    </target>
+</project>

@@ -1,0 +1,74 @@
+[program:{{ customer }}-{{ project }}-browser-webpack]
+process_name=%(program_name)s-%(process_num)02d
+environment=PORT={{ webpack_port|default(3001) }}
+directory={{ root }}
+command=yarn run start
+autostart={{ "true" if (is_default_project|default(false) or webpack_port|default(3001) == 3001 or catwalk_webpack_start_all) else "false" }}
+autorestart=true
+startsecs=10
+stdout_logfile={{ log_dir }}/{{ process_name|default('catwalk') }}-yarn.log
+stderr_logfile={{ log_dir }}/{{ process_name|default('catwalk') }}-yarn.log
+user={{ web_user }}
+stopsignal=KILL
+stopasgroup=true
+{% if is_vm %}
+numprocs=1
+{% else %}
+numprocs=0
+{% endif %}
+{% if is_vm and ((customer ~ '_' ~ project) in ['demo_swiss', 'demo_developer', 'show_demo']) %}
+autostart=false
+{% endif %}
+
+{% if is_single_ssr_server_project|default(false) %}
+
+[group:{{ customer }}-{{ project }}]
+programs={{ customer }}-{{ project }}-browser-webpack
+
+{% else %}
+[program:{{ customer }}-{{ project }}-server-webpack]
+process_name=%(program_name)s-%(process_num)02d
+directory={{ root }}
+command=yarn run server:watch
+autostart={{ "true" if (is_default_project|default(false) or webpack_port|default(3001) == 3001 or catwalk_webpack_start_all) else "false" }}
+autorestart=true
+startsecs=30
+stdout_logfile={{ log_dir }}/{{ customer }}_{{ project }}/ssr.log
+stderr_logfile={{ log_dir }}/{{ customer }}_{{ project }}/ssr.log
+user={{ web_user }}
+stopsignal=KILL
+stopasgroup=true
+{% if is_vm %}
+numprocs=1
+{% else %}
+numprocs=0
+{% endif %}
+{% if is_vm and ((customer ~ '_' ~ project) in ['demo_swiss', 'demo_developer', 'show_demo']) %}
+autostart=false
+{% endif %}
+
+[program:{{ customer }}-{{ project }}-server-run]
+process_name=%(program_name)s-%(process_num)02d
+directory={{ root }}
+command=yarn run server:start
+autostart={{ "true" if (is_default_project|default(false) or webpack_port|default(3001) == 3001 or catwalk_webpack_start_all) else "false" }}
+autorestart=true
+startsecs=5
+stdout_logfile={{ log_dir }}/{{ customer }}_{{ project }}/ssr.log
+stderr_logfile={{ log_dir }}/{{ customer }}_{{ project }}/ssr.log
+user={{ web_user }}
+stopsignal=KILL
+stopasgroup=true
+{% if is_vm %}
+numprocs=1
+{% else %}
+numprocs=0
+{% endif %}
+{% if is_vm and ((customer ~ '_' ~ project) in ['demo_swiss', 'demo_developer', 'show_demo']) %}
+autostart=false
+{% endif %}
+
+[group:{{ customer }}-{{ project }}]
+programs={{ customer }}-{{ project }}-browser-webpack,{{ customer }}-{{ project }}-server-webpack,{{ customer }}-{{ project }}-server-run
+
+{% endif %}

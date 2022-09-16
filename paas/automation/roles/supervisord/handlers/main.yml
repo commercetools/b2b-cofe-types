@@ -1,0 +1,5 @@
+---
+- name: "Restart Supervisord"
+  service: name={{ supervisord_service }} state=restarted
+  when: not is_docker
+  ignore_errors: yes

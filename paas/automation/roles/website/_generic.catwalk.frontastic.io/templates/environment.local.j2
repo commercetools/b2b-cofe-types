@@ -1,0 +1,34 @@
+env={{ is_vm|ternary("dev", is_staging|default(False)|ternary("staging", "prod")) }}
+
+database_host={{ catwalk_mysql_host }}
+database_port=
+database_name={{ catwalk_mysql_db }}
+database_user={{ catwalk_mysql_user }}
+database_password={{ catwalk_mysql_pass }}
+
+memcache_ip={{ memcache_interface_ip }}
+
+customer={{ customer }}
+project={{ project }}
+# Requires quotes, remember when using in Ant
+secret='{{ customer_secret|default(secret) }}'
+
+{% if not is_vm %}
+mailer_url=smtp://{{ ssmtp_user|default('')|urlencode }}:{{ ssmtp_password|default('')|urlencode }}@smtp.mailgun.org:465
+{% endif %}
+
+{% if redis_ip is defined %}
+redis_ip={{ redis_ip }}
+redis_prefix={{ redis_prefix|default("adoi029sa") }}
+{% endif %}
+
+{% if tideways_key is defined %}
+tideways_key={{ tideways_key|default("") }}
+{% elif tideways_keys is defined %}
+tideways_key={{ tideways_keys[project_name]|default("") }}
+{% else %}
+tideways_key=
+{% endif %}
+
+cache_dir={{ cache_dir }}
+log_dir={{ log_dir }}

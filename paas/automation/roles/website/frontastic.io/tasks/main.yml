@@ -1,0 +1,17 @@
+---
+- name: "Create root if necessary"
+  file: >
+    path={{ root }}
+    mode=0755
+    state=directory
+  become: yes
+  become_user: "{{ web_user }}"
+  tags: ["config"]
+- name: "Create application configuration"
+  template: >
+    src=environment.local.j2
+    dest={{ root }}/environment.local
+    mode=0644
+  become: yes
+  become_user: "{{ web_user }}"
+  tags: ["config"]

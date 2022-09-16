@@ -1,0 +1,188 @@
+---
+- name: Add PHP 7 repository
+  apt_repository:
+    repo: "ppa:ondrej/php"
+    mode: "0644"
+  register: php_is_new
+
+- name: Update apt cache
+  apt: update_cache=yes
+  when: php_is_new.changed
+
+- name: Create php pid directory
+  file:
+    path: /var/run/php
+    state: directory
+    owner: www-data
+    group: www-data
+  notify: Restart PHP-FPM
+  when: is_docker|bool
+
+# We have to still do this as long as some customers are still on PHP 7.2.
+#
+# Our base container / base image is on PHP 7.4 and only by explicitely
+# removing these packages the base container is actually downgraded to the PHP
+# version required by the customer.
+- name: Remove unprefixed PHP packages
+  apt:
+    pkg:
+      - "php"
+      - "php-common"
+      - "php-cli"
+      - "php-fpm"
+      - "php-imagick"
+      - "php-xdebug"
+    state: absent
+  when: false and php_version != "7.4"
+  notify: Restart PHP-FPM
+
+- name: Install PHP
+  apt:
+    pkg:
+      - "php{{ php_version }}-cli"
+      - "php{{ php_version }}-fpm"
+      - "php{{ php_version }}-bcmath"
+      - "php{{ php_version }}-curl"
+      - "php{{ php_version }}-gd"
+      - "php{{ php_version }}-intl"
+      - "php{{ php_version }}-mbstring"
+      - "php{{ php_version }}-mysql"
+      - "php{{ php_version }}-sqlite3"
+      - "php{{ php_version }}-xsl"
+      - "php{{ php_version }}-zip"
+      - "php{{ php_version }}-memcache"
+      - "php{{ php_version }}-memcached"
+      - "php{{ php_version }}-apcu"
+      - "php{{ php_version }}-soap"
+      - "php{{ php_version }}-imagick"
+      - "php{{ php_version }}-redis"
+      - "php{{ php_version }}-dev"
+      - "build-essential"
+    state: latest
+  notify: Restart PHP-FPM
+
+- name: SIMDJSON -- Checkout
+  git:
+    repo: https://github.com/FrontasticGmbH/simdjson_php.git
+    accept_hostkey: yes
+    dest: /tmp/simdjson
+
+- name: SIMDJSON -- phpize
+  command: chdir="/tmp/simdjson" phpize
+
+- name: SIMDJSON -- configure
+  command: chdir="/tmp/simdjson" ./configure
+
+- name: SIMDJSON -- make
+  command: chdir="/tmp/simdjson" make
+
+# - name: SIMDJSON -- make test
+#   command: chdir="/tmp/simdjson" make test
+
+- name: SIMDJSON -- make install
+  command: chdir="/tmp/simdjson" make install
+
+- name: SIMDJSON -- Clean artifacts
+  file:
+      state: absent
+      path: "/tmp/simdjson"
+
+- name: Configure PHP simdjson tools cli
+  template: src=simdjson.ini.j2 dest={{ php_cli_confd_directory }}/20-simdjson.ini owner=root group=root mode=0644
+  notify: Restart PHP-FPM
+
+- name: Configure PHP simdjson tools fpm
+  template: src=simdjson.ini.j2 dest={{ php_fpm_confd_directory }}/20-simdjson.ini owner=root group=root mode=0644
+  notify: Restart PHP-FPM
+
+- name: Install PHP Debug packages
+  apt:
+    pkg:
+      - "php{{ php_version }}-xdebug"
+    state: latest
+  when: is_vm|bool
+  notify: Restart PHP-FPM
+  ignore_errors: yes
+
+- name: Configure PHP debug tools cli
+  template: src=xdebug.ini.j2 dest={{ php_cli_confd_directory }}/20-xdebug.ini owner=root group=root mode=0644
+  when: is_vm|bool
+  notify: Restart PHP-FPM
+
+- name: Configure PHP debug tools fpm
+  template: src=xdebug.ini.j2 dest={{ php_fpm_confd_directory }}/20-xdebug.ini owner=root group=root mode=0644
+  when: is_vm|bool
+  notify: Restart PHP-FPM
+
+- name: PECL Installer Directory
+  file: path=/opt/php_extensions_build state=directory
+
+- name: Configure PHP FPM
+  template: src=php-fpm.ini.j2 dest={{ php_conf_directory }}/fpm/php.ini owner=root group=root mode=0644
+
+- name: Configure PHP CLI
+  template: src=php-cli.ini.j2 dest={{ php_conf_directory }}/cli/php.ini owner=root group=root mode=0644
+
+- name: Configure PHP-CLI
+  template: src={{ item }} dest={{ php_cli_confd_directory }}/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - 10-memory_limit.ini
+    - 20-mail.ini
+    - 30-timezone.ini
+
+- name: Configure PHP-FPM on Debian OS Family
+  template: src={{ item }} dest={{ php_fpm_confd_directory }}/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - 10-memory_limit.ini
+    - 30-timezone.ini
+    - 40-errors.ini
+  notify: Restart PHP-FPM
+
+- name: Create php-fpm.conf
+  template: src=fpm.conf dest={{ php_fpm_pool_file }} owner=root group=root mode=0644
+  notify: Restart PHP-FPM
+
+- name: Create internal www directory
+  file:
+    path: /var/www/internal
+    state: directory
+    owner: www-data
+    group: www-data
+
+- name: Copy opcache status script
+  copy:
+    src: files/opcache.php
+    dest: /var/www/internal/opcache.php
+    mode: "0644"
+
+- name: Copy apcu status script
+  copy:
+      src: files/apcu.php
+      dest: /var/www/internal/apcu.php
+      mode: "0644"
+
+- name: Remove orphan PHP-FPM pool.d directory
+  file:
+    path: "/etc/php{{ php_version }}/fpm/pool.d"
+    state: absent
+  notify: Restart PHP-FPM
+  when: (ansible_os_family == 'Debian')
+
+- name: "Install Composer"
+  get_url: >
+    dest=/opt/composer.phar
+    url=https://getcomposer.org/composer.phar
+    mode=0755
+    validate_certs=no
+
+- name: "Link Composer"
+  file: >
+    state=link
+    src=/opt/composer.phar
+    dest=/usr/local/bin/composer
+
+- name: Copy auto_prepend script
+  copy:
+    src: files/auto_prepend.php
+    dest: /var/www/internal/auto_prepend.php
+    mode: "0644"

@@ -1,0 +1,11 @@
+map $http_host $map_customer {
+    default  "{{ customer }}";
+}
+
+map $http_host $map_application {
+    hostnames;
+
+{% for mapping in domain_to_project %}
+    .{{ mapping.domain }}  "{{ mapping.project }}";
+{% endfor %}
+}

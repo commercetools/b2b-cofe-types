@@ -1,0 +1,40 @@
+{% if is_single_ssr_server_project|default(false) %}
+[program:{{ customer }}-single-server-webpack]
+process_name=%(program_name)s-%(process_num)02d
+directory={{ customer_root }}
+command=yarn run singleServer:watch
+autostart=true
+autorestart=true
+startsecs=30
+stdout_logfile={{ log_dir }}/{{ customer }}/single-ssr.log
+stderr_logfile={{ log_dir }}/{{ customer }}/single-ssr.log
+user={{ web_user }}
+stopsignal=KILL
+stopasgroup=true
+{% if is_vm %}
+numprocs=1
+{% else %}
+numprocs=0
+{% endif %}
+
+[program:{{ customer }}-single-server-run]
+process_name=%(program_name)s-%(process_num)02d
+directory={{ customer_root }}
+command=yarn run singleServer:start
+autostart=true
+autorestart=true
+startsecs=5
+stdout_logfile={{ log_dir }}/{{ customer }}/single-ssr.log
+stderr_logfile={{ log_dir }}/{{ customer }}/single-ssr.log
+user={{ web_user }}
+stopsignal=KILL
+stopasgroup=true
+numprocs=1
+
+[group:{{ customer }}]
+programs={{ customer }}-single-server-webpack,{{ customer }}-single-server-run
+
+{% else %}
+# This file is only relevant to customers with the single server configuration.
+
+{% endif %}

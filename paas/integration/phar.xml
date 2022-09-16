@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="PHAR Builder">
+    <property name="executable.phar" location="${frontastic_basedir}/paas/integration/box.phar" />
+
+    <target name="phar:package" extensionOf="-package:main~hook" if="upstream">
+        <delete>
+            <fileset dir="${basedir}" includes="*.phar" />
+        </delete>
+
+        <exec executable="rsync" failonerror="true" dir="${basedir}">
+            <arg value="--copy-links" />
+            <arg value="-a" />
+            <arg value="--exclude" />
+            <arg value="vendor/frontastic/common/vendor" />
+            <arg value="--exclude" />
+            <arg value="vendor/frontastic/common/node_modules" />
+            <arg value="--exclude" />
+            <arg value="build" />
+            <arg value="./" />
+            <arg value="build/phar" />
+        </exec>
+
+        <exec executable="php" failonerror="true" dir="${basedir}/build/phar">
+            <arg value="${executable.phar}" />
+            <arg value="compile" />
+        </exec>
+
+        <move todir="${basedir}/" overwrite="true">
+            <fileset dir="${basedir}/build/phar">
+                <include name="*.phar" />
+            </fileset>
+        </move>
+
+        <retry retrycount="3" retrydelay="1000">
+            <exec executable="git" failonerror="false" dir="${basedir}">
+                <arg value="add" />
+                <arg value="*.phar" />
+            </exec>
+        </retry>
+    </target>
+</project>

@@ -1,0 +1,6 @@
+{% if is_vm %}
+env=dev
+{% endif %}
+{% if http_client_timeout is defined %}
+http_client_timeout={{ http_client_timeout }}
+{% endif %}

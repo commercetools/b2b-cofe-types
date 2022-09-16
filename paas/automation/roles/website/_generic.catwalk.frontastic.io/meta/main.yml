@@ -1,0 +1,28 @@
+---
+dependencies:
+  - libraries
+  - mock_catwalk
+  - role: mysql_database
+    mysql_databases:
+      - { name: "{{ catwalk_mysql_db }}", collation: utf8mb4_unicode_ci, encoding: utf8mb4 }
+    mysql_users:
+      - { name: "{{ catwalk_mysql_user }}", password: "{{ catwalk_mysql_pass }}", priv: "{{ catwalk_mysql_db }}.*:ALL", host: "%" }
+  - role: pm2
+    when: not is_frontastic_nextjs
+  - role: supervisord_daemon
+    process_name: "{{ customer }}-{{ project }}"
+    configs:
+      - "yarn"
+      - "dev-ssr"
+      - "ssr-webpack"
+      - "ssr"
+    when: not is_frontastic_nextjs
+  # "Hack" for single SSR server customers
+  - role: supervisord_daemon
+    process_name: "{{ customer }}"
+    configs:
+      - "single-ssr"
+    when: not is_frontastic_nextjs
+  - role: api-hub
+    when: is_frontastic_nextjs
+

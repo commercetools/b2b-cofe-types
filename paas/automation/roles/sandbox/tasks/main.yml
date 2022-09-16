@@ -1,0 +1,10 @@
+---
+
+- name: "Kill node process that are running with more than 50% CPU"
+  cron:
+    name: "Check for node processes every 5min"
+    state: present
+    user: "{{ web_user }}"
+    minute: "*/5"
+    job: > 
+      ps -x -o pcpu,pid,cmd --sort=-pcpu | grep '\--watch' | grep node | php -r 'foreach(explode("\n", trim(file_get_contents("php://stdin"))) as $line) { [$cpu, $pid, $command] = preg_split("/\\s+/", trim($line), 3); if ($cpu > 50) { `kill $pid`; } }'

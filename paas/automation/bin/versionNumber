@@ -1,0 +1,5 @@
+#!/bin/bash
+
+ROOT_DIR=`dirname "${0}"`/../../../
+
+grep 'version=' ${ROOT_DIR}*/environment | awk -F '=' '{print $2}' | sed  's/\./-/g' | sort --reverse | head -n 1

@@ -1,0 +1,9 @@
+---
+- name: Bootstrapping server
+  hosts: all
+  gather_facts: no
+  become: yes
+  tags: backstage
+  roles:
+    - docker_systemd
+    - { role: bootstrap, tags: ['always'] }

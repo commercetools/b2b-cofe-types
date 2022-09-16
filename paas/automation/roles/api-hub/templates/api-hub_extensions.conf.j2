@@ -1,0 +1,11 @@
+[program:api-hub-extensions]
+process_name=%(program_name)s-%(process_num)02d
+directory={{ root }}/extensions
+command=nodemon dist/extension-runner.min.js -q --watch
+autostart=true
+autorestart=true
+startsecs=10
+user={{ web_user }}
+stopsignal=KILL
+stopasgroup=true
+numprocs=1

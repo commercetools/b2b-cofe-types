@@ -1,0 +1,9 @@
+---
+- name: "Copy supervisor programs"
+  template:
+    src: "{{ item }}.conf.j2"
+    dest: "/etc/supervisor/conf.d/{{ process_name|ternary(process_name + '-' + item, item) }}.conf"
+    mode: 0644
+  notify: "Restart Supervisord"
+  with_items: '{{ configs }}'
+  tags: ['new-project']

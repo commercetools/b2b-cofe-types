@@ -1,0 +1,13 @@
+- name: "Download file to decrypt it"
+  slurp:
+    src: "{{ item.path }}"
+  register: encryptedProjectYaml
+  tags: ["config", "new-project", "decrypt-project-yml"]
+
+- name: "Copy decrypted contents back to remote"
+  copy:
+    content: "{{ encryptedProjectYaml['content']|b64decode }}"
+    dest: "{{ item.path|replace('.crypt', '.decrypted') }}"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+  tags: ["config", "new-project", "decrypt-project-yml"]

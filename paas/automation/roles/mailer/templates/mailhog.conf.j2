@@ -1,0 +1,7 @@
+[program:mailhog]
+process_name=%(program_name)s%(process_num)02d
+command={{ mailhog_install_dir }}/mailhog
+autorestart=true
+startsecs=1
+stdout_logfile={{ log_dir }}/mailhog.log
+stderr_logfile={{ log_dir }}/mailhog.log
