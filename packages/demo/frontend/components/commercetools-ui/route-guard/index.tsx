@@ -1,46 +1,38 @@
 import { useAccount } from 'frontastic';
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
+import debounce from 'lodash.debounce';
 
-const AuthenticationWrapper: React.FC<{ children }> = ({ children }): ReactElement => {
+const RouteGuard: React.FC<{ children }> = ({ children }): ReactElement => {
   const { loggedIn } = useAccount();
   const router = useRouter();
 
-  const [isAuthorized, setAuthorized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    authCheck(router.asPath);
+  const debounced = useRef(
+    debounce(async (isLoggedIn) => {
+      const path = router.asPath.split('?')[0];
 
-    const hideContent = () => setAuthorized(false);
-    router.events.on('routeChangeStart', hideContent);
+      const publicPaths = ['/login', '/register'];
 
-    router.events.on('routeChangeComplete', authCheck);
+      if (!isLoggedIn && !publicPaths.includes(path)) {
+        await router.push({
+          pathname: '/login',
+          query: { returnUrl: router.asPath },
+        });
+      }
+      setIsLoading(false);
+    }, 400),
+  );
 
-    return () => {
-      router.events.off('routeChangeStart', hideContent);
-      router.events.off('routeChangeComplete', authCheck);
-    };
+  useEffect(() => debounced.current(loggedIn), [loggedIn]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  function authCheck(url) {
-    // redirect to login page if accessing a private page and not logged in
-    const publicPaths = ['/login', '/register'];
-    const path = url.split('?')[0];
-
-    if (!loggedIn && !publicPaths.includes(path)) {
-      setAuthorized(false);
-      router.push({
-        pathname: '/login',
-        query: { returnUrl: router.asPath },
-      });
-    } else {
-      setAuthorized(true);
-    }
-  }
-
-  return isAuthorized && children;
+  return (
+    <>
+      {isLoading && <div>loading</div>}
+      {!isLoading && children}
+    </>
+  );
 };
 
-export default AuthenticationWrapper;
+export default RouteGuard;
