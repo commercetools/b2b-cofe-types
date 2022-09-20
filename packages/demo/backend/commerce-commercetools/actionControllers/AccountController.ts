@@ -11,6 +11,7 @@ type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Re
 
 type AccountRegisterBody = {
   email?: string;
+  confirmed?: boolean;
   password?: string;
   salutation?: string;
   firstName?: string;
@@ -73,6 +74,7 @@ function mapRequestToAccount(request: Request): Account {
 
   const account: Account = {
     email: accountRegisterBody?.email,
+    confirmed: accountRegisterBody?.confirmed,
     password: accountRegisterBody?.password,
     salutation: accountRegisterBody?.salutation,
     firstName: accountRegisterBody?.firstName,
@@ -260,7 +262,7 @@ export const requestReset: ActionHook = async (request: Request, actionContext: 
     email?: string;
     host?: string;
   };
-    
+
   const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request));
   const emailApi = new EmailApi(actionContext.frontasticContext.project.configuration.smtp);
 

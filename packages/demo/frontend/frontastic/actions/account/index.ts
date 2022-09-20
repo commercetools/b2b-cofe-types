@@ -23,6 +23,7 @@ export interface UpdateAccount {
 export interface RegisterAccount extends UpdateAccount {
   email: string;
   password: string;
+  confirmed: boolean;
   billingAddress?: Address;
   shippingAddress?: Address;
 }

@@ -59,7 +59,8 @@ const Register: React.FC<RegisterProps> = ({ logo, loginLink }) => {
     setLoading(true);
     //try registering the user with given credentials
     try {
-      const response = await register({ email: data.email, password: data.password });
+      // set email as confirmed by default for demo
+      const response = await register({ email: data.email, password: data.password, confirmed: true });
       if (!response.accountId) {
         setError(
           formatErrorMessage({ id: 'account.create.fail', defaultMessage: "Sorry. We couldn't create your account.." }),
