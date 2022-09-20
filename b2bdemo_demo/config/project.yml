@@ -12,40 +12,40 @@ ssrPort: 8001
 configuration:
   product:
     engine: commercetools
-    clientId: nJIPfHoT9_GlC29EfL75zdkg
-    clientSecret: tUrh_yyjWn7RcVY0MRXMbe6h7S9MPiz0
-    projectKey: frontastic-1
-    authUrl: 'https://auth.sphere.io'
-    hostUrl: 'https://api.sphere.io'
+    clientId: pyWxXbSIBd1w8cs0VH0RVAcv
+    clientSecret: 7X-iILQ88kVd__fJLOGR7sqOVxqyFzY2
+    projectKey: composable-b2b-demo
+    authUrl: 'https://auth.us-central1.gcp.commercetools.com'
+    hostUrl: 'https://api.us-central1.gcp.commercetools.com'
   productSearch: {  }
   account:
     engine: commercetools
-    clientId: nJIPfHoT9_GlC29EfL75zdkg
-    clientSecret: tUrh_yyjWn7RcVY0MRXMbe6h7S9MPiz0
-    projectKey: frontastic-1
-    authUrl: 'https://auth.sphere.io'
-    hostUrl: 'https://api.sphere.io'
+    clientId: pyWxXbSIBd1w8cs0VH0RVAcv
+    clientSecret: 7X-iILQ88kVd__fJLOGR7sqOVxqyFzY2
+    projectKey: composable-b2b-demo
+    authUrl: 'https://auth.us-central1.gcp.commercetools.com'
+    hostUrl: 'https://api.us-central1.gcp.commercetools.com'
   cart:
     engine: commercetools
-    clientId: nJIPfHoT9_GlC29EfL75zdkg
-    clientSecret: tUrh_yyjWn7RcVY0MRXMbe6h7S9MPiz0
-    projectKey: frontastic-1
-    authUrl: 'https://auth.sphere.io'
-    hostUrl: 'https://api.sphere.io'
+    clientId: pyWxXbSIBd1w8cs0VH0RVAcv
+    clientSecret: 7X-iILQ88kVd__fJLOGR7sqOVxqyFzY2
+    projectKey: composable-b2b-demo
+    authUrl: 'https://auth.us-central1.gcp.commercetools.com'
+    hostUrl: 'https://api.us-central1.gcp.commercetools.com'
   wishlist:
     engine: commercetools
-    clientId: nJIPfHoT9_GlC29EfL75zdkg
-    clientSecret: tUrh_yyjWn7RcVY0MRXMbe6h7S9MPiz0
-    projectKey: frontastic-1
-    authUrl: 'https://auth.sphere.io'
-    hostUrl: 'https://api.sphere.io'
+    clientId: pyWxXbSIBd1w8cs0VH0RVAcv
+    clientSecret: 7X-iILQ88kVd__fJLOGR7sqOVxqyFzY2
+    projectKey: composable-b2b-demo
+    authUrl: 'https://auth.us-central1.gcp.commercetools.com'
+    hostUrl: 'https://api.us-central1.gcp.commercetools.com'
   search:
     engine: commercetools
-    clientId: nJIPfHoT9_GlC29EfL75zdkg
-    clientSecret: tUrh_yyjWn7RcVY0MRXMbe6h7S9MPiz0
-    projectKey: frontastic-1
-    authUrl: 'https://auth.sphere.io'
-    hostUrl: 'https://api.sphere.io'
+    clientId: pyWxXbSIBd1w8cs0VH0RVAcv
+    clientSecret: 7X-iILQ88kVd__fJLOGR7sqOVxqyFzY2
+    projectKey: composable-b2b-demo
+    authUrl: 'https://auth.us-central1.gcp.commercetools.com'
+    hostUrl: 'https://api.us-central1.gcp.commercetools.com'
   content:
     engine: contentful
     accessToken: 3d50038afea30f11997a73f887c4aa12d7d411d9da6825dabcc250b78623a530
@@ -69,11 +69,11 @@ configuration:
     cloudName: dlwdq84ig
     mediaPoolName: b2bdemo
   commercetools:
-    clientId: nJIPfHoT9_GlC29EfL75zdkg
-    clientSecret: tUrh_yyjWn7RcVY0MRXMbe6h7S9MPiz0
-    projectKey: frontastic-1
-    authUrl: 'https://auth.sphere.io'
-    hostUrl: 'https://api.sphere.io'
+    clientId: pyWxXbSIBd1w8cs0VH0RVAcv
+    clientSecret: 7X-iILQ88kVd__fJLOGR7sqOVxqyFzY2
+    projectKey: composable-b2b-demo
+    authUrl: 'https://auth.us-central1.gcp.commercetools.com'
+    hostUrl: 'https://api.us-central1.gcp.commercetools.com'
   contentful:
     accessToken: 3d50038afea30f11997a73f887c4aa12d7d411d9da6825dabcc250b78623a530
     previewToken: 7391f414d8febe45caf58672ddb65ae62b2c37d525c10205669ba57c6f47bfa6
