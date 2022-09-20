@@ -5,22 +5,19 @@ import * as WishlistActions from './actionControllers/WishlistController';
 import * as ProjectActions from './actionControllers/ProjectController';
 
 import {
-  DataSourceConfiguration,
-  DataSourceContext,
   DynamicPageContext,
   DynamicPageRedirectResult,
   DynamicPageSuccessResult,
   ExtensionRegistry,
   Request,
 } from '@frontastic/extension-types';
-import { getLocale, getPath } from './utils/Request';
+import { getPath } from './utils/Request';
 import { ProductRouter } from './utils/ProductRouter';
 import { Product } from '../../types/product/Product';
 import { SearchRouter } from './utils/SearchRouter';
 import { Result } from '../../types/product/Result';
 import { CategoryRouter } from './utils/CategoryRouter';
-import { ProductApi } from './apis/ProductApi';
-import { ProductQueryFactory } from './utils/ProductQueryFactory';
+import dataSources from './dataSources';
 
 export default {
   'dynamic-page-handler': async (
@@ -110,54 +107,7 @@ export default {
 
     return null;
   },
-  'data-sources': {
-    'frontastic/product-list': async (config: DataSourceConfiguration, context: DataSourceContext) => {
-      const productApi = new ProductApi(context.frontasticContext, context.request ? getLocale(context.request) : null);
-
-      const productQuery = ProductQueryFactory.queryFromParams(context?.request, config);
-
-      return await productApi.query(productQuery).then((queryResult) => {
-        return {
-          dataSourcePayload: queryResult,
-        };
-      });
-    },
-
-    'frontastic/similar-products': async (config: DataSourceConfiguration, context: DataSourceContext) => {
-      if (!context.hasOwnProperty('request')) {
-        throw new Error(`Request is not defined in context ${context}`);
-      }
-
-      const productApi = new ProductApi(context.frontasticContext, getLocale(context.request));
-      const productQuery = ProductQueryFactory.queryFromParams(context.request, config);
-      const queryWithCategoryId = {
-        ...productQuery,
-        category: (
-          context.pageFolder.dataSourceConfigurations.find((stream) => (stream as any).streamId === '__master') as any
-        )?.preloadedValue?.product?.categories?.[0]?.categoryId,
-      };
-
-      return await productApi.query(queryWithCategoryId).then((queryResult) => {
-        return {
-          dataSourcePayload: queryResult,
-        };
-      });
-    },
-
-    'frontastic/product': async (config: DataSourceConfiguration, context: DataSourceContext) => {
-      const productApi = new ProductApi(context.frontasticContext, context.request ? getLocale(context.request) : null);
-
-      const productQuery = ProductQueryFactory.queryFromParams(context?.request, config);
-
-      return await productApi.getProduct(productQuery).then((queryResult) => {
-        return {
-          dataSourcePayload: {
-            product: queryResult,
-          },
-        };
-      });
-    },
-  },
+  'data-sources': dataSources,
   actions: {
     account: AccountActions,
     cart: CartActions,
