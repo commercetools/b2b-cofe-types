@@ -17,3 +17,8 @@ export interface Account {
   addresses?: Address[];
   apiToken?: string;
 }
+
+export interface CustomerReference {
+  id: string;
+  typeId: 'customer';
+}
