@@ -1,7 +1,7 @@
-import { useAccount } from 'frontastic';
 import React, { ReactElement, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import debounce from 'lodash.debounce';
+import { useAccount } from 'frontastic';
 
 const RouteGuard: React.FC<{ children }> = ({ children }): ReactElement => {
   const { loggedIn } = useAccount();

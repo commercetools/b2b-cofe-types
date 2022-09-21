@@ -3,6 +3,8 @@ import * as ProductActions from './actionControllers/ProductController';
 import * as CartActions from './actionControllers/CartController';
 import * as WishlistActions from './actionControllers/WishlistController';
 import * as ProjectActions from './actionControllers/ProjectController';
+import * as StoreActions from './actionControllers/StoreController';
+
 
 import {
   DynamicPageContext,
@@ -114,5 +116,6 @@ export default {
     product: ProductActions,
     wishlist: WishlistActions,
     project: ProjectActions,
+    store: StoreActions,
   },
 } as ExtensionRegistry;

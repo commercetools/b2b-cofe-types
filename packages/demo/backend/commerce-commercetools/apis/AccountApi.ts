@@ -36,6 +36,7 @@ export class AccountApi extends BaseApi {
         salutation: account?.salutation,
         firstName: account?.firstName,
         lastName: account?.lastName,
+        companyName: account.company,
         dateOfBirth: account?.birthday
           ? account.birthday.getFullYear() + '-' + account.birthday.getMonth() + '-' + account.birthday.getDate()
           : undefined,

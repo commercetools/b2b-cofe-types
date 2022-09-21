@@ -7,6 +7,7 @@ export interface Account {
   salutation?: string;
   firstName?: string;
   lastName?: string;
+  company?: string;
   birthday?: Date;
   password?: string; // TODO: should we use hash the password or use plain password?
   groups?: Group[];

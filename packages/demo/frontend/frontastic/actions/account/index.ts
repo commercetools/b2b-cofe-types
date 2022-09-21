@@ -4,6 +4,7 @@ import { Address } from '@Types/account/Address';
 import { REMEMBER_ME } from 'helpers/constants/localStorage';
 import { revalidateOptions } from 'frontastic';
 import { fetchApiHub, ResponseError } from 'frontastic/lib/fetch-api-hub';
+import { createStore } from '../stores';
 
 export interface GetAccountResult {
   loggedIn: boolean;
@@ -23,7 +24,8 @@ export interface UpdateAccount {
 export interface RegisterAccount extends UpdateAccount {
   email: string;
   password: string;
-  confirmed: boolean;
+  company: string;
+  confirmed?: boolean;
   billingAddress?: Address;
   shippingAddress?: Address;
 }
@@ -62,7 +64,10 @@ export const logout = async () => {
 export const register = async (account: RegisterAccount): Promise<Account> => {
   const host = typeof window !== 'undefined' ? window.location.origin : '';
   const acc = { ...account, host };
-  return await fetchApiHub('/action/account/register', { method: 'POST' }, acc);
+  const response = await fetchApiHub('/action/account/register', { method: 'POST' }, acc);
+
+  await createStore(account);
+  return response;
 };
 
 export const confirm = async (token: string): Promise<Account> => {

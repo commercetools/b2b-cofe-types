@@ -21,7 +21,7 @@ const Register: React.FC<RegisterProps> = ({ logo, loginLink }) => {
   const { register, loggedIn } = useAccount();
 
   //register data
-  const [data, setData] = useState({ email: '', password: '', confirmPassword: '' });
+  const [data, setData] = useState({ email: '', password: '', confirmPassword: '', company: '' });
 
   //error
   const [error, setError] = useState('');
@@ -60,7 +60,12 @@ const Register: React.FC<RegisterProps> = ({ logo, loginLink }) => {
     //try registering the user with given credentials
     try {
       // set email as confirmed by default for demo
-      const response = await register({ email: data.email, password: data.password, confirmed: true });
+      const response = await register({
+        email: data.email,
+        password: data.password,
+        company: data.company,
+        confirmed: true,
+      });
       if (!response.accountId) {
         setError(
           formatErrorMessage({ id: 'account.create.fail', defaultMessage: "Sorry. We couldn't create your account.." }),
@@ -119,6 +124,20 @@ const Register: React.FC<RegisterProps> = ({ logo, loginLink }) => {
                     name="email"
                     type="email"
                     autoComplete="email"
+                    required
+                    className="block w-full appearance-none rounded-md border border-gray-300 py-2 px-3 shadow-sm placeholder:text-gray-400 focus:border-accent-400 focus:outline-none focus:ring-accent-400 sm:text-sm"
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-light-100">
+                  {formatMessage({ id: 'company', defaultMessage: 'Company' })}
+                </label>
+                <div className="mt-1">
+                  <input
+                    id="company"
+                    name="company"
                     required
                     className="block w-full appearance-none rounded-md border border-gray-300 py-2 px-3 shadow-sm placeholder:text-gray-400 focus:border-accent-400 focus:outline-none focus:ring-accent-400 sm:text-sm"
                     onChange={handleChange}

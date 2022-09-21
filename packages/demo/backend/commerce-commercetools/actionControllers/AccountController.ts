@@ -16,6 +16,7 @@ type AccountRegisterBody = {
   salutation?: string;
   firstName?: string;
   lastName?: string;
+  company?: string;
   birthdayYear?: string;
   birthdayMonth?: string;
   birthdayDay?: string;
@@ -79,6 +80,7 @@ function mapRequestToAccount(request: Request): Account {
     salutation: accountRegisterBody?.salutation,
     firstName: accountRegisterBody?.firstName,
     lastName: accountRegisterBody?.lastName,
+    company: accountRegisterBody?.company,
     birthday: parseBirthday(accountRegisterBody),
     addresses: [],
   };
