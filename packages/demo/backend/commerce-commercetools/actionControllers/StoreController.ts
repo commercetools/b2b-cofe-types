@@ -1,5 +1,5 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
-import { Store } from '../../../types/store/store';
+import { Store } from '@Types/store/store';
 import { StoreApi } from '../apis/StoreApi';
 import { getLocale } from '../utils/Request';
 
@@ -12,6 +12,8 @@ type AccountRegisterBody = {
     company?: string;
   };
 };
+
+const DEFAULT_CHANNEL_KEY = 'default-channel';
 
 export const create: ActionHook = async (request: Request, actionContext: ActionContext) => {
   const storeApi = new StoreApi(actionContext.frontasticContext, getLocale(request));
@@ -36,6 +38,18 @@ function mapRequestToStore(request: Request): Store {
   const account: Store = {
     key: `store_${key}`,
     name: storeBody.account.company,
+    distributionChannels: [
+        {
+            key: DEFAULT_CHANNEL_KEY,
+            typeId: 'channel'
+        }
+    ],
+    supplyChannels: [
+        {
+            key: DEFAULT_CHANNEL_KEY,
+            typeId: 'channel'
+        }
+    ]
   };
 
   return account;
