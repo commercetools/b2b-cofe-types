@@ -4,7 +4,7 @@ import * as CartActions from './actionControllers/CartController';
 import * as WishlistActions from './actionControllers/WishlistController';
 import * as ProjectActions from './actionControllers/ProjectController';
 import * as StoreActions from './actionControllers/StoreController';
-
+import * as BusinessUnitActions from './actionControllers/BusinessUnitController';
 
 import {
   DynamicPageContext,
@@ -27,16 +27,14 @@ export default {
     context: DynamicPageContext,
   ): Promise<DynamicPageSuccessResult | DynamicPageRedirectResult | null> => {
     // Identify static page
-    const staticPageMatch = getPath(request)?.match(/^\/(cart|checkout|wishlist|account|login|register|reset-password|thank-you)/);
+    const staticPageMatch = getPath(request)?.match(
+      /^\/(cart|checkout|wishlist|account|login|register|reset-password|thank-you)/,
+    );
     if (staticPageMatch) {
       return {
         dynamicPageType: `frontastic${staticPageMatch[0]}`,
-        dataSourcePayload: {
-
-        },
-        pageMatchingPayload: {
-
-        },
+        dataSourcePayload: {},
+        pageMatchingPayload: {},
       } as DynamicPageSuccessResult;
     }
 
@@ -117,5 +115,6 @@ export default {
     wishlist: WishlistActions,
     project: ProjectActions,
     store: StoreActions,
+    'business-unit': BusinessUnitActions,
   },
 } as ExtensionRegistry;

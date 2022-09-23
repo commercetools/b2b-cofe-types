@@ -9,7 +9,7 @@ import { EmailApi } from '../apis/EmailApi';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
-type AccountRegisterBody = {
+export type AccountRegisterBody = {
   email?: string;
   confirmed?: boolean;
   password?: string;

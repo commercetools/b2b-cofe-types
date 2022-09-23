@@ -11,6 +11,7 @@ export interface Store {
 }
 
 export interface StoreKeyReference {
-  key: string;
+  key?: string;
+  id?: string;
   typeId: 'store';
 }

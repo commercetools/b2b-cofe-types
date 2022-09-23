@@ -5,6 +5,7 @@ import { REMEMBER_ME } from 'helpers/constants/localStorage';
 import { revalidateOptions } from 'frontastic';
 import { fetchApiHub, ResponseError } from 'frontastic/lib/fetch-api-hub';
 import { createStore } from '../stores';
+import { createBusinessUnit } from '../business-unit';
 
 export interface GetAccountResult {
   loggedIn: boolean;
@@ -66,7 +67,9 @@ export const register = async (account: RegisterAccount): Promise<Account> => {
   const acc = { ...account, host };
   const response = await fetchApiHub('/action/account/register', { method: 'POST' }, acc);
 
-  await createStore(account);
+  const store = await createStore(account);
+  await createBusinessUnit(account, response, store);
+
   return response;
 };
 

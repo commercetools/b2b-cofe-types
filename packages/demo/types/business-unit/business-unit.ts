@@ -1,15 +1,15 @@
 import { Address } from '../account/Address';
 import { StoreKeyReference } from '../store/store';
-import { Associate } from '../associate/Associate';
+import { Associate } from '../associate/associate';
 
 export enum BusinessUnitType {
   Company = 'Company',
   Division = 'Division',
 }
 
-export enum ​BusinessUnitStatus {
-    Active = 'Active',
-    Inactive = 'Inactive'
+export enum BusinessUnitStatus {
+  Active = 'Active',
+  Inactive = 'Inactive',
 }
 
 export interface BusinessUnitResourceIdentifier {
@@ -20,8 +20,9 @@ export interface BusinessUnitResourceIdentifier {
 
 export interface BusinessUnit {
   key: string;
-  status: boolean;
+  status: BusinessUnitStatus;
   stores?: StoreKeyReference[];
+  storeMode: 'Explicit';
   unitType: BusinessUnitType;
   name: string;
   contactEmail?: string;

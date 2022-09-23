@@ -3,13 +3,13 @@ import { Store } from '../../../types/store/store';
 import { StoreDraft } from '@commercetools/platform-sdk';
 
 const convertStoreToBody = (store: Store, locale: string): StoreDraft => {
-    return {
-        ...store,
-        name: {
-            [locale]: store.name
-        }
-    }
-}
+  return {
+    ...store,
+    name: {
+      [locale]: store.name,
+    },
+  };
+};
 
 export class StoreApi extends BaseApi {
   create: (store: Store) => Promise<any> = async (store: Store) => {
@@ -17,24 +17,20 @@ export class StoreApi extends BaseApi {
     const body = convertStoreToBody(store, locale.language);
 
     try {
-       return this.getApiForProject()
+      return this.getApiForProject()
         .stores()
         .post({
           body,
         })
         .execute()
         .then((response) => {
-          return response.body
+          return response.body;
         })
         .catch((error) => {
           throw error;
         });
-
     } catch {
-        throw ''
+      throw '';
     }
   };
-
-
-
 }

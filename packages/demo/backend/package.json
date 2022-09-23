@@ -1,5 +1,5 @@
 {
-  "name": "@b2bdemo/demo-backend",
+    "name": "@b2bdemo/demo-backend",
     "version": "1.0.0",
     "license": "MIT",
     "private": true,
@@ -19,7 +19,7 @@
         "@commercetools/platform-sdk": "^1.20.0",
         "@commercetools/sdk-client-v2": "^0.2.0",
         "@types/jest": "^27.4.1",
-        "axios": "^0.24.0",
+        "axios": "^0.27.2",
         "contentful": "^9.1.32",
         "core-js": "^3.20.0",
         "nodemailer": "^6.7.3",
