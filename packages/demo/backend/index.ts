@@ -4,14 +4,16 @@ import commercetoolsExtension from './commerce-commercetools';
 import adyenExtension from './payment-adyen';
 import contentfulExtensions from './content-contentful';
 
-const extensionsToMerge = [
-  commercetoolsExtension,
-  adyenExtension,
-  contentfulExtensions,
-] as Array<ExtensionRegistry>;
+const extensionsToMerge = [commercetoolsExtension, adyenExtension, contentfulExtensions] as Array<ExtensionRegistry>;
 // END: Generated extension imports
 
-import { ExtensionRegistry, ActionRegistry, DynamicPageHandler, DynamicPageRedirectResult, DynamicPageSuccessResult } from '@frontastic/extension-types';
+import {
+  ExtensionRegistry,
+  ActionRegistry,
+  DynamicPageHandler,
+  DynamicPageRedirectResult,
+  DynamicPageSuccessResult,
+} from '@frontastic/extension-types';
 
 const mergeActions = (extensions: Array<ExtensionRegistry>): ActionRegistry => {
   const actionNamespaces = {};

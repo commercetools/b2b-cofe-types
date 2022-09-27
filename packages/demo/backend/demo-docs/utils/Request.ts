@@ -13,7 +13,7 @@ export const getLocale = (request?: Request): string => {
     return getHeader(request, 'frontastic-locale') ?? request.query.locale;
   }
 
-  console.log("request::: ", request);
+  console.log('request::: ', request);
 
   throw new Error(`Locale is missing from request ${request}`);
 };

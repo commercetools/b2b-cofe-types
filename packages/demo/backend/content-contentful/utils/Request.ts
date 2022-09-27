@@ -6,7 +6,7 @@ export const getPath = (request: Request): string | null => {
 
 export const getLocale = (request?: Request): string => {
   if (!request) return '';
-  
+
   const locale = getHeader(request, 'frontastic-locale') ?? request.query.locale;
 
   if (locale !== undefined) {

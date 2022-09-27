@@ -35,7 +35,13 @@ export class ProductRouter {
       const productQuery: ProductQuery = {
         skus: [urlMatches[1]],
       };
-      return productApi.getProduct(productQuery);
+      const additionalQueryArgs = {};
+      if (request.sessionData?.distributionChannelId) {
+        // @ts-ignore
+        additionalQueryArgs.priceChannel = request.sessionData.distributionChannelId;
+      }
+
+      return productApi.getProduct(productQuery, additionalQueryArgs);
     }
 
     return null;

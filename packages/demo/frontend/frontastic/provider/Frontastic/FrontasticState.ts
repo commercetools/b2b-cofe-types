@@ -15,6 +15,7 @@ import {
   setDefaultBillingAddress,
   setDefaultShippingAddress,
 } from '../../actions/account';
+import { createSession, adyenCheckout } from '../../actions/adyen';
 import {
   cartItems,
   addItem,
@@ -29,22 +30,27 @@ import {
   removeDiscountCode,
   getProjectSettings,
 } from '../../actions/cart';
+import { fetch } from '../../actions/channel';
 import { getWishlist, addToWishlist, removeLineItem, updateLineItem } from '../../actions/wishlist';
-import { createSession, adyenCheckout } from '../../actions/adyen';
 import { UseAccount } from './UseAccount';
-import { UseCart } from './UseCart';
-import { UseWishlist } from './UseWishlist';
 import { UseAdyen } from './UseAdyen';
+import { UseCart } from './UseCart';
+import { UseChannel } from './UseChannel';
+import { UseWishlist } from './UseWishlist';
 
 export interface FrontasticState {
   useCart: UseCart;
   useAccount: UseAccount;
   useWishlist: UseWishlist;
   useAdyen: UseAdyen;
+  useChannel: UseChannel;
 }
 
 export const getFrontasticState = (): FrontasticState => {
   return {
+    useChannel: {
+      fetch,
+    },
     useCart: {
       ...cartItems(),
       addItem,

@@ -34,3 +34,11 @@ export interface BusinessUnit {
   associates?: Associate[];
   parentUnit?: BusinessUnitResourceIdentifier;
 }
+
+export interface BusinessUnitPagedQueryResponse {
+  total?: number;
+  count: number;
+  limit: number;
+  offset: number;
+  results: BusinessUnit[];
+}

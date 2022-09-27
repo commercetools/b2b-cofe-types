@@ -11,7 +11,7 @@ export default class BaseApi {
   }
 
   private mapLocale(locale?: string) {
-    return { en: 'en-US' }[locale ?? ""] ?? 'en-US';
+    return { en: 'en-US' }[locale ?? ''] ?? 'en-US';
   }
 
   async getEntries() {

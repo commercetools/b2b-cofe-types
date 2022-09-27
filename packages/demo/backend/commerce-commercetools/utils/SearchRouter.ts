@@ -20,12 +20,18 @@ export class SearchRouter {
 
     const urlMatches = getPath(request)?.match(/\/search/);
 
+    const additionalQueryArgs = {};
+    if (request.sessionData?.distributionChannelId) {
+      // @ts-ignore
+      additionalQueryArgs.priceChannel = request.sessionData.distributionChannelId;
+    }
+
     if (urlMatches) {
       const productQuery = ProductQueryFactory.queryFromParams({
         ...request,
         query: { ...request.query, query: request.query.query || request.query.q },
       });
-      return productApi.query(productQuery);
+      return productApi.query(productQuery, additionalQueryArgs);
     }
 
     return null;

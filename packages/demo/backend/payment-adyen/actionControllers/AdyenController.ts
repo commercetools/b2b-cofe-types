@@ -49,8 +49,8 @@ const createPayment = async (request: Request, actionContext: ActionContext, dat
       paymentProvider: data.pspReference,
       amountPlanned: {
         centAmount: cart.sum.centAmount,
-        currencyCode: cart.sum.currencyCode
-      }
+        currencyCode: cart.sum.currencyCode,
+      },
     };
 
     cart = await cartApi.addPayment(cart, payment);
@@ -59,7 +59,7 @@ const createPayment = async (request: Request, actionContext: ActionContext, dat
 
     await emailApi.sendPaymentConfirmationEmail(cart.email);
   }
-}
+};
 
 export const checkout = async (request: Request, actionContext: ActionContext) => {
   //const cartApi = new CartApi(actionContext.frontasticContext, getLocale(request));
@@ -68,9 +68,9 @@ export const checkout = async (request: Request, actionContext: ActionContext) =
 
   const payload = {
     details: {
-      redirectResult: JSON.parse(request.body).redirectResult
-      //threeDSResult: 
-    }
+      redirectResult: JSON.parse(request.body).redirectResult,
+      //threeDSResult:
+    },
   } as PaymentDetails;
 
   const data: any = await adyenApi.paymentDetails(payload);
@@ -112,7 +112,7 @@ export const notifications = async (request: Request, actionContext: ActionConte
   if (params.get('eventCode') === 'AUTHORISATION') {
   }
 
-/*
+  /*
   "originalReference=&
   reason=null&
   additionalData.checkoutSessionId=CSA10244BE25969113&

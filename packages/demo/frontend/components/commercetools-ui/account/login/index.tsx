@@ -3,7 +3,7 @@ import { ArrowLeftIcon } from '@heroicons/react/solid';
 import { useFormat } from 'helpers/hooks/useFormat';
 import Redirect from 'helpers/redirect';
 import { Reference, ReferenceLink } from 'helpers/reference';
-import { useAccount } from 'frontastic';
+import { useAccount, useChannel } from 'frontastic';
 import Image, { NextFrontasticImage } from 'frontastic/lib/image';
 
 export interface LoginProps {
@@ -20,6 +20,7 @@ const Login: React.FC<LoginProps> = ({ logo, registerLink, accountLink }) => {
 
   //account actions
   const { login, loggedIn, resendVerificationEmail, requestPasswordReset } = useAccount();
+  const { fetch } = useChannel();
 
   //login data
   const [data, setData] = useState({ email: '', password: '', rememberMe: false });
@@ -74,8 +75,12 @@ const Login: React.FC<LoginProps> = ({ logo, registerLink, accountLink }) => {
   const loginUser = async () => {
     try {
       const response = await login(data.email, data.password, data.rememberMe);
-      if (!response.accountId)
+      if (!response.accountId) {
         setError(formatErrorMessage({ id: 'auth.wrong', defaultMessage: 'Wrong email address or password' }));
+      } else {
+        // fetch channel id
+        await fetch();
+      }
     } catch (err) {
       setError(formatErrorMessage({ id: 'wentWrong', defaultMessage: 'Sorry. Something went wrong..' }));
     }

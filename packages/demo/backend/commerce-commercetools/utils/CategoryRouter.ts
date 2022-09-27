@@ -33,7 +33,13 @@ export class CategoryRouter {
         ...request,
       });
 
-      return await productApi.query(productQuery);
+      const additionalQueryArgs = {};
+      if (request.sessionData?.distributionChannelId) {
+        // @ts-ignore
+        additionalQueryArgs.priceChannel = request.sessionData.distributionChannelId;
+      }
+
+      return await productApi.query(productQuery, additionalQueryArgs);
     }
 
     return null;

@@ -21,7 +21,10 @@ export class ProductApi extends BaseApi {
     return offsetMach !== null ? +Object.values(offsetMach)[0] : undefined;
   };
 
-  query: (productQuery: ProductQuery) => Promise<Result> = async (productQuery: ProductQuery) => {
+  query: (productQuery: ProductQuery, additionalQueryArgs?: object) => Promise<Result> = async (
+    productQuery: ProductQuery,
+    additionalQueryArgs?: object,
+  ) => {
     try {
       const locale = await this.getCommercetoolsLocal();
 
@@ -110,6 +113,7 @@ export class ProductApi extends BaseApi {
           'filter.facets': filterFacets.length > 0 ? filterFacets : undefined,
           'filter.query': filterQuery.length > 0 ? filterQuery : undefined,
           [`text.${locale.language}`]: productQuery.query,
+          ...additionalQueryArgs,
         },
       };
 
@@ -148,9 +152,12 @@ export class ProductApi extends BaseApi {
     }
   };
 
-  getProduct: (productQuery: ProductQuery) => Promise<Product> = async (productQuery: ProductQuery) => {
+  getProduct: (productQuery: ProductQuery, additionalQueryArgs?: object) => Promise<Product> = async (
+    productQuery: ProductQuery,
+    additionalQueryArgs?: object,
+  ) => {
     try {
-      const result = await this.query(productQuery);
+      const result = await this.query(productQuery, additionalQueryArgs);
 
       return result.items.shift() as Product;
     } catch (error) {

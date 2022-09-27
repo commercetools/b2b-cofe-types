@@ -1,6 +1,7 @@
 import * as AccountActions from './actionControllers/AccountController';
 import * as ProductActions from './actionControllers/ProductController';
 import * as CartActions from './actionControllers/CartController';
+import * as ChannelActions from './actionControllers/ChannelController';
 import * as WishlistActions from './actionControllers/WishlistController';
 import * as ProjectActions from './actionControllers/ProjectController';
 import * as StoreActions from './actionControllers/StoreController';
@@ -111,6 +112,7 @@ export default {
   actions: {
     account: AccountActions,
     cart: CartActions,
+    channel: ChannelActions,
     product: ProductActions,
     wishlist: WishlistActions,
     project: ProjectActions,

@@ -7,3 +7,6 @@ export const getAllBusinessUnits = async (): Promise<any> => {
 export const createBusinessUnit = async (account, customer, store): Promise<any> => {
   return await fetchApiHub('/action/business-unit/create', { method: 'POST' }, { account, customer, store });
 };
+export const getMyBusinessUnits = async (accountId: string): Promise<any> => {
+  return fetchApiHub(`/action/business-unit/query?where=associates(customer(id = "${accountId}"))`, { method: 'GET' });
+};

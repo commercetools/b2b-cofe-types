@@ -20,15 +20,15 @@ export const create: ActionHook = async (request: Request, actionContext: Action
 
   const data = mapRequestToStore(request);
 
-    const store = await storeApi.create(data);
+  const store = await storeApi.create(data);
 
-    const response: Response = {
-      statusCode: 200,
-      body: JSON.stringify(store),
-      sessionData: request.sessionData,
-    };
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(store),
+    sessionData: request.sessionData,
+  };
 
-    return response;
+  return response;
 };
 
 function mapRequestToStore(request: Request): Store {
@@ -39,17 +39,17 @@ function mapRequestToStore(request: Request): Store {
     key: `store_${key}`,
     name: storeBody.account.company,
     distributionChannels: [
-        {
-            key: DEFAULT_CHANNEL_KEY,
-            typeId: 'channel'
-        }
+      {
+        key: DEFAULT_CHANNEL_KEY,
+        typeId: 'channel',
+      },
     ],
     supplyChannels: [
-        {
-            key: DEFAULT_CHANNEL_KEY,
-            typeId: 'channel'
-        }
-    ]
+      {
+        key: DEFAULT_CHANNEL_KEY,
+        typeId: 'channel',
+      },
+    ],
   };
 
   return account;

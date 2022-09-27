@@ -13,7 +13,7 @@ export interface BusinessUnitRequestBody {
   store: Store;
   customer: {
     accountId: string;
-  }
+  };
 }
 
 export const get: ActionHook = async (request: Request, actionContext: ActionContext) => {
@@ -33,6 +33,24 @@ export const create: ActionHook = async (request: Request, actionContext: Action
   const data = mapRequestToBusinessUnit(request);
 
   const store = await businessUnitApi.create(data);
+
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(store),
+    sessionData: request.sessionData,
+  };
+
+  return response;
+};
+
+export const query: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
+
+  let where = '';
+  if ('where' in request.query) {
+    where += [request.query['where']];
+  }
+  const store = await businessUnitApi.query(where);
 
   const response: Response = {
     statusCode: 200,

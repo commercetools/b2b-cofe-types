@@ -33,4 +33,21 @@ export class StoreApi extends BaseApi {
       throw '';
     }
   };
+
+  get: (key: string) => Promise<any> = async (key: string): Promise<any> => {
+    try {
+      return this.getApiForProject()
+        .stores()
+        .withKey({ key })
+        .get()
+        .execute()
+        .then((response) => {
+          return response.body;
+        });
+    } catch (e) {
+      console.log(e);
+
+      throw '';
+    }
+  };
 }
