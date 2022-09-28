@@ -1,6 +1,6 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { BusinessUnit, BusinessUnitStatus, BusinessUnitType } from '../../../types/business-unit/business-unit';
-import { AssociateRole } from '../../../types/associate/associate';
+import { AssociateRole } from '../../../types/associate/Associate';
 import { BusinessUnitApi } from '../apis/BusinessUnitApi';
 import { getLocale } from '../utils/Request';
 import { AccountRegisterBody } from './AccountController';
