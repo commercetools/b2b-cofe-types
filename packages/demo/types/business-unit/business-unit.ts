@@ -42,3 +42,9 @@ export interface BusinessUnitPagedQueryResponse {
   offset: number;
   results: BusinessUnit[];
 }
+
+export interface OrganizationDataSource {
+    dfistributionChannelId: string;
+    store: string;
+    businessUnit: string;
+}

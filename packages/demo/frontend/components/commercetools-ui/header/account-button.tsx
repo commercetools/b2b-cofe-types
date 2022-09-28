@@ -2,16 +2,18 @@ import React, { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { UserIcon } from '@heroicons/react/outline';
 import { Account } from '@Types/account/Account';
+import { OrganizationDataSource } from '@Types/business-unit/business-unit';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { Reference, ReferenceLink } from 'helpers/reference';
 import { logout } from 'frontastic/actions/account';
 
 interface AccountButtonProps {
+  organization: OrganizationDataSource;
   accountLink: Reference;
   account: Account;
 }
 
-const AccountButton: React.FC<AccountButtonProps> = ({ accountLink, account }) => {
+const AccountButton: React.FC<AccountButtonProps> = ({ accountLink, account, organization }) => {
   const { formatMessage: formatAccountMessage } = useFormat({ name: 'account' });
 
   const handleLogout = () => {
@@ -42,19 +44,24 @@ const AccountButton: React.FC<AccountButtonProps> = ({ accountLink, account }) =
             <Menu.Items className="absolute right-0 top-6 z-50 mt-2 w-fit origin-top-right rounded-md bg-white shadow-sm ring-1 ring-black/5 focus:outline-none dark:bg-primary-400 dark:shadow-3xl">
               <div className="py-1 ">
                 <Menu.Item>
-                  <ReferenceLink
-                    target={accountLink}
-                    className={`block w-36 cursor-pointer py-2 px-4 ${
-                      account ? 'text-left' : 'text-center'
-                    }  text-sm text-primary-400 hover:bg-gray-100 dark:bg-primary-400  dark:text-light-100`}
-                  >
-                    {account.firstName
-                      ? formatAccountMessage({ id: 'hello', defaultMessage: 'Hi, ' }) + account.firstName
-                      : account.lastName
-                      ? formatAccountMessage({ id: 'hello', defaultMessage: 'Hi, ' }) + account.lastName
-                      : formatAccountMessage({ id: 'hello', defaultMessage: 'Hi, ' }) +
-                        formatAccountMessage({ id: 'user', defaultMessage: 'User ' })}
-                  </ReferenceLink>
+                  <>
+                    <ReferenceLink
+                      target={accountLink}
+                      className={`block w-36 cursor-pointer py-2 px-4 ${
+                        account ? 'text-left' : 'text-center'
+                      }  text-sm text-primary-400 hover:bg-gray-100 dark:bg-primary-400  dark:text-light-100`}
+                    >
+                      {account.firstName
+                        ? formatAccountMessage({ id: 'hello', defaultMessage: 'Hi, ' }) + account.firstName
+                        : account.lastName
+                        ? formatAccountMessage({ id: 'hello', defaultMessage: 'Hi, ' }) + account.lastName
+                        : formatAccountMessage({ id: 'hello', defaultMessage: 'Hi, ' }) +
+                          formatAccountMessage({ id: 'user', defaultMessage: 'User ' })}
+                    </ReferenceLink>
+                    {organization.businessUnit && (
+                      <span className="text-xs">Business unit: {organization.businessUnit}</span>
+                    )}
+                  </>
                 </Menu.Item>
                 {account && (
                   <Menu.Item>

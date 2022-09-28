@@ -77,6 +77,17 @@
           "required": true
         }
       ]
+    },
+    {
+        "name": "Data source",
+        "fields": [
+            {
+                "label": "Organization Info",
+                "field": "organization",
+                "type": "dataSource",
+                "dataSourceType": "b2b/organization"
+            }
+        ]
     }
   ]
 }

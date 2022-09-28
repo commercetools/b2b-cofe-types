@@ -4,7 +4,7 @@ import { ProductApi } from './apis/ProductApi';
 import { ProductQueryFactory } from './utils/ProductQueryFactory';
 export default {
   'frontastic/product-list': async (config: DataSourceConfiguration, context: DataSourceContext) => {
-    const distributionChannelId = context.request.sessionData?.distributionChannelId;
+    const distributionChannelId = context.request.sessionData?.organization?.distributionChannelId;
     const productApi = new ProductApi(context.frontasticContext, context.request ? getLocale(context.request) : null);
 
     const additionalQueryArgs = {};
@@ -47,9 +47,11 @@ export default {
     const productApi = new ProductApi(context.frontasticContext, context.request ? getLocale(context.request) : null);
 
     const additionalQueryArgs = {};
-    if (context.request.sessionData?.distributionChannelId) {
+    const distributionChannelId = context.request.sessionData?.organization?.distributionChannelId;
+
+    if (distributionChannelId) {
       // @ts-ignore
-      additionalQueryArgs.priceChannel = context.request.sessionData.distributionChannelId;
+      additionalQueryArgs.priceChannel = distributionChannelId;
     }
 
     const productQuery = ProductQueryFactory.queryFromParams(context?.request, config);
@@ -61,5 +63,12 @@ export default {
         },
       };
     });
+  },
+  'b2b/organization': (config: DataSourceConfiguration, context: DataSourceContext) => {
+    return {
+      dataSourcePayload: {
+        organization: context.request.sessionData?.organization,
+      },
+    };
   },
 };

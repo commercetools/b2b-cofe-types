@@ -6,7 +6,7 @@ import { BusinessUnitApi } from '../apis/BusinessUnitApi';
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
 export const fetch: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  let distributionChannelId = '';
+  const organization: Record<string, string> = {};
   if (request.sessionData?.account?.accountId) {
     const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
 
@@ -14,11 +14,15 @@ export const fetch: ActionHook = async (request: Request, actionContext: ActionC
       `associates(customer(id="${request.sessionData.account.accountId}"))`,
     );
     if (results?.length) {
+      const businessUnit = results[0];
+      organization.businessUnit = businessUnit.key;
       const storeApi = new StoreApi(actionContext.frontasticContext, getLocale(request));
 
       const store = await storeApi.get(results[0].stores[0].key);
-      if (store.distributionChannels?.length) {
-        distributionChannelId = store.distributionChannels[0].id;
+      // @ts-ignore
+      organization.store = store.key;
+      if (store?.distributionChannels?.length) {
+        organization.distributionChannelId = store.distributionChannels[0].id;
       }
     }
   }
@@ -28,7 +32,7 @@ export const fetch: ActionHook = async (request: Request, actionContext: ActionC
     body: JSON.stringify({}),
     sessionData: {
       ...request.sessionData,
-      distributionChannelId,
+      organization,
     },
   };
 

@@ -12,6 +12,7 @@ const HeaderTastic = ({ data }) => {
     <Header
       tagline={data.tagline}
       links={data.links}
+      organization={data.organization.dataSource.organization}
       cartItemCount={calculateCartCount(cart?.lineItems) || 0}
       wishlistItemCount={wishlist?.lineItems?.length || 0}
       logo={data.logo}

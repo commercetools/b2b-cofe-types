@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { MenuIcon } from '@heroicons/react/outline';
 import { Account } from '@Types/account/Account';
+import { OrganizationDataSource } from '@Types/business-unit/business-unit';
 import Typography from 'components/commercetools-ui/typography';
 import { headerNavigation } from 'helpers/mocks/mockData';
 import { Reference, ReferenceLink } from 'helpers/reference';
@@ -24,6 +25,7 @@ export interface Link {
 }
 
 export interface HeaderProps {
+  organization: OrganizationDataSource;
   tagline?: string;
   links: Link[];
   cartItemCount: number;
@@ -37,6 +39,7 @@ export interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({
+  organization,
   tagline,
   links,
   cartItemCount,
@@ -148,7 +151,7 @@ const Header: React.FC<HeaderProps> = ({
                 <div className="flex w-fit items-center">
                   <DarkModeWidget className="mr-4 text-primary-400 hover:text-primary-500 dark:text-light-100" />
                   <SearchButton />
-                  <AccountButton account={account} accountLink={accountLink} />
+                  <AccountButton account={account} accountLink={accountLink} organization={organization} />
 
                   <span className="mx-4 h-6 w-px bg-gray-200 lg:mx-4" aria-hidden="true" />
 
