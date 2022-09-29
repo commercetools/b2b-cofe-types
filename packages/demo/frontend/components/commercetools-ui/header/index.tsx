@@ -10,6 +10,7 @@ import Image, { NextFrontasticImage } from 'frontastic/lib/image';
 import DarkModeWidget from '../darkmode-widget';
 import AccountButton from './account-button';
 import CartButton from './cart-button';
+import { FlyingCartButton } from './flying-cart-button';
 import HeaderMenu from './header-menu';
 import MegaMenuContent from './mega-menu-content';
 import SearchButton from './search-button';
@@ -157,6 +158,7 @@ const Header: React.FC<HeaderProps> = ({
 
                   <WishListButton wishlistItemCount={wishlistItemCount} wishlistLink={wishlistLink} />
                   <CartButton cartItemCount={cartItemCount} cartLink={cartLink} />
+                  <FlyingCartButton />
                 </div>
               </div>
             </div>
