@@ -31,11 +31,13 @@ import {
   getProjectSettings,
 } from '../../actions/cart';
 import { fetch } from '../../actions/channel';
+import { query } from '../../actions/product';
 import { getWishlist, addToWishlist, removeLineItem, updateLineItem } from '../../actions/wishlist';
 import { UseAccount } from './UseAccount';
 import { UseAdyen } from './UseAdyen';
 import { UseCart } from './UseCart';
 import { UseChannel } from './UseChannel';
+import { UseProducts } from './UseProducts';
 import { UseWishlist } from './UseWishlist';
 
 export interface FrontasticState {
@@ -44,10 +46,14 @@ export interface FrontasticState {
   useWishlist: UseWishlist;
   useAdyen: UseAdyen;
   useChannel: UseChannel;
+  useProducts: UseProducts;
 }
 
 export const getFrontasticState = (): FrontasticState => {
   return {
+    useProducts: {
+      query,
+    },
     useChannel: {
       fetch,
     },

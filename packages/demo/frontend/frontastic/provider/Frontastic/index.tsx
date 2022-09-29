@@ -10,6 +10,7 @@ const initialState: FrontasticState = {
   useWishlist: {} as any,
   useAdyen: {} as any,
   useChannel: {} as any,
+  useProducts: {} as any,
 };
 
 const FrontasticContext = React.createContext<FrontasticState>(initialState);
@@ -59,4 +60,10 @@ export const useChannel = () => {
   const context = React.useContext(FrontasticContext);
   checkContext(context);
   return context.useChannel;
+};
+
+export const useProducts = () => {
+  const context = React.useContext(FrontasticContext);
+  checkContext(context);
+  return context.useProducts;
 };
