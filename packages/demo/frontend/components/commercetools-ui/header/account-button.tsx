@@ -41,27 +41,25 @@ const AccountButton: React.FC<AccountButtonProps> = ({ accountLink, account, org
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="absolute right-0 top-6 z-50 mt-2 w-fit origin-top-right rounded-md bg-white shadow-sm ring-1 ring-black/5 focus:outline-none dark:bg-primary-400 dark:shadow-3xl">
+            <Menu.Items className="absolute right-0 top-6 z-50 mt-2 w-72 origin-top-right rounded-md bg-white shadow-sm ring-1 ring-black/5 focus:outline-none dark:bg-primary-400 dark:shadow-3xl">
               <div className="py-1 ">
                 <Menu.Item>
-                  <>
-                    <ReferenceLink
-                      target={accountLink}
-                      className={`block w-36 cursor-pointer py-2 px-4 ${
-                        account ? 'text-left' : 'text-center'
-                      }  text-sm text-primary-400 hover:bg-gray-100 dark:bg-primary-400  dark:text-light-100`}
-                    >
-                      {account.firstName
-                        ? formatAccountMessage({ id: 'hello', defaultMessage: 'Hi, ' }) + account.firstName
-                        : account.lastName
-                        ? formatAccountMessage({ id: 'hello', defaultMessage: 'Hi, ' }) + account.lastName
-                        : formatAccountMessage({ id: 'hello', defaultMessage: 'Hi, ' }) +
-                          formatAccountMessage({ id: 'user', defaultMessage: 'User ' })}
-                    </ReferenceLink>
+                  <ReferenceLink
+                    target={accountLink}
+                    className={`block w-72 cursor-pointer py-2 px-4 ${
+                      account ? 'text-left' : 'text-center'
+                    }  text-sm text-primary-400 hover:bg-gray-100 dark:bg-primary-400  dark:text-light-100`}
+                  >
+                    {account.firstName
+                      ? formatAccountMessage({ id: 'hello', defaultMessage: 'Hi, ' }) + account.firstName
+                      : account.lastName
+                      ? formatAccountMessage({ id: 'hello', defaultMessage: 'Hi, ' }) + account.lastName
+                      : formatAccountMessage({ id: 'hello', defaultMessage: 'Hi, ' }) +
+                        formatAccountMessage({ id: 'user', defaultMessage: 'User ' })}
                     {organization.businessUnit && (
-                      <span className="text-xs">Business unit: {organization.businessUnit}</span>
+                      <span className="text-xs text-gray-400">({organization.businessUnit})</span>
                     )}
-                  </>
+                  </ReferenceLink>
                 </Menu.Item>
                 {account && (
                   <Menu.Item>
