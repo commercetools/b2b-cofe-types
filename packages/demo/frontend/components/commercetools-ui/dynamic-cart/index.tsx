@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { RefreshIcon } from '@heroicons/react/outline';
 import { Product } from '@Types/product/Product';
 import debounce from 'lodash.debounce';
 import { useProducts } from 'frontastic';
@@ -6,6 +7,7 @@ import { useProducts } from 'frontastic';
 interface DynamicCartItem {
   id: string;
   value: string;
+  isLoading: boolean;
   items: Product[];
   selectedSku: string;
   selectedProduct: Product;
@@ -20,6 +22,7 @@ export const DynamicCart: React.FC = () => {
       id: new Date().getTime().toString(),
       value: '',
       items: [],
+      isLoading: false,
       selectedSku: '',
       selectedProduct: null,
       selectedQuantity: 0,
@@ -36,6 +39,7 @@ export const DynamicCart: React.FC = () => {
       {
         id: newItemId,
         value: '',
+        isLoading: false,
         items: [],
         selectedSku: '',
         selectedProduct: null,
@@ -46,8 +50,22 @@ export const DynamicCart: React.FC = () => {
   };
 
   const debouncedQuery = debounce(async (id, text) => {
-    const { items } = await query(`query=${text}`);
-    updateItem(id, 'items', items);
+    await updateItem(id, 'isLoading', true);
+
+    const { items }: { items: Product[] } = await query(`query=${text}`);
+    setLineItems(
+      lineItems.map((item) => {
+        if (item.id !== id) {
+          return item;
+        } else {
+          return {
+            ...item,
+            items,
+            isLoading: false,
+          };
+        }
+      }),
+    );
   }, 500);
 
   const updateItem = async (id: string, key: string, value: any) => {
@@ -138,18 +156,25 @@ export const DynamicCart: React.FC = () => {
           <label htmlFor={`item_${lineItem.id}`}>Item:</label>
           <div className="dynamic-cart-item__input-wrapper ml-4 flex flex-row">
             {!lineItem.selectedSku && (
-              <input
-                id={`item_${lineItem.id}`}
-                ref={(el) => (lineItemsInputRef.current[i] = el)}
-                className="dynamic-cart-item__input border"
-                onChange={(event) => updateItemValue(lineItem.id, event)}
-              />
+              <>
+                <input
+                  id={`item_${lineItem.id}`}
+                  ref={(el) => (lineItemsInputRef.current[i] = el)}
+                  type="text"
+                  className="dynamic-cart-item__input border"
+                  onChange={(event) => updateItemValue(lineItem.id, event)}
+                />
+                {lineItem.isLoading && (
+                  <RefreshIcon className="dynamic-cart-item__input-loader mt-1 ml-2 h-4 w-4 animate-spin" />
+                )}
+              </>
             )}
             {!!lineItem.selectedSku && (
               <>
                 <input
                   id={`item_${lineItem.id}`}
-                  className="dynamic-cart-item__input border"
+                  className="dynamic-cart-item__selected-item border"
+                  type="text"
                   readOnly={true}
                   value={lineItem.selectedProduct.name}
                 />

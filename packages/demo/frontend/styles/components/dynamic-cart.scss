@@ -4,22 +4,32 @@
       display: block;
     }
     &__input {
-      &-wrapper {
-        flex-basis: 100%;
-      }
+
       &:focus + &__search {
         display: block;
       }
-      flex-basis: 80%;
+
+      flex-basis: 100%;
+    }
+    &__input-wrapper {
+        flex-basis: 100%;
+        position: relative;
+      }
+    &__selected-item {
+        flex-basis: 100%;
     }
     &__quantity {
         flex-basis: 20%;
         flex-shrink: 1;
         flex-grow: 0;
     }
-
+    &__input-loader {
+        position: absolute;
+        right: 10px;
+        top: 7px;
+    }
     &__search {
-      transform: translateY(26px);
+      transform: translateY(43px);
     }
   }
 }
