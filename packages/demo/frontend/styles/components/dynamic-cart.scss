@@ -1,0 +1,25 @@
+.dynamic-cart {
+  &-item {
+    &:focus-within &__search {
+      display: block;
+    }
+    &__input {
+      &-wrapper {
+        flex-basis: 100%;
+      }
+      &:focus + &__search {
+        display: block;
+      }
+      flex-basis: 80%;
+    }
+    &__quantity {
+        flex-basis: 20%;
+        flex-shrink: 1;
+        flex-grow: 0;
+    }
+
+    &__search {
+      transform: translateY(26px);
+    }
+  }
+}
