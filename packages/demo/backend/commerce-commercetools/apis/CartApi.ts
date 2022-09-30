@@ -172,7 +172,11 @@ export class CartApi extends BaseApi {
     }
   };
 
-  addToCart: (cart: Cart, lineItem: LineItem) => Promise<Cart> = async (cart: Cart, lineItem: LineItem) => {
+  addToCart: (cart: Cart, lineItem: LineItem, distributionChannel: string) => Promise<Cart> = async (
+    cart: Cart,
+    lineItem: LineItem,
+    distributionChannel: string,
+  ) => {
     try {
       const locale = await this.getCommercetoolsLocal();
 
@@ -183,8 +187,35 @@ export class CartApi extends BaseApi {
             action: 'addLineItem',
             sku: lineItem.variant.sku,
             quantity: +lineItem.count,
+            distributionChannel: { id: distributionChannel, typeId: 'channel' },
           } as CartAddLineItemAction,
         ],
+      };
+
+      const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate, locale);
+
+      return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
+    } catch (error) {
+      //TODO: better error, get status code etc...
+      throw new Error(`addToCart failed. ${error}`);
+    }
+  };
+
+  addItemsToCart: (cart: Cart, lineItems: LineItem[], distributionChannel: string) => Promise<Cart> = async (
+    cart: Cart,
+    lineItems: LineItem[],
+    distributionChannel: string,
+  ) => {
+    try {
+      const locale = await this.getCommercetoolsLocal();
+      const cartUpdate: CartUpdate = {
+        version: +cart.cartVersion,
+        actions: lineItems.map((lineItem) => ({
+          action: 'addLineItem',
+          sku: lineItem.variant.sku,
+          quantity: +lineItem.count,
+          distributionChannel: { id: distributionChannel, typeId: 'channel' },
+        })),
       };
 
       const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate, locale);

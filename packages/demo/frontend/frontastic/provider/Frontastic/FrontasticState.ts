@@ -19,6 +19,7 @@ import { createSession, adyenCheckout } from '../../actions/adyen';
 import {
   cartItems,
   addItem,
+  addItems,
   orderCart,
   orderHistory,
   removeItem,
@@ -60,6 +61,7 @@ export const getFrontasticState = (): FrontasticState => {
     useCart: {
       ...cartItems(),
       addItem,
+      addItems,
       updateCart,
       setShippingMethod,
       removeItem,

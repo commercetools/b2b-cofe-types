@@ -1,36 +1,47 @@
 import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { RefreshIcon } from '@heroicons/react/outline';
 import { Product } from '@Types/product/Product';
+import { Variant } from '@Types/product/Variant';
 import debounce from 'lodash.debounce';
-import { useProducts } from 'frontastic';
+import { useCart, useProducts, useUIStateContext } from 'frontastic';
+import { LoadingIcon } from '../icons/loading';
 
 interface DynamicCartItem {
   id: string;
   value: string;
   isLoading: boolean;
   items: Product[];
-  selectedSku: string;
+  selectedVariant: Variant;
   selectedProduct: Product;
   selectedQuantity: number;
 }
 
+const getInitialLineItem = () => ({
+  id: new Date().getTime().toString(),
+  value: '',
+  items: [],
+  isLoading: false,
+  selectedVariant: null,
+  selectedProduct: null,
+  selectedQuantity: 0,
+});
+
 export const DynamicCart: React.FC = () => {
   const { query } = useProducts();
+  const { addItems } = useCart();
+  const { toggleFlyingCart } = useUIStateContext();
 
-  const [lineItems, setLineItems] = useState<DynamicCartItem[]>([
-    {
-      id: new Date().getTime().toString(),
-      value: '',
-      items: [],
-      isLoading: false,
-      selectedSku: '',
-      selectedProduct: null,
-      selectedQuantity: 0,
-    },
-  ]);
+  const [isOneItemSelected, setIsOneItemSelected] = useState(false);
+  const [isLastLineItemSelected, setIsLastLineItemSelected] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [lineItems, setLineItems] = useState<DynamicCartItem[]>([getInitialLineItem()]);
 
   const lineItemsInputRef = useRef<HTMLInputElement[]>([]);
   const lineItemsQuantityRef = useRef<HTMLInputElement[]>([]);
+
+  useEffect(() => {
+    setIsLastLineItemSelected(!!lineItems[lineItems.length - 1].selectedVariant);
+    setIsOneItemSelected(lineItems.some((lineItem) => !!lineItem.selectedVariant));
+  }, [lineItems]);
 
   const addLineItem = async () => {
     const newItemId = new Date().getTime().toString();
@@ -41,7 +52,7 @@ export const DynamicCart: React.FC = () => {
         value: '',
         isLoading: false,
         items: [],
-        selectedSku: '',
+        selectedVariant: null,
         selectedProduct: null,
         selectedQuantity: 0,
       },
@@ -104,7 +115,7 @@ export const DynamicCart: React.FC = () => {
           } else {
             return {
               ...item,
-              selectedSku: product.variants[0].sku,
+              selectedVariant: product.variants[0],
               selectedProduct: product,
               items: [],
             };
@@ -118,8 +129,8 @@ export const DynamicCart: React.FC = () => {
     }
   };
 
-  const selectVariantAsLineItem = async (lineItemId: string, sku: string) => {
-    updateItem(lineItemId, 'selectedSku', sku);
+  const selectVariantAsLineItem = async (lineItemId: string, variant: Variant) => {
+    updateItem(lineItemId, 'selectedVariant', variant);
     await setLineItems(
       lineItems.map((item) => {
         if (item.id !== lineItemId) {
@@ -127,7 +138,7 @@ export const DynamicCart: React.FC = () => {
         } else {
           return {
             ...item,
-            selectedSku: sku,
+            selectedVariant: variant,
             items: [],
           };
         }
@@ -149,13 +160,29 @@ export const DynamicCart: React.FC = () => {
       .join(', ');
   };
 
+  const addAllToCart = async () => {
+    setIsLoading(true);
+    await addItems(
+      lineItems
+        .filter((lineItem) => !!lineItem.selectedVariant)
+        .map((lineItem) => ({ variant: lineItem.selectedVariant, quantity: lineItem.selectedQuantity })),
+    );
+    setIsLoading(false);
+    setTimeout(() => {
+      setLineItems([getInitialLineItem()]);
+      toggleFlyingCart(false);
+    }, 300);
+  };
+
   return (
-    <div className="dynamic-cart items-left flex w-full flex-col">
+    <div className="dynamic-cart mt-4 flex w-full flex-col">
       {lineItems.map((lineItem, i) => (
         <div className="dynamic-cart-item mb-4 flex" key={lineItem.id}>
-          <label htmlFor={`item_${lineItem.id}`}>Item:</label>
+          <label className="mt-2" htmlFor={`item_${lineItem.id}`}>
+            Item:
+          </label>
           <div className="dynamic-cart-item__input-wrapper ml-4 flex flex-row">
-            {!lineItem.selectedSku && (
+            {!lineItem.selectedVariant && (
               <>
                 <input
                   id={`item_${lineItem.id}`}
@@ -165,11 +192,11 @@ export const DynamicCart: React.FC = () => {
                   onChange={(event) => updateItemValue(lineItem.id, event)}
                 />
                 {lineItem.isLoading && (
-                  <RefreshIcon className="dynamic-cart-item__input-loader mt-1 ml-2 h-4 w-4 animate-spin" />
+                  <LoadingIcon className="dynamic-cart-item__input-loader ml-2 h-4 w-4 animate-spin text-gray-400" />
                 )}
               </>
             )}
-            {!!lineItem.selectedSku && (
+            {!!lineItem.selectedVariant && (
               <>
                 <input
                   id={`item_${lineItem.id}`}
@@ -188,21 +215,21 @@ export const DynamicCart: React.FC = () => {
                 />
               </>
             )}
-            {!!lineItem.items.length && !!lineItem.selectedProduct && !lineItem.selectedSku && (
+            {!!lineItem.items.length && !!lineItem.selectedProduct && !lineItem.selectedVariant && (
               <ol className="dynamic-cart-item__search absolute hidden">
                 {lineItem.selectedProduct.variants.map((variant) => (
                   <li
                     className="dynamic-cart-item__search-item cursor-pointer border-b-2 bg-gray-100 hover:bg-gray-300"
                     key={variant.id}
                   >
-                    <button onClick={() => selectVariantAsLineItem(lineItem.id, variant.sku)}>
+                    <button onClick={() => selectVariantAsLineItem(lineItem.id, variant)}>
                       {getVariantName(variant.attributes)}
                     </button>
                   </li>
                 ))}
               </ol>
             )}
-            {!!lineItem.items.length && !lineItem.selectedProduct && !lineItem.selectedSku && (
+            {!!lineItem.items.length && !lineItem.selectedProduct && !lineItem.selectedVariant && (
               <ol className="dynamic-cart-item__search absolute hidden">
                 {lineItem.items.map((product) => (
                   <li
@@ -217,7 +244,13 @@ export const DynamicCart: React.FC = () => {
           </div>
         </div>
       ))}
-      <button onClick={() => addLineItem()}>+</button>
+      <button disabled={!isLastLineItemSelected} className="dynamic-cart__add-item" onClick={() => addLineItem()}>
+        +
+      </button>
+      <button disabled={!isOneItemSelected} className="dynamic-cart__add-to-cart" onClick={() => addAllToCart()}>
+        {!isLoading && 'Add all to cart'}
+        {isLoading && <LoadingIcon className="h-6 w-6 animate-spin" />}
+      </button>
     </div>
   );
 };

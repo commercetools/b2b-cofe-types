@@ -12,6 +12,7 @@
         "lint": "eslint .",
         "lint:fix": "eslint --fix .",
         "format": "prettier --write \"**/*.ts\"",
+        "fix": "eslint --fix . && prettier --write \"**/*.ts\"",
         "test": "jest"
     },
     "dependencies": {

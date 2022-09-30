@@ -1,7 +1,8 @@
 {
   "name": "b2bdemo",
   "scripts": {
-    "preinstall": "node preinstall.min.js"
+    "preinstall": "node preinstall.min.js",
+    "fix": "cd packages/demo/backend && yarn fix && cd ../frontend && yarn fix"
   },
   "private": true
 }

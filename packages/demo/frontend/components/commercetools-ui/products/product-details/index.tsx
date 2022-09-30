@@ -4,6 +4,7 @@ import { Disclosure, RadioGroup, Tab } from '@headlessui/react';
 import { MinusSmIcon, PlusSmIcon } from '@heroicons/react/outline';
 import { Money } from '@Types/product/Money';
 import { Variant } from '@Types/product/Variant';
+import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useFormat } from 'helpers/hooks/useFormat';
 import WishlistButton from './wishlist-button';
@@ -262,14 +263,7 @@ export default function ProductDetail({ product, onAddToCart, onAddToWishlist, v
                     </>
                   )}
 
-                  {loading && (
-                    <svg className="h-6 w-6 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25">
-                      <path
-                        d="M8,8.5A3.5,3.5,0,1,1,4.5,5,3.5,3.5,0,0,1,8,8.5ZM4.5,14A3.5,3.5,0,1,0,8,17.5,3.5,3.5,0,0,0,4.5,14Zm16-2A3.5,3.5,0,1,0,17,8.5,3.5,3.5,0,0,0,20.5,12Zm0,2A3.5,3.5,0,1,0,24,17.5,3.5,3.5,0,0,0,20.5,14Zm-8,4A3.5,3.5,0,1,0,16,21.5,3.5,3.5,0,0,0,12.5,18Zm0-18A3.5,3.5,0,1,0,16,3.5,3.5,3.5,0,0,0,12.5,0Z"
-                        fill="#fff"
-                      />
-                    </svg>
-                  )}
+                  {loading && <LoadingIcon className="h-6 w-6 animate-spin" />}
                   {!loading && added && (
                     <svg className="h-6 w-6" fill="#fff" viewBox="0 0 80.588 61.158">
                       <path

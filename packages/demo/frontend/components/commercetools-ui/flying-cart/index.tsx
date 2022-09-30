@@ -8,7 +8,9 @@ export const FlyingCart: React.FC = () => {
   const { isFlyingCartOpen, toggleFlyingCart } = useUIStateContext();
   return (
     <div>
-      {isFlyingCartOpen && <div className="fixed inset-0 h-full w-full bg-black/50" />}
+      {isFlyingCartOpen && (
+        <div onClick={() => toggleFlyingCart(false)} className="fixed inset-0 h-full w-full bg-black/50" />
+      )}
       <Transition.Root show={isFlyingCartOpen} as={Fragment}>
         <div>
           <Transition.Child

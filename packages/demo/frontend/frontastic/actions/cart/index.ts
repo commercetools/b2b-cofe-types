@@ -32,6 +32,24 @@ export const addItem = async (variant: Variant, quantity: number) => {
   mutate('/action/cart/getCart', res);
 };
 
+export const addItems = async (lineItems: any[]) => {
+  const payload = {
+    list: lineItems.map((lineItem) => ({
+      sku: lineItem.variant.sku,
+      count: lineItem.quantity,
+    })),
+  };
+  const res = await fetchApiHub(
+    '/action/cart/addItemsToCart',
+    {
+      method: 'POST',
+    },
+    payload,
+  );
+  mutate('/action/cart/getCart', res);
+  return res;
+};
+
 export const orderCart = async () => {
   const res = await fetchApiHub('/action/cart/checkout', {
     method: 'POST',
