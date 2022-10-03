@@ -53,25 +53,57 @@ const OrderSummary = ({
     />,
   ];
 
-  const totalTaxes = cart?.taxed?.taxPortions?.reduce((a, b) => a + b.amount.centAmount, 0);
+  const totalTaxes = cart?.taxed?.taxPortions?.reduce(
+    (a, b) => ({
+      ...a,
+      centAmount: a.centAmount + b.amount.centAmount,
+    }),
+    {
+      centAmount: 0,
+      fractionDigits: cart?.taxed?.taxPortions?.[0]?.amount.fractionDigits,
+      currencyCode: cart?.taxed?.taxPortions?.[0]?.amount.currencyCode,
+    },
+  );
 
-  const productPrice = cart?.lineItems.reduce((a, b: LineItem) => {
-    if (b.discountedPrice) {
-      return a + b.discountedPrice.centAmount * b.count;
-    } else {
-      return a + b.price.centAmount * b.count;
-    }
-  }, 0);
+  const productPrice = cart?.lineItems.reduce(
+    (a, b: LineItem) => {
+      if (b.discountedPrice) {
+        return {
+          ...a,
+          centAmount: a.centAmount + b.discountedPrice.centAmount * b.count,
+        };
+      } else {
+        return {
+          ...a,
+          centAmount: a.centAmount + b.price.centAmount * b.count,
+        };
+      }
+    },
+    {
+      centAmount: 0,
+      fractionDigits: cart?.lineItems?.[0]?.price?.fractionDigits,
+      currencyCode: cart?.lineItems?.[0]?.price?.currencyCode,
+    },
+  );
 
-  const discountPrice = cart?.lineItems?.reduce((a, b) => {
-    return (
-      a +
-      b.count *
-        b.discounts.reduce((x, y) => {
-          return x + y.discountedAmount.centAmount;
-        }, 0)
-    );
-  }, 0);
+  const discountPrice = cart?.lineItems?.reduce(
+    (a, b) => {
+      return {
+        ...a,
+        centAmount:
+          a.centAmount -
+          b.count *
+            b.discounts.reduce((x, y) => {
+              return x + y.discountedAmount.centAmount;
+            }, 0),
+      };
+    },
+    {
+      centAmount: 0,
+      fractionDigits: cart?.lineItems?.[0]?.price?.fractionDigits,
+      currencyCode: cart?.lineItems?.[0]?.price?.currencyCode,
+    },
+  );
 
   return (
     <section
@@ -108,7 +140,7 @@ const OrderSummary = ({
             <span>{formatCartMessage({ id: 'discounts', defaultMessage: 'Discounts' })}</span>
           </dt>
           <dd className="text-sm font-medium text-gray-900 dark:text-light-100">
-            {CurrencyHelpers.formatForCurrency(-discountPrice || {})}
+            {CurrencyHelpers.formatForCurrency(discountPrice)}
           </dd>
         </div>
 
