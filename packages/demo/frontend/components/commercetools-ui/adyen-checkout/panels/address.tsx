@@ -178,6 +178,12 @@ const Address: React.FC<AddressProps> = ({ data, updateData, billingIsSameAsShip
             onChange={handleChange}
             value={data.shippingCountry}
           >
+            <option key={-1} disabled>
+              {formatMessage({
+                id: 'selectShippingCountry',
+                defaultMessage: 'Please select a country',
+              })}
+            </option>
             {availableCountryOptions?.map(({ display, data }, index) => (
               <option key={index} value={data}>
                 {formatCommonMessage({ id: `country.${data}`, defaultMessage: display })}
