@@ -51,6 +51,31 @@ export class BusinessUnitApi extends BaseApi {
     }
   };
 
+  update: (key: string, actions: any[]) => Promise<any> = async (key: string, actions: any[]) => {
+    try {
+      const accessToken = await this.getAccessToken();
+      const response = await this.get(key).then((res) => {
+        return axios.post(
+          `https://api.us-central1.gcp.commercetools.com/${this.projectKey}/business-units/key=${key}`,
+          {
+            version: res.version,
+            actions,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          },
+        );
+      });
+      return response.data;
+    } catch (e) {
+      console.log(e);
+
+      throw e;
+    }
+  };
+
   query: (where: string) => Promise<BusinessUnitPagedQueryResponse> = async (where: string) => {
     try {
       const accessToken = await this.getAccessToken();
@@ -69,7 +94,7 @@ export class BusinessUnitApi extends BaseApi {
     }
   };
 
-  get: (key: string) => Promise<BusinessUnitPagedQueryResponse> = async (key: string) => {
+  get: (key: string) => Promise<BusinessUnit> = async (key: string) => {
     try {
       const accessToken = await this.getAccessToken();
       const response = await axios.get(
@@ -80,6 +105,8 @@ export class BusinessUnitApi extends BaseApi {
           },
         },
       );
+      console.log('GET', response.data);
+
       return response.data;
     } catch (e) {
       throw e;

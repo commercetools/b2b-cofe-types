@@ -11,6 +11,7 @@ const initialState: FrontasticState = {
   useAdyen: {} as any,
   useChannel: {} as any,
   useProducts: {} as any,
+  useBusinessUnit: {} as any,
 };
 
 const FrontasticContext = React.createContext<FrontasticState>(initialState);
@@ -66,4 +67,10 @@ export const useProducts = () => {
   const context = React.useContext(FrontasticContext);
   checkContext(context);
   return context.useProducts;
+};
+
+export const useBusinessUnit = () => {
+  const context = React.useContext(FrontasticContext);
+  checkContext(context);
+  return context.useBusinessUnit;
 };

@@ -97,7 +97,7 @@ export const BusinessUnitDetails: React.FC<BusinessUnitDetailsProps> = ({ organi
                           </nav>
                         </div>
                       </div>
-                      {Content && <Content />}
+                      {Content && <Content organization={organization} />}
                     </div>
                   </div>
                 </div>

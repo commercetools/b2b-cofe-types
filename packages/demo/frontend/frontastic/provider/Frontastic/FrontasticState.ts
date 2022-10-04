@@ -16,6 +16,7 @@ import {
   setDefaultShippingAddress,
 } from '../../actions/account';
 import { createSession, adyenCheckout } from '../../actions/adyen';
+import { updateName } from '../../actions/business-unit';
 import {
   cartItems,
   addItem,
@@ -36,6 +37,7 @@ import { query } from '../../actions/product';
 import { getWishlist, addToWishlist, removeLineItem, updateLineItem } from '../../actions/wishlist';
 import { UseAccount } from './UseAccount';
 import { UseAdyen } from './UseAdyen';
+import { UseBusinessUnit } from './UseBusinessUnit';
 import { UseCart } from './UseCart';
 import { UseChannel } from './UseChannel';
 import { UseProducts } from './UseProducts';
@@ -48,10 +50,14 @@ export interface FrontasticState {
   useAdyen: UseAdyen;
   useChannel: UseChannel;
   useProducts: UseProducts;
+  useBusinessUnit: UseBusinessUnit;
 }
 
 export const getFrontasticState = (): FrontasticState => {
   return {
+    useBusinessUnit: {
+      updateName,
+    },
     useProducts: {
       query,
     },

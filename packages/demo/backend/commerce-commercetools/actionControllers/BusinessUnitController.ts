@@ -43,6 +43,27 @@ export const create: ActionHook = async (request: Request, actionContext: Action
   return response;
 };
 
+export const update: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
+  const { key, actions } = JSON.parse(request.body);
+
+  const businessUnit = await businessUnitApi.update(key, actions);
+
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(businessUnit),
+    sessionData: {
+      ...request.sessionData,
+      organization: {
+        ...request.sessionData?.organization,
+        businessUnit,
+      },
+    },
+  };
+
+  return response;
+};
+
 export const query: ActionHook = async (request: Request, actionContext: ActionContext) => {
   const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
 

@@ -10,3 +10,10 @@ export const createBusinessUnit = async (account, customer, store): Promise<any>
 export const getMyBusinessUnits = async (accountId: string): Promise<any> => {
   return fetchApiHub(`/action/business-unit/query?where=associates(customer(id = "${accountId}"))`, { method: 'GET' });
 };
+export const updateName = async (key: string, name: string): Promise<any> => {
+  return fetchApiHub(
+    `/action/business-unit/update`,
+    { method: 'POST' },
+    { actions: [{ action: 'changeName', name }], key },
+  );
+};
