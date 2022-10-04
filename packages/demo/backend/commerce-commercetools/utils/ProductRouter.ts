@@ -36,7 +36,7 @@ export class ProductRouter {
         skus: [urlMatches[1]],
       };
       const additionalQueryArgs = {};
-      const distributionChannelId = request.sessionData?.organization?.distributionChannelId;
+      const distributionChannelId = request.sessionData?.organization?.distributionChannel?.id;
 
       if (distributionChannelId) {
         // @ts-ignore

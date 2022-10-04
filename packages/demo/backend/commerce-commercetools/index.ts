@@ -14,13 +14,14 @@ import {
   ExtensionRegistry,
   Request,
 } from '@frontastic/extension-types';
-import { getPath } from './utils/Request';
+import { getLocale, getPath } from './utils/Request';
 import { ProductRouter } from './utils/ProductRouter';
 import { Product } from '../../types/product/Product';
 import { SearchRouter } from './utils/SearchRouter';
 import { Result } from '../../types/product/Result';
 import { CategoryRouter } from './utils/CategoryRouter';
 import dataSources from './dataSources';
+import { ChannelApi } from './apis/ChannelApi';
 
 export default {
   'dynamic-page-handler': async (
@@ -38,14 +39,21 @@ export default {
         pageMatchingPayload: {},
       } as DynamicPageSuccessResult;
     }
-    const b2bPageMatch = getPath(request)?.match(
-      /^\/(business-unit)/,
-    );
+    const b2bPageMatch = getPath(request)?.match(/^\/(business-unit)/);
     if (b2bPageMatch) {
+      let organization = request.sessionData?.organization;
+      if (!organization.businessUnit && request.sessionData?.account?.accountId) {
+        const channelApi = new ChannelApi(context.frontasticContext, getLocale(request));
+        organization = await channelApi.fetch(request.sessionData.account.accountId);
+      }
       return {
         dynamicPageType: `b2b${b2bPageMatch[0]}`,
-        dataSourcePayload: {},
-        pageMatchingPayload: {},
+        dataSourcePayload: {
+          organization: request.sessionData?.organization,
+        },
+        pageMatchingPayload: {
+          organization: request.sessionData?.organization,
+        },
       } as DynamicPageSuccessResult;
     }
 

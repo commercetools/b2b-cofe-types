@@ -4,7 +4,7 @@ import { ProductApi } from './apis/ProductApi';
 import { ProductQueryFactory } from './utils/ProductQueryFactory';
 export default {
   'frontastic/product-list': async (config: DataSourceConfiguration, context: DataSourceContext) => {
-    const distributionChannelId = context.request.sessionData?.organization?.distributionChannelId;
+    const distributionChannelId = context.request.sessionData?.organization?.distributionChannel?.id;
     const productApi = new ProductApi(context.frontasticContext, context.request ? getLocale(context.request) : null);
 
     const additionalQueryArgs = {};
@@ -47,7 +47,7 @@ export default {
     const productApi = new ProductApi(context.frontasticContext, context.request ? getLocale(context.request) : null);
 
     const additionalQueryArgs = {};
-    const distributionChannelId = context.request.sessionData?.organization?.distributionChannelId;
+    const distributionChannelId = context.request.sessionData?.organization?.distributionChannel?.id;
 
     if (distributionChannelId) {
       // @ts-ignore

@@ -68,4 +68,21 @@ export class BusinessUnitApi extends BaseApi {
       throw e;
     }
   };
+
+  get: (key: string) => Promise<BusinessUnitPagedQueryResponse> = async (key: string) => {
+    try {
+      const accessToken = await this.getAccessToken();
+      const response = await axios.get(
+        `https://api.us-central1.gcp.commercetools.com/${this.projectKey}/business-units/key=${key}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      return response.data;
+    } catch (e) {
+      throw e;
+    }
+  };
 }

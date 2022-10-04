@@ -20,6 +20,7 @@ const HeaderTastic = ({ data }) => {
       account={account}
       accountLink={data.accountLink}
       wishlistLink={data.wishlistLink}
+      businessUnitLink={data.businessUnitLink}
       cartLink={data.cartLink}
     />
   );

@@ -34,7 +34,7 @@ export class CategoryRouter {
       });
 
       const additionalQueryArgs = {};
-      const distributionChannelId = request.sessionData?.organization?.distributionChannelId;
+      const distributionChannelId = request.sessionData?.organization?.distributionChannel?.id;
 
       if (distributionChannelId) {
         // @ts-ignore

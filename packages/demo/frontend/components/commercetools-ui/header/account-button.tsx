@@ -2,18 +2,19 @@ import React, { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { UserIcon } from '@heroicons/react/outline';
 import { Account } from '@Types/account/Account';
-import { OrganizationDataSource } from '@Types/business-unit/business-unit';
+import { Organization } from '@Types/organization/organization';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { Reference, ReferenceLink } from 'helpers/reference';
 import { logout } from 'frontastic/actions/account';
 
 interface AccountButtonProps {
-  organization: OrganizationDataSource;
+  organization: Organization;
   accountLink: Reference;
+  businessUnitLink: Reference;
   account: Account;
 }
 
-const AccountButton: React.FC<AccountButtonProps> = ({ accountLink, account, organization }) => {
+const AccountButton: React.FC<AccountButtonProps> = ({ accountLink, account, businessUnitLink, organization }) => {
   const { formatMessage: formatAccountMessage } = useFormat({ name: 'account' });
 
   const handleLogout = () => {
@@ -56,9 +57,15 @@ const AccountButton: React.FC<AccountButtonProps> = ({ accountLink, account, org
                       ? formatAccountMessage({ id: 'hello', defaultMessage: 'Hi, ' }) + account.lastName
                       : formatAccountMessage({ id: 'hello', defaultMessage: 'Hi, ' }) +
                         formatAccountMessage({ id: 'user', defaultMessage: 'User ' })}
-                    {organization.businessUnit && (
-                      <span className="text-xs text-gray-400">({organization.businessUnit})</span>
-                    )}
+                  </ReferenceLink>
+                </Menu.Item>
+                <Menu.Item>
+                  <ReferenceLink
+                    target={businessUnitLink}
+                    className={`block w-72 cursor-pointer py-2 px-4 text-sm text-primary-400 hover:bg-gray-100 dark:bg-primary-400  dark:text-light-100`}
+                  >
+                    {organization.businessUnit &&
+                      formatAccountMessage({ id: 'bu', defaultMessage: 'BU: ' }) + organization.businessUnit.name}
                   </ReferenceLink>
                 </Menu.Item>
                 {account && (

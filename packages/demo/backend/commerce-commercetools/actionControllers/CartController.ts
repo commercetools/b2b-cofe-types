@@ -78,7 +78,7 @@ export const addToCart: ActionHook = async (request: Request, actionContext: Act
     count: +body.variant?.count || 1,
   };
 
-  const distributionChannel = request.sessionData.organization?.distributionChannelId;
+  const distributionChannel = request.sessionData.organization?.distributionChannel?.id;
 
   let cart = await CartFetcher.fetchCart(request, actionContext);
   cart = await cartApi.addToCart(cart, lineItem, distributionChannel);

@@ -65,6 +65,12 @@
           "required": true
         },
         {
+          "label": "Business Unit link",
+          "field": "businessUnitLink",
+          "type": "reference",
+          "required": true
+        },
+        {
           "label": "Wishlist link",
           "field": "wishlistLink",
           "type": "reference",
