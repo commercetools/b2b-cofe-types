@@ -38,6 +38,16 @@ export default {
         pageMatchingPayload: {},
       } as DynamicPageSuccessResult;
     }
+    const b2bPageMatch = getPath(request)?.match(
+      /^\/(business-unit)/,
+    );
+    if (b2bPageMatch) {
+      return {
+        dynamicPageType: `b2b${b2bPageMatch[0]}`,
+        dataSourcePayload: {},
+        pageMatchingPayload: {},
+      } as DynamicPageSuccessResult;
+    }
 
     // Identify Product
     if (ProductRouter.identifyFrom(request)) {

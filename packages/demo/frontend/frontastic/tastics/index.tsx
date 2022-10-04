@@ -29,6 +29,7 @@ import SimilarProducts from './products/similar-products';
 import Showcase from './showcase';
 import Wishlist from './wishlist';
 import ContentfulBlogTastic from './contentful-blog';
+import { BusinessUnit } from './business-unit';
 
 export const tastics = {
   // Doc Examples
@@ -39,6 +40,7 @@ export const tastics = {
   'example/star-wars/character-filter': StarWarsCharacterFilter,
   //'contentful/blog': ContentfulBlog,
 
+  'b2b/business-unit': BusinessUnit,
   'commercetools/ui/checkout': Checkout,
   'commercetools/ui/thank-you': ThankYou,
   'commercetools/ui/cart': Cart,
