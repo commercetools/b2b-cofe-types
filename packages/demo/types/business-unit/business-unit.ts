@@ -1,6 +1,6 @@
 import { Address } from '../account/Address';
 import { StoreKeyReference } from '../store/store';
-import { Associate } from '../associate/associate';
+import { Associate } from '../associate/Associate';
 
 export enum BusinessUnitType {
   Company = 'Company',
