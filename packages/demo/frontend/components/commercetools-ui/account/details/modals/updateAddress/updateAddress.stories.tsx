@@ -14,6 +14,7 @@ const Template: Story<UpdateAddressProps> = (args) => (
     addressId="adrs-1"
     defaultValues={addresses[0]}
     onClose={() => console.log('Closed')}
+    updateAddress={() => true}
     open={true}
     {...args}
   />

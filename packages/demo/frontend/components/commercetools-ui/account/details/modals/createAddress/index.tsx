@@ -3,24 +3,22 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Address } from '@Types/account/Address';
 import { useFormat } from 'helpers/hooks/useFormat';
 import useI18n from 'helpers/hooks/useI18n';
-import { useAccount, useDarkMode } from 'frontastic';
+import { useDarkMode } from 'frontastic';
 
 export interface CreateAddressProps {
   open?: boolean;
   onClose?: () => void;
+  addAddress: (address: Address) => void;
   addressId?: string;
 }
 
-const CreateAddress: React.FC<CreateAddressProps> = ({ open, onClose }) => {
+const CreateAddress: React.FC<CreateAddressProps> = ({ open, onClose, addAddress }) => {
   //Darkmode
   const { mode } = useDarkMode();
 
   //i18n messages
   const { formatMessage: formatAccountMessage } = useFormat({ name: 'account' });
   const { formatMessage } = useFormat({ name: 'common' });
-
-  //account data
-  const { addAddress } = useAccount();
 
   //I18n info
   const { country } = useI18n();

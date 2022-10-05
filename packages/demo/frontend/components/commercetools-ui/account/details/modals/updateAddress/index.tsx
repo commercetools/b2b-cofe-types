@@ -2,25 +2,23 @@ import { useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Address } from '@Types/account/Address';
 import { useFormat } from 'helpers/hooks/useFormat';
-import { useAccount, useDarkMode } from 'frontastic';
+import { useDarkMode } from 'frontastic';
 
 export interface UpdateAddressProps {
   open?: boolean;
   onClose?: () => void;
+  updateAddress: (address: Address) => void;
   addressId?: string;
   defaultValues: Partial<Address>;
 }
 
-const UpdateAddress: React.FC<UpdateAddressProps> = ({ open, onClose, defaultValues }) => {
+const UpdateAddress: React.FC<UpdateAddressProps> = ({ open, onClose, defaultValues, updateAddress }) => {
   //Darkmode
   const { mode } = useDarkMode();
 
   //i18n messages
   const { formatMessage: formatAccountMessage } = useFormat({ name: 'account' });
   const { formatMessage } = useFormat({ name: 'common' });
-
-  //account data
-  const { updateAddress } = useAccount();
 
   //updated address data
   const [data, setData] = useState(defaultValues as Address);

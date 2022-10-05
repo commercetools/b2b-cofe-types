@@ -9,7 +9,7 @@ const Addresses = () => {
   const { formatMessage: formatAccountMessage } = useFormat({ name: 'account' });
 
   //account data
-  const { account } = useAccount();
+  const { account, addAddress } = useAccount();
 
   //user addresses
   const addresses = account?.addresses;
@@ -67,7 +67,7 @@ const Addresses = () => {
           </button>
         </div>
       </div>
-      <CreateAddressModal open={createModalOpen} onClose={closeCreateModal} />
+      <CreateAddressModal addAddress={addAddress} open={createModalOpen} onClose={closeCreateModal} />
     </>
   );
 };

@@ -11,7 +11,7 @@ export interface AddressProps {
 
 const Address: React.FC<AddressProps> = ({ address }) => {
   //account data
-  const { removeAddress } = useAccount();
+  const { removeAddress, updateAddress } = useAccount();
 
   //i18n messages
   const { formatMessage } = useFormat({ name: 'common' });
@@ -68,7 +68,12 @@ const Address: React.FC<AddressProps> = ({ address }) => {
           </button>
         </span>
       </div>
-      <UpdateAddressModal open={updateModalOpen} onClose={closeUpdateModal} defaultValues={address} />
+      <UpdateAddressModal
+        updateAddress={updateAddress}
+        open={updateModalOpen}
+        onClose={closeUpdateModal}
+        defaultValues={address}
+      />
     </>
   );
 };
