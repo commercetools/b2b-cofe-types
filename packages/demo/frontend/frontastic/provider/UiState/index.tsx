@@ -1,5 +1,5 @@
 import { Context, createContext, useContext } from 'react';
-import { useUI } from 'frontastic/hooks/useUI';
+import { useUI } from 'helpers/hooks/useUI';
 import { UseUIState } from '../../../../types/hooks/UseUIState';
 
 const UIStateContext: Context<UseUIState> = createContext({

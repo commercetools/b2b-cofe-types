@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { UseUIState } from '../../../types/hooks/UseUIState';
 
 export const useUI = (): UseUIState => {

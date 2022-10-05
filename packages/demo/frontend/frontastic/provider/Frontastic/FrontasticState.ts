@@ -39,7 +39,6 @@ import { UseAccount } from './UseAccount';
 import { UseAdyen } from './UseAdyen';
 import { UseBusinessUnit } from './UseBusinessUnit';
 import { UseCart } from './UseCart';
-import { UseChannel } from './UseChannel';
 import { UseProducts } from './UseProducts';
 import { UseWishlist } from './UseWishlist';
 
@@ -48,7 +47,6 @@ export interface FrontasticState {
   useAccount: UseAccount;
   useWishlist: UseWishlist;
   useAdyen: UseAdyen;
-  useChannel: UseChannel;
   useProducts: UseProducts;
   useBusinessUnit: UseBusinessUnit;
 }
@@ -60,9 +58,6 @@ export const getFrontasticState = (): FrontasticState => {
     },
     useProducts: {
       query,
-    },
-    useChannel: {
-      fetch,
     },
     useCart: {
       ...cartItems(),

@@ -64,7 +64,7 @@ const AccountButton: React.FC<AccountButtonProps> = ({ accountLink, account, bus
                     target={businessUnitLink}
                     className={`block w-72 cursor-pointer py-2 px-4 text-sm text-primary-400 hover:bg-gray-100 dark:bg-primary-400  dark:text-light-100`}
                   >
-                    {organization.businessUnit &&
+                    {organization?.businessUnit &&
                       formatAccountMessage({ id: 'bu', defaultMessage: 'BU: ' }) + organization.businessUnit.name}
                   </ReferenceLink>
                 </Menu.Item>
