@@ -1,0 +1,19 @@
+.business-unit-address {
+    &__header {
+        & td {
+            @apply p-1;
+        }
+    }
+
+    &__body {
+        & tr:nth-child(2n) {
+            @apply bg-gray-100;
+        }
+        & tr:hover {
+            @apply bg-gray-300;
+        }
+        & tr td {
+            @apply p-1;
+        }
+    }
+}

@@ -301,10 +301,7 @@ const CreateAddress: React.FC<CreateAddressProps> = ({ open, onClose, addAddress
                           >
                             {formatMessage({ id: 'cancel', defaultMessage: 'Cancel' })}
                           </button>
-                          <button
-                            type="submit"
-                            className="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-accent-400 py-3 px-6 text-base font-medium text-white shadow-sm transition-colors duration-200 ease-out hover:bg-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2"
-                          >
+                          <button type="submit" className="button button-primary">
                             {formatMessage({ id: 'save', defaultMessage: 'Save' })}
                           </button>
                         </div>

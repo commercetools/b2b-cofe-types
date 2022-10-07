@@ -247,7 +247,11 @@ export const DynamicCart: React.FC = () => {
       <button disabled={!isLastLineItemSelected} className="dynamic-cart__add-item" onClick={() => addLineItem()}>
         +
       </button>
-      <button disabled={!isOneItemSelected} className="dynamic-cart__add-to-cart" onClick={() => addAllToCart()}>
+      <button
+        disabled={!isOneItemSelected}
+        className="dynamic-cart__add-to-cart button button-primary"
+        onClick={() => addAllToCart()}
+      >
         {!isLoading && 'Add all to cart'}
         {isLoading && <LoadingIcon className="h-6 w-6 animate-spin" />}
       </button>

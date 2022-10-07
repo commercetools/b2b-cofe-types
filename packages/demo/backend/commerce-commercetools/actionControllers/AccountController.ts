@@ -313,7 +313,7 @@ export const reset: ActionHook = async (request: Request, actionContext: ActionC
 
   // TODO: do we need to log in the account after creation?
   // TODO: handle exception when customer can't login if email is not confirmed
-  const {account, organization} = await loginAccount(request, actionContext, newAccount);
+  const { account, organization } = await loginAccount(request, actionContext, newAccount);
 
   return {
     statusCode: 200,
@@ -321,7 +321,7 @@ export const reset: ActionHook = async (request: Request, actionContext: ActionC
     sessionData: {
       ...request.sessionData,
       account,
-      organization
+      organization,
     },
   } as Response;
 };

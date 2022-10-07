@@ -28,6 +28,26 @@ export const get: ActionHook = async (request: Request, actionContext: ActionCon
   return response;
 };
 
+export const getMy: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const response: Response = {
+    statusCode: 200,
+    sessionData: request.sessionData,
+  };
+
+  if (request.sessionData?.account?.accountId) {
+    const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
+    const { results } = await businessUnitApi.query(
+      `associates(customer(id="${request.sessionData?.account?.accountId}"))`,
+    );
+
+    if (results?.length) {
+      response.body = JSON.stringify(results[0]);
+    }
+  }
+
+  return response;
+};
+
 export const create: ActionHook = async (request: Request, actionContext: ActionContext) => {
   const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
   const data = mapRequestToBusinessUnit(request);

@@ -53,6 +53,7 @@ export const login = async (email: string, password: string, remember?: boolean)
   if (remember) window.localStorage.setItem(REMEMBER_ME, '1');
   const res = await fetchApiHub('/action/account/login', { method: 'POST' }, payload);
   await mutate('/action/account/getAccount', res);
+  await mutate('/action/business-unit/getMy', res);
   return res;
 };
 
