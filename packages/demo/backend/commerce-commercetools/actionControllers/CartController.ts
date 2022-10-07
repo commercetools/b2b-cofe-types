@@ -112,7 +112,7 @@ export const addItemsToCart: ActionHook = async (request: Request, actionContext
     count: +variant.count || 1,
   }));
 
-  const distributionChannel = request.sessionData.organization?.distributionChannelId;
+  const distributionChannel = request.sessionData.organization?.distributionChannel?.id;
 
   let cart = await CartFetcher.fetchCart(request, actionContext);
   cart = await cartApi.addItemsToCart(cart, lineItems, distributionChannel);
