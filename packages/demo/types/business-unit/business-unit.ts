@@ -12,6 +12,11 @@ export enum BusinessUnitStatus {
   Inactive = 'Inactive',
 }
 
+export enum StoreMode {
+  Explicit = 'Explicit',
+  FromParent = 'FromParent',
+}
+
 export interface BusinessUnitResourceIdentifier {
   id?: string;
   key: string;
@@ -22,7 +27,7 @@ export interface BusinessUnit {
   key: string;
   status: BusinessUnitStatus;
   stores?: StoreKeyReference[];
-  storeMode: 'Explicit';
+  storeMode: StoreMode;
   unitType: BusinessUnitType;
   name: string;
   contactEmail?: string;

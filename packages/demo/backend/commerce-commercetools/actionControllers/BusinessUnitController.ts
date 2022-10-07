@@ -1,16 +1,17 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
-import { BusinessUnit, BusinessUnitStatus, BusinessUnitType } from '../../../types/business-unit/business-unit';
+import { BusinessUnit, BusinessUnitStatus, BusinessUnitType, StoreMode } from '../../../types/business-unit/business-unit';
 import { AssociateRole } from '../../../types/associate/Associate';
 import { BusinessUnitApi } from '../apis/BusinessUnitApi';
 import { getLocale } from '../utils/Request';
 import { AccountRegisterBody } from './AccountController';
-import { Store } from '../../../types/store/store';
+import { Store, StoreKeyReference } from '../../../types/store/store';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
 export interface BusinessUnitRequestBody {
   account: AccountRegisterBody;
-  store: Store;
+  store?: Store;
+  parentBusinessUnit?: string;
   customer: {
     accountId: string;
   };
@@ -106,18 +107,32 @@ function mapRequestToBusinessUnit(request: Request): BusinessUnit {
   const businessUnitBody: BusinessUnitRequestBody = JSON.parse(request.body);
   const key = businessUnitBody.account.company.toLowerCase().replace(/ /g, '_');
 
+  let storeMode = StoreMode.Explicit;
+  let unitType = BusinessUnitType.Company;
+  const stores: StoreKeyReference[] = [];
+
+  if (businessUnitBody.parentBusinessUnit && !businessUnitBody.store) {
+    storeMode = StoreMode.FromParent;
+  }
+
+  if (businessUnitBody.parentBusinessUnit) {
+    unitType = BusinessUnitType.Division;
+  }
+
+  if (businessUnitBody.store) {
+    stores.push({
+        typeId: 'store',
+        id: businessUnitBody.store.id
+    })
+  }
+
   const businessUnit: BusinessUnit = {
     key: `business_unit_${key}`,
     name: businessUnitBody.account.company,
     status: BusinessUnitStatus.Active,
-    stores: [
-      {
-        typeId: 'store',
-        id: businessUnitBody.store.id,
-      },
-    ],
-    storeMode: 'Explicit',
-    unitType: BusinessUnitType.Company,
+    stores,
+    storeMode,
+    unitType,
     contactEmail: businessUnitBody.account.email,
     associates: [
       {
@@ -129,6 +144,13 @@ function mapRequestToBusinessUnit(request: Request): BusinessUnit {
       },
     ],
   };
+
+  if (businessUnitBody.parentBusinessUnit) {
+    businessUnit.parentUnit = {
+        key: businessUnitBody.parentBusinessUnit,
+        typeId: 'business-unit'
+    }
+  }
 
   return businessUnit;
 }
