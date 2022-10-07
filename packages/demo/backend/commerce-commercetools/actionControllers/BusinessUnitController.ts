@@ -1,5 +1,10 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
-import { BusinessUnit, BusinessUnitStatus, BusinessUnitType, StoreMode } from '../../../types/business-unit/business-unit';
+import {
+  BusinessUnit,
+  BusinessUnitStatus,
+  BusinessUnitType,
+  StoreMode,
+} from '../../../types/business-unit/business-unit';
 import { AssociateRole } from '../../../types/associate/Associate';
 import { BusinessUnitApi } from '../apis/BusinessUnitApi';
 import { getLocale } from '../utils/Request';
@@ -45,6 +50,20 @@ export const getMy: ActionHook = async (request: Request, actionContext: ActionC
       response.body = JSON.stringify(results[0]);
     }
   }
+
+  return response;
+};
+
+export const getMyOrganization: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
+
+  const allOrganization = await businessUnitApi.getTree(request.query['key']);
+
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(allOrganization),
+    sessionData: request.sessionData,
+  };
 
   return response;
 };
@@ -105,7 +124,10 @@ export const query: ActionHook = async (request: Request, actionContext: ActionC
 
 function mapRequestToBusinessUnit(request: Request): BusinessUnit {
   const businessUnitBody: BusinessUnitRequestBody = JSON.parse(request.body);
-  const key = businessUnitBody.account.company.toLowerCase().replace(/ /g, '_');
+  const normalizedName = businessUnitBody.account.company.toLowerCase().replace(/ /g, '_');
+  const key = businessUnitBody.parentBusinessUnit
+    ? `${businessUnitBody.parentBusinessUnit}_div_${normalizedName}`
+    : `business_unit_${normalizedName}`;
 
   let storeMode = StoreMode.Explicit;
   let unitType = BusinessUnitType.Company;
@@ -121,13 +143,13 @@ function mapRequestToBusinessUnit(request: Request): BusinessUnit {
 
   if (businessUnitBody.store) {
     stores.push({
-        typeId: 'store',
-        id: businessUnitBody.store.id
-    })
+      typeId: 'store',
+      id: businessUnitBody.store.id,
+    });
   }
 
   const businessUnit: BusinessUnit = {
-    key: `business_unit_${key}`,
+    key,
     name: businessUnitBody.account.company,
     status: BusinessUnitStatus.Active,
     stores,
@@ -147,9 +169,9 @@ function mapRequestToBusinessUnit(request: Request): BusinessUnit {
 
   if (businessUnitBody.parentBusinessUnit) {
     businessUnit.parentUnit = {
-        key: businessUnitBody.parentBusinessUnit,
-        typeId: 'business-unit'
-    }
+      key: businessUnitBody.parentBusinessUnit,
+      typeId: 'business-unit',
+    };
   }
 
   return businessUnit;

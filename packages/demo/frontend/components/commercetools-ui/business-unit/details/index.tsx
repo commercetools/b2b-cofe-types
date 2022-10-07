@@ -2,6 +2,7 @@ import React from 'react';
 import { Organization } from '@Types/organization/organization';
 import AddressesSection from 'components/commercetools-ui/business-unit/details/addresses';
 import GeneralSection from 'components/commercetools-ui/business-unit/details/general';
+import ManageSection from 'components/commercetools-ui/business-unit/details/manage';
 import StoresSection from 'components/commercetools-ui/business-unit/details/stores';
 import UsersSection from 'components/commercetools-ui/business-unit/details/users';
 import { useFormat } from 'helpers/hooks/useFormat';
@@ -25,6 +26,7 @@ export const BusinessUnitDetails: React.FC<BusinessUnitDetailsProps> = ({ organi
     { name: formatAccountMessage({ id: 'addresses', defaultMessage: 'Addresses' }), href: '#addresses' },
     { name: formatAccountMessage({ id: 'stores', defaultMessage: 'Stores' }), href: '#stores' },
     { name: formatAccountMessage({ id: 'users', defaultMessage: 'Users' }), href: '#users' },
+    { name: formatAccountMessage({ id: 'manage', defaultMessage: 'Manage' }), href: '#manage' },
   ];
 
   //tabs change (mobile only)
@@ -38,6 +40,8 @@ export const BusinessUnitDetails: React.FC<BusinessUnitDetailsProps> = ({ organi
     '#addresses': AddressesSection,
     '#stores': StoresSection,
     '#users': UsersSection,
+    // TODO: only show if isAdmin
+    '#manage': ManageSection,
   };
 
   //current rendered content

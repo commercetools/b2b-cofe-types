@@ -112,4 +112,29 @@ export class BusinessUnitApi extends BaseApi {
       throw e;
     }
   };
+
+  getTree: (key: string) => Promise<BusinessUnit> = async (key: string) => {
+    const thisNode = await this.get(key);
+    const allNodes = await this.query(`topLevelUnit(key="${thisNode.topLevelUnit.key}")`);
+    const data = allNodes.results;
+
+    const idMapping = data.reduce((acc, el, i) => {
+      acc[el.key] = i;
+      return acc;
+    }, {});
+
+    let root;
+    data.forEach((el) => {
+      // Handle the root element
+      if (!el.parentUnit) {
+        root = el;
+        return;
+      }
+      // Use our mapping to locate the parent element in our data array
+      const parentEl = data[idMapping[el.parentUnit.key]];
+      // Add our current el to its parent's `children` array
+      parentEl.children = [...(parentEl.children || []), el];
+    });
+    return root;
+  };
 }

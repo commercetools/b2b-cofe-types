@@ -38,7 +38,9 @@ export interface BusinessUnit {
   defaultBillingAddress?: number;
   associates?: Associate[];
   parentUnit?: BusinessUnitResourceIdentifier;
+  topLevelUnit?: BusinessUnitResourceIdentifier;
   version?: number;
+  children?: BusinessUnit[];
 }
 
 export interface BusinessUnitPagedQueryResponse {

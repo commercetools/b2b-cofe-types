@@ -16,7 +16,13 @@ import {
   setDefaultShippingAddress,
 } from '../../actions/account';
 import { createSession, adyenCheckout } from '../../actions/adyen';
-import { updateName, addAddress as addBusinessUnitAdddress, getMyBusinessUnit } from '../../actions/business-unit';
+import {
+  updateName,
+  addAddress as addBusinessUnitAdddress,
+  getMyBusinessUnit,
+  createBusinessUnitAndStore,
+  getMyOrganization,
+} from '../../actions/business-unit';
 import {
   cartItems,
   addItem,
@@ -54,8 +60,10 @@ export const getFrontasticState = (): FrontasticState => {
   return {
     useBusinessUnit: {
       businessUnit: getMyBusinessUnit(),
+      getMyOrganization,
       updateName,
       addAddress: addBusinessUnitAdddress,
+      createBusinessUnitAndStore,
     },
     useProducts: {
       query,
