@@ -1,29 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { PlusIcon, PencilIcon, UserIcon, XIcon } from '@heroicons/react/solid';
 import { BusinessUnit } from '@Types/business-unit/business-unit';
 import { useCenteredTree } from 'helpers/hooks/useCenteredTree';
 import { useFormat } from 'helpers/hooks/useFormat';
 import Tree from 'react-d3-tree';
-import { useAccount, useBusinessUnit } from 'frontastic';
-import CreateBusinessUnit from '../../new';
+import { useBusinessUnit } from 'frontastic';
+import Toolbox from './toolbox';
 
 const Manage = () => {
   const { dimensions, translate, containerRef } = useCenteredTree();
-  const { businessUnit, createBusinessUnitAndStore, getMyOrganization } = useBusinessUnit();
-  const { account } = useAccount();
+  const { businessUnit, getMyOrganization } = useBusinessUnit();
   const { formatMessage } = useFormat({ name: 'business-unit' });
 
   const [tree, setTree] = useState<BusinessUnit[]>(null);
-  const [isNewBUModalOpen, setIsNewBUModalOpen] = useState(false);
   const [currentSelectedBU, setCurrentSelectedBU] = useState<BusinessUnit>(null);
 
   // TODO: move to data source
   useEffect(() => {
-    (async () => {
-      const res = await getMyOrganization(businessUnit.key);
-      setTree(res);
-    })();
+    getOrganizationTree();
   }, []);
+
+  const getOrganizationTree = async () => {
+    const res = await getMyOrganization(businessUnit.key);
+    setTree(res);
+  };
 
   const renderNodeWithCustomEvents = ({
     nodeDatum,
@@ -52,19 +51,11 @@ const Manage = () => {
 
   const selectBusinessUnit = (nodeDatum: any = null) => {
     if (!nodeDatum) {
-      setIsNewBUModalOpen(false);
+      //   setIsNewBUModalOpen(false);
       setCurrentSelectedBU(null);
     } else {
       setCurrentSelectedBU(nodeDatum);
     }
-  };
-
-  const createBusinessUnit = (data) => {
-    createBusinessUnitAndStore(
-      { ...data, email: account.email },
-      { accountId: account.accountId },
-      currentSelectedBU.key,
-    );
   };
 
   if (!tree) {
@@ -74,21 +65,11 @@ const Manage = () => {
   return (
     <div>
       {!!currentSelectedBU && (
-        <div className="border p-2">
-          <h2>{`Toolbox: actions on ${currentSelectedBU.name}`}</h2>
-          <button className="button button-primary--small mr-2" onClick={() => setIsNewBUModalOpen(true)}>
-            <PlusIcon className="h-4 w-4" />
-          </button>
-          <button className="button button-primary--small mx-2" onClick={() => setIsNewBUModalOpen(true)}>
-            <PencilIcon className="h4 w-4" />
-          </button>
-          <button className="button button-primary--small mx-2" onClick={() => setIsNewBUModalOpen(true)}>
-            <UserIcon className="h4 w-4" />
-          </button>
-          <button className="button button-primary--small ml-2" onClick={() => selectBusinessUnit()}>
-            <XIcon className="h4 w-4" />
-          </button>
-        </div>
+        <Toolbox
+          selectedBU={currentSelectedBU}
+          handleBUSelection={selectBusinessUnit}
+          getOrganizationTree={getOrganizationTree}
+        />
       )}
       <div id="treeWrapper" style={{ width: '100%', height: '20em' }} ref={containerRef}>
         <Tree
@@ -98,12 +79,6 @@ const Manage = () => {
           translate={translate}
         />
       </div>
-
-      <CreateBusinessUnit
-        open={isNewBUModalOpen}
-        createBusinessUnit={createBusinessUnit}
-        onClose={() => selectBusinessUnit()}
-      />
     </div>
   );
 };

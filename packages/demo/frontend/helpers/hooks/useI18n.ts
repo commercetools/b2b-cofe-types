@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const useI18n = () => {
-  const [country, setCountry] = useState('DE');
+  const [country, setCountry] = useState('US');
 
   return { country };
 };

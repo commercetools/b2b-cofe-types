@@ -1,6 +1,7 @@
 import { useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { BusinessUnit as BusinessUnitType } from '@Types/business-unit/business-unit';
+import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useDarkMode } from 'frontastic';
 
@@ -20,6 +21,7 @@ const CreateBusinessUnit: React.FC<CreateBusinessUnitProps> = ({ open, onClose, 
 
   //new address data
   const [data, setData] = useState({} as BusinessUnitType);
+  const [isLoading, setIsLoading] = useState(false);
 
   //input change handler
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,19 +29,21 @@ const CreateBusinessUnit: React.FC<CreateBusinessUnitProps> = ({ open, onClose, 
   };
 
   //submission handler
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
-      createBusinessUnit(data);
+      await createBusinessUnit(data);
     } catch (err) {
     } finally {
+      setIsLoading(false);
       onClose();
     }
   };
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog className={`${mode} fixed inset-0 z-10 overflow-y-auto`} onClose={onClose}>
+      <Dialog className={`${mode} default fixed inset-0 z-10 overflow-y-auto`} onClose={onClose}>
         <>
           <div className="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-left sm:block sm:p-0">
             <Transition.Child
@@ -76,16 +80,16 @@ const CreateBusinessUnit: React.FC<CreateBusinessUnitProps> = ({ open, onClose, 
                   {/* eslint-enable */}
                   <div className="relative mx-auto max-w-xl">
                     <div className="text-center">
-                      <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-light-100 sm:text-4xl">
+                      <h2 className="dark:text-light-100 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
                         {formatAccountMessage({
                           id: 'business-unit.create.headline',
-                          defaultMessage: 'New Business Unit',
+                          defaultMessage: 'New company division',
                         })}
                       </h2>
                       <p className="mt-4 text-lg leading-6 text-gray-400">
                         {formatAccountMessage({
                           id: 'business-unit.create.dec',
-                          defaultMessage: 'Add a new business unit as a division to current unit',
+                          defaultMessage: 'Add a new division to current company/division',
                         })}
                       </p>
                     </div>
@@ -94,7 +98,7 @@ const CreateBusinessUnit: React.FC<CreateBusinessUnitProps> = ({ open, onClose, 
                         <div>
                           <label
                             htmlFor="company"
-                            className="block text-sm font-medium text-gray-700 dark:text-light-100"
+                            className="dark:text-light-100 block text-sm font-medium text-gray-700"
                           >
                             {formatMessage({ id: 'division-name', defaultMessage: 'Division Name' })}
                           </label>
@@ -104,21 +108,18 @@ const CreateBusinessUnit: React.FC<CreateBusinessUnitProps> = ({ open, onClose, 
                               type="text"
                               name="company"
                               id="company"
-                              className="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-accent-400 focus:ring-accent-400"
+                              className="focus:border-accent-400 focus:ring-accent-400 block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm"
                               onChange={handleChange}
                             />
                           </div>
                         </div>
-                        <div className="mt-4 flex gap-4 sm:col-span-2 sm:gap-8">
-                          <button
-                            type="button"
-                            className="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-gray-400 py-3 px-6 text-base font-medium text-white shadow-sm transition-colors duration-200 ease-out hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                            onClick={onClose}
-                          >
+                        <div className="mt-4 flex justify-between gap-4 sm:col-span-2 sm:gap-8">
+                          <button type="button" className="button button-secondary" onClick={onClose}>
                             {formatMessage({ id: 'cancel', defaultMessage: 'Cancel' })}
                           </button>
                           <button type="submit" className="button button-primary">
-                            {formatMessage({ id: 'save', defaultMessage: 'Save' })}
+                            {!isLoading && formatMessage({ id: 'save', defaultMessage: 'Save' })}
+                            {isLoading && <LoadingIcon className="h-6 w-6 animate-spin" />}
                           </button>
                         </div>
                       </form>
