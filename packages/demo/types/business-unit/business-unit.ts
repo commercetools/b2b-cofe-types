@@ -41,6 +41,7 @@ export interface BusinessUnit {
   topLevelUnit?: BusinessUnitResourceIdentifier;
   version?: number;
   children?: BusinessUnit[];
+  isAdmin?: boolean;
 }
 
 export interface BusinessUnitPagedQueryResponse {

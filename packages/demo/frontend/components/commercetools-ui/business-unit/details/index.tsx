@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Organization } from '@Types/organization/organization';
 import AddressesSection from 'components/commercetools-ui/business-unit/details/addresses';
 import GeneralSection from 'components/commercetools-ui/business-unit/details/general';
@@ -7,6 +7,7 @@ import StoresSection from 'components/commercetools-ui/business-unit/details/sto
 import UsersSection from 'components/commercetools-ui/business-unit/details/users';
 import { useFormat } from 'helpers/hooks/useFormat';
 import useHash from 'helpers/hooks/useHash';
+import { useBusinessUnit } from 'frontastic';
 
 interface BusinessUnitDetailsProps {
   organization: Organization;
@@ -18,31 +19,37 @@ function classNames(...classes) {
 
 export const BusinessUnitDetails: React.FC<BusinessUnitDetailsProps> = ({ organization }) => {
   const { formatMessage: formatAccountMessage } = useFormat({ name: 'account' });
+  const { businessUnit } = useBusinessUnit();
   const hash = useHash();
 
-  //tabs
-  const tabs = [
+  const [tabs, setTabs] = useState([
     { name: formatAccountMessage({ id: 'general', defaultMessage: 'General' }), href: '#' },
     { name: formatAccountMessage({ id: 'addresses', defaultMessage: 'Addresses' }), href: '#addresses' },
     { name: formatAccountMessage({ id: 'stores', defaultMessage: 'Stores' }), href: '#stores' },
     { name: formatAccountMessage({ id: 'users', defaultMessage: 'Users' }), href: '#users' },
-    { name: formatAccountMessage({ id: 'manage', defaultMessage: 'Manage' }), href: '#manage' },
-  ];
+  ]);
+
+  const [mapping, setMapping] = useState<Record<string, React.FC<{ organization: object }>>>({
+    '#': GeneralSection,
+    '#addresses': AddressesSection,
+    '#stores': StoresSection,
+    '#users': UsersSection,
+  });
 
   //tabs change (mobile only)
   const handleTabChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     window.location.hash = e.target.value;
   };
 
-  //tabs-content mapping
-  const mapping = {
-    '#': GeneralSection,
-    '#addresses': AddressesSection,
-    '#stores': StoresSection,
-    '#users': UsersSection,
-    // TODO: only show if isAdmin
-    '#manage': ManageSection,
-  };
+  useEffect(() => {
+    if (businessUnit.isAdmin) {
+      setTabs([...tabs, { name: formatAccountMessage({ id: 'manage', defaultMessage: 'Manage' }), href: '#manage' }]);
+      setMapping({
+        ...mapping,
+        ['#manage']: ManageSection,
+      });
+    }
+  }, [businessUnit.isAdmin]);
 
   //current rendered content
   const Content = mapping[hash];
@@ -71,7 +78,7 @@ export const BusinessUnitDetails: React.FC<BusinessUnitDetailsProps> = ({ organi
                           id="selected-tab"
                           name="selected-tab"
                           className="mt-1 block w-full rounded-md border-gray-300 py-2 pr-10 pl-3 text-base focus:border-accent-400 focus:outline-none focus:ring-accent-400 sm:text-sm"
-                          defaultValue={tabs.find((tab) => tab.href === hash).name}
+                          defaultValue={tabs.find((tab) => tab.href === hash)?.name}
                           onChange={handleTabChange}
                         >
                           {tabs.map((tab) => (

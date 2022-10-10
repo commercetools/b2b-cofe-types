@@ -8,9 +8,8 @@ export class ChannelApi extends BaseApi {
     if (accountId) {
       const businessUnitApi = new BusinessUnitApi(this.frontasticContext, this.locale);
 
-      const { results } = await businessUnitApi.query(`associates(customer(id="${accountId}"))`);
-      if (results?.length) {
-        const businessUnit = results[0];
+      const businessUnit = await businessUnitApi.getMe(accountId);
+      if (businessUnit) {
         organization.businessUnit = businessUnit;
         const storeApi = new StoreApi(this.frontasticContext, this.locale);
         // @ts-ignore
@@ -22,6 +21,7 @@ export class ChannelApi extends BaseApi {
         }
       }
     }
+
     return organization;
   };
 }

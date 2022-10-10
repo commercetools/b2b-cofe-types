@@ -1,6 +1,7 @@
 import { BaseApi } from './BaseApi';
 import axios from 'axios';
 import { BusinessUnit, BusinessUnitPagedQueryResponse } from '../../../types/business-unit/business-unit';
+import { AssociateRole } from '../../../types/associate/Associate';
 
 export class BusinessUnitApi extends BaseApi {
   getAccessToken = async (): Promise<string> => {
@@ -89,6 +90,28 @@ export class BusinessUnitApi extends BaseApi {
         },
       );
       return response.data;
+    } catch (e) {
+      throw e;
+    }
+  };
+
+  private isUserAdminInBusinessUnit = (businessUnit: BusinessUnit, accountId: string): boolean => {
+    const currentUserAssociate = businessUnit.associates.find((associate) => associate.customer.id === accountId);
+    if (currentUserAssociate?.roles.some((role) => role === AssociateRole.Admin)) {
+      return !businessUnit.parentUnit;
+    }
+    return false;
+  };
+
+  getMe: (accountId: string) => Promise<any> = async (accountId: string) => {
+    try {
+      const response = await this.query(`associates(customer(id="${accountId}"))`);
+      if (response.results.length) {
+        const businessUnit = response.results[0];
+        businessUnit.isAdmin = this.isUserAdminInBusinessUnit(businessUnit, accountId);
+        return businessUnit;
+      }
+      return response;
     } catch (e) {
       throw e;
     }

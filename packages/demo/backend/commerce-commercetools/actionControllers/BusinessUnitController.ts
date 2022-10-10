@@ -42,12 +42,10 @@ export const getMy: ActionHook = async (request: Request, actionContext: ActionC
 
   if (request.sessionData?.account?.accountId) {
     const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
-    const { results } = await businessUnitApi.query(
-      `associates(customer(id="${request.sessionData?.account?.accountId}"))`,
-    );
+    const businessUnit = await businessUnitApi.getMe(request.sessionData?.account?.accountId);
 
-    if (results?.length) {
-      response.body = JSON.stringify(results[0]);
+    if (businessUnit) {
+      response.body = JSON.stringify(businessUnit);
     }
   }
 
