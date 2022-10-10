@@ -2,6 +2,7 @@ import { DataSourceConfiguration, DataSourceContext } from '@frontastic/extensio
 import { getLocale } from './utils/Request';
 import { ProductApi } from './apis/ProductApi';
 import { ProductQueryFactory } from './utils/ProductQueryFactory';
+import { BusinessUnitApi } from './apis/BusinessUnitApi';
 export default {
   'frontastic/product-list': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     const distributionChannelId = context.request.sessionData?.organization?.distributionChannel?.id;
@@ -68,6 +69,15 @@ export default {
     return {
       dataSourcePayload: {
         organization: context.request.sessionData?.organization,
+      },
+    };
+  },
+  'b2b/organization-tree': async (config: DataSourceConfiguration, context: DataSourceContext) => {
+    const businessUnitApi = new BusinessUnitApi(context.frontasticContext,context.request ? getLocale(context.request) : null );
+    const tree = await businessUnitApi.getTree(context.request.sessionData?.organization.businessUnit.key);
+    return {
+      dataSourcePayload: {
+        tree,
       },
     };
   },

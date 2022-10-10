@@ -14,6 +14,12 @@
           "default": true
         },
         {
+          "label": "Show list view",
+          "field": "showListView",
+          "type": "boolean",
+          "default": false
+        },
+        {
           "label": "Products Per Page",
           "field": "perPage",
           "type": "number",
