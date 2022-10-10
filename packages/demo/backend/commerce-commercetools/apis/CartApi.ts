@@ -38,7 +38,10 @@ import { Discount } from '../../../types/cart/Discount';
 import { ActionResult } from '@Types/result/ActionResult';
 
 export class CartApi extends BaseApi {
-  getForUser: (account: Account, businessUnitKey: string) => Promise<Cart> = async (account: Account, businessUnitKey: string) => {
+  getForUser: (account: Account, businessUnitKey: string) => Promise<Cart> = async (
+    account: Account,
+    businessUnitKey: string,
+  ) => {
     try {
       const locale = await this.getCommercetoolsLocal();
 
@@ -68,7 +71,6 @@ export class CartApi extends BaseApi {
       throw new Error(`getForUser failed. ${error}`);
     }
   };
-
 
   createCart: (customerId: string, businessUnitKey: string) => Promise<Cart> = async (
     customerId: string,

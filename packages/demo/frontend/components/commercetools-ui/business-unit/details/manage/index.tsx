@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { BusinessUnit } from '@Types/business-unit/business-unit';
+import Tree from 'react-d3-tree';
 import { useCenteredTree } from 'helpers/hooks/useCenteredTree';
 import { useFormat } from 'helpers/hooks/useFormat';
-import Tree from 'react-d3-tree';
 import { useBusinessUnit } from 'frontastic';
 import Toolbox from './toolbox';
 

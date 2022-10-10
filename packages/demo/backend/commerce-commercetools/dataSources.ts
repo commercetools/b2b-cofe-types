@@ -73,7 +73,10 @@ export default {
     };
   },
   'b2b/organization-tree': async (config: DataSourceConfiguration, context: DataSourceContext) => {
-    const businessUnitApi = new BusinessUnitApi(context.frontasticContext,context.request ? getLocale(context.request) : null );
+    const businessUnitApi = new BusinessUnitApi(
+      context.frontasticContext,
+      context.request ? getLocale(context.request) : null,
+    );
     const tree = await businessUnitApi.getTree(context.request.sessionData?.organization.businessUnit.key);
     return {
       dataSourcePayload: {

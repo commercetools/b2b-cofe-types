@@ -80,7 +80,7 @@ const CreateBusinessUnit: React.FC<CreateBusinessUnitProps> = ({ open, onClose, 
                   {/* eslint-enable */}
                   <div className="relative mx-auto max-w-xl">
                     <div className="text-center">
-                      <h2 className="dark:text-light-100 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                      <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-light-100 sm:text-4xl">
                         {formatAccountMessage({
                           id: 'business-unit.create.headline',
                           defaultMessage: 'New company division',
@@ -98,7 +98,7 @@ const CreateBusinessUnit: React.FC<CreateBusinessUnitProps> = ({ open, onClose, 
                         <div>
                           <label
                             htmlFor="company"
-                            className="dark:text-light-100 block text-sm font-medium text-gray-700"
+                            className="block text-sm font-medium text-gray-700 dark:text-light-100"
                           >
                             {formatMessage({ id: 'division-name', defaultMessage: 'Division Name' })}
                           </label>
@@ -108,7 +108,7 @@ const CreateBusinessUnit: React.FC<CreateBusinessUnitProps> = ({ open, onClose, 
                               type="text"
                               name="company"
                               id="company"
-                              className="focus:border-accent-400 focus:ring-accent-400 block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm"
+                              className="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-accent-400 focus:ring-accent-400"
                               onChange={handleChange}
                             />
                           </div>
