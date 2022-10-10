@@ -57,7 +57,7 @@ export const BusinessUnitDetails: React.FC<BusinessUnitDetailsProps> = ({ organi
                 <div className="pt-10 pb-16">
                   <div className="w-full">
                     <h1 className="text-center text-3xl font-extrabold text-gray-900 dark:text-light-100 sm:text-left">
-                      {formatAccountMessage({ id: 'business-unit-settings', defaultMessage: 'Business Unit Settings' })}
+                      {formatAccountMessage({ id: 'company-settings', defaultMessage: 'Company Settings' })}
                     </h1>
                   </div>
                   <div className="w-full">

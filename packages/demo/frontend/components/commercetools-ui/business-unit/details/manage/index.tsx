@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { PlusIcon, PencilIcon, UserIcon, XIcon } from '@heroicons/react/solid';
 import { BusinessUnit } from '@Types/business-unit/business-unit';
-import Tree from 'react-d3-tree';
 import { useCenteredTree } from 'helpers/hooks/useCenteredTree';
+import { useFormat } from 'helpers/hooks/useFormat';
+import Tree from 'react-d3-tree';
 import { useAccount, useBusinessUnit } from 'frontastic';
 import CreateBusinessUnit from '../../new';
 
@@ -10,6 +11,7 @@ const Manage = () => {
   const { dimensions, translate, containerRef } = useCenteredTree();
   const { businessUnit, createBusinessUnitAndStore, getMyOrganization } = useBusinessUnit();
   const { account } = useAccount();
+  const { formatMessage } = useFormat({ name: 'business-unit' });
 
   const [tree, setTree] = useState<BusinessUnit[]>(null);
   const [isNewBUModalOpen, setIsNewBUModalOpen] = useState(false);
@@ -38,7 +40,8 @@ const Manage = () => {
       />
       {nodeDatum.key === businessUnit.key && (
         <text fill="black" strokeWidth="0.5" x="-20" y="-15">
-          Your Business Unit
+          {/* TODO: check if it's a division */}
+          {formatMessage({ id: 'your-company', defaultMessage: 'Your company' })}
         </text>
       )}
       <text fill="black" strokeWidth="0.5" x="5" y="25" fontSize="8">
