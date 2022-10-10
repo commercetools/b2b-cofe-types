@@ -1,7 +1,6 @@
 import { ActionContext, Request } from '@frontastic/extension-types';
 import { Cart } from '../../../types/cart/Cart';
 import { CartApi } from '../../commerce-commercetools/apis/CartApi';
-import { Guid } from './Guid';
 import { getLocale } from './Request';
 
 export class CartFetcher {
@@ -9,7 +8,7 @@ export class CartFetcher {
     const cartApi = new CartApi(actionContext.frontasticContext, getLocale(request));
 
     if (request.sessionData?.account !== undefined) {
-      return await cartApi.getForUser(request.sessionData.account);
+      return await cartApi.getForUser(request.sessionData.account, request.sessionData.organization.businessUnit.key);
     }
 
     if (request.sessionData?.cartId !== undefined) {
@@ -20,6 +19,7 @@ export class CartFetcher {
       }
     }
 
-    return await cartApi.getAnonymous(Guid.newGuid());
+    // @ts-ignore
+    return {};
   }
 }

@@ -38,7 +38,7 @@ import { Discount } from '../../../types/cart/Discount';
 import { ActionResult } from '@Types/result/ActionResult';
 
 export class CartApi extends BaseApi {
-  getForUser: (account: Account) => Promise<Cart> = async (account: Account) => {
+  getForUser: (account: Account, businessUnitKey: string) => Promise<Cart> = async (account: Account, businessUnitKey: string) => {
     try {
       const locale = await this.getCommercetoolsLocal();
 
@@ -62,64 +62,31 @@ export class CartApi extends BaseApi {
         return this.buildCartWithAvailableShippingMethods(response.body.results[0], locale);
       }
 
-      const cartDraft: CartDraft = {
-        currency: locale.currency,
-        country: locale.country,
-        locale: locale.language,
-        customerId: account.accountId,
-        inventoryMode: 'ReserveOnOrder',
-      };
-
-      const commercetoolsCart = await this.getApiForProject()
-        .carts()
-        .post({
-          queryArgs: {
-            expand: [
-              'lineItems[*].discountedPrice.includedDiscounts[*].discount',
-              'discountCodes[*].discountCode',
-              'paymentInfo.payments[*]',
-            ],
-          },
-          body: cartDraft,
-        })
-        .execute();
-
-      return this.buildCartWithAvailableShippingMethods(commercetoolsCart.body, locale);
+      return this.createCart(account.accountId, businessUnitKey);
     } catch (error) {
       //TODO: better error, get status code etc...
       throw new Error(`getForUser failed. ${error}`);
     }
   };
 
-  getAnonymous: (anonymousId: string) => Promise<Cart> = async (anonymousId: string) => {
+
+  createCart: (customerId: string, businessUnitKey: string) => Promise<Cart> = async (
+    customerId: string,
+    businessUnitKey: string,
+  ) => {
     try {
       const locale = await this.getCommercetoolsLocal();
-
-      const response = await this.getApiForProject()
-        .carts()
-        .get({
-          queryArgs: {
-            limit: 1,
-            expand: [
-              'lineItems[*].discountedPrice.includedDiscounts[*].discount',
-              'discountCodes[*].discountCode',
-              'paymentInfo.payments[*]',
-            ],
-            where: [`anonymousId="${anonymousId}"`, `cartState="Active"`],
-            sort: 'createdAt desc',
-          },
-        })
-        .execute();
-
-      if (response.body.count >= 1) {
-        return this.buildCartWithAvailableShippingMethods(response.body.results[0], locale);
-      }
 
       const cartDraft: CartDraft = {
         currency: locale.currency,
         country: locale.country,
         locale: locale.language,
-        anonymousId: anonymousId,
+        customerId,
+        // @ts-ignore
+        businessUnit: {
+          key: businessUnitKey,
+          typeId: 'business-unit',
+        },
         inventoryMode: 'ReserveOnOrder',
       };
 
