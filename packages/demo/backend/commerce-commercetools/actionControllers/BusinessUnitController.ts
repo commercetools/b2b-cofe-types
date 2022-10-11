@@ -10,6 +10,7 @@ import { BusinessUnitApi } from '../apis/BusinessUnitApi';
 import { getLocale } from '../utils/Request';
 import { AccountRegisterBody } from './AccountController';
 import { Store, StoreKeyReference } from '../../../types/store/store';
+import { ChannelApi } from '../apis/ChannelApi';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -34,7 +35,7 @@ export const get: ActionHook = async (request: Request, actionContext: ActionCon
   return response;
 };
 
-export const getMy: ActionHook = async (request: Request, actionContext: ActionContext) => {
+export const getMe: ActionHook = async (request: Request, actionContext: ActionContext) => {
   const response: Response = {
     statusCode: 200,
     sessionData: request.sessionData,
@@ -42,12 +43,37 @@ export const getMy: ActionHook = async (request: Request, actionContext: ActionC
 
   if (request.sessionData?.account?.accountId) {
     const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
+    const channelApi = new ChannelApi(actionContext.frontasticContext, getLocale(request));
     const businessUnit = await businessUnitApi.getMe(request.sessionData?.account?.accountId);
 
     if (businessUnit) {
+      const organization = await channelApi.getOrganizationByBusinessUnit(businessUnit);
       response.body = JSON.stringify(businessUnit);
+      response.sessionData = {
+        ...response.sessionData,
+        organization,
+      };
     }
   }
+
+  return response;
+};
+
+export const setMe: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
+  const channelApi = new ChannelApi(actionContext.frontasticContext, getLocale(request));
+  const data = JSON.parse(request.body);
+
+  const businessUnit = await businessUnitApi.get(data.key);
+  const organization = await channelApi.getOrganizationByBusinessUnit(businessUnit);
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(businessUnit),
+    sessionData: {
+      ...request.sessionData,
+      organization,
+    },
+  };
 
   return response;
 };
@@ -156,7 +182,7 @@ function mapRequestToBusinessUnit(request: Request): BusinessUnit {
     contactEmail: businessUnitBody.account.email,
     associates: [
       {
-        roles: [AssociateRole.Admin],
+        roles: [AssociateRole.Admin, AssociateRole.Buyer],
         customer: {
           id: businessUnitBody.customer.accountId,
           typeId: 'customer',

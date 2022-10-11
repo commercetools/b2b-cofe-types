@@ -3,21 +3,22 @@ import { BusinessUnit } from '@Types/business-unit/business-unit';
 import Tree from 'react-d3-tree';
 import { useCenteredTree } from 'helpers/hooks/useCenteredTree';
 import { useFormat } from 'helpers/hooks/useFormat';
-import { useBusinessUnit } from 'frontastic';
+import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 import Toolbox from './toolbox';
 
 const Manage = () => {
   const { dimensions, translate, containerRef } = useCenteredTree();
-  const { businessUnit, getMyOrganization } = useBusinessUnit();
+  const { businessUnit, getMyOrganization } = useBusinessUnitStateContext();
   const { formatMessage } = useFormat({ name: 'business-unit' });
 
   const [tree, setTree] = useState<BusinessUnit[]>(null);
   const [currentSelectedBU, setCurrentSelectedBU] = useState<BusinessUnit>(null);
 
-  // TODO: move to data source
   useEffect(() => {
-    getOrganizationTree();
-  }, []);
+    if (businessUnit?.key) {
+      getOrganizationTree();
+    }
+  }, [businessUnit]);
 
   const getOrganizationTree = async () => {
     const res = await getMyOrganization(businessUnit.key);

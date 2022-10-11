@@ -12,17 +12,20 @@ import '../styles/themes/theme1.css';
 import '../styles/themes/theme2.css';
 import '../styles/themes/theme3.css';
 import '../styles/components/index.scss';
+import { BusinessUnitProvider } from 'frontastic/provider/BusinessUnitState';
 
 function FrontasticStarter({ Component, pageProps }: AppProps) {
   return (
     <FrontasticProvider>
-      <UIStateProvider>
-        <RouteGuard>
-          <Component {...pageProps} />
-          <Toaster />
-          <FlyingCart />
-        </RouteGuard>
-      </UIStateProvider>
+      <BusinessUnitProvider>
+        <UIStateProvider>
+          <RouteGuard>
+            <Component {...pageProps} />
+            <Toaster />
+            <FlyingCart />
+          </RouteGuard>
+        </UIStateProvider>
+      </BusinessUnitProvider>
     </FrontasticProvider>
   );
 }

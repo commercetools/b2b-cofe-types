@@ -1,18 +1,24 @@
-import React from 'react';
-
+import React, { useMemo } from 'react';
+import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
+const flatten = (root) =>
+  root
+    ?.reduce((prev, { children, ...rest }) => {
+      return prev.concat({ ...rest }).concat(flatten(children));
+    }, [])
+    .filter((item) => !!item);
 const BusinessUnitDropdownTree = ({ tree }) => {
-  const flatten = (root) =>
-    root
-      ?.reduce((prev, { children, ...rest }) => {
-        return prev.concat({ ...rest }).concat(flatten(children));
-      }, [])
-      .filter((item) => !!item);
+  const { businessUnit, setMyBusinessUnit } = useBusinessUnitStateContext();
+  const flatted = useMemo(() => flatten([tree]), []);
 
-  const flatted = flatten([tree]);
+  const setBusinessUnit = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setMyBusinessUnit(event.target.value);
+  };
+
+  if (!businessUnit) return null;
 
   return (
     <div className="px-1 sm:px-3 lg:px-6">
-      <select>
+      <select defaultValue={businessUnit.key} onChange={setBusinessUnit}>
         {flatted.map((item) => (
           <option key={item.key} value={item.key}>
             {item.name}

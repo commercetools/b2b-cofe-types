@@ -36,11 +36,12 @@ import { Account } from '../../../types/account/Account';
 import { isReadyForCheckout } from '../utils/Cart';
 import { Discount } from '../../../types/cart/Discount';
 import { ActionResult } from '@Types/result/ActionResult';
+import { Organization } from '@Types/organization/organization';
 
 export class CartApi extends BaseApi {
-  getForUser: (account: Account, businessUnitKey: string) => Promise<Cart> = async (
+  getForUser: (account: Account, organization: Organization) => Promise<Cart> = async (
     account: Account,
-    businessUnitKey: string,
+    organization: Organization,
   ) => {
     try {
       const locale = await this.getCommercetoolsLocal();
@@ -55,7 +56,11 @@ export class CartApi extends BaseApi {
               'discountCodes[*].discountCode',
               'paymentInfo.payments[*]',
             ],
-            where: [`customerId="${account.accountId}"`, `cartState="Active"`],
+            where: [
+              `customerId="${account.accountId}"`,
+              `cartState="Active"`,
+              `businessUnit(key="${organization.businessUnit.key}")`,
+            ],
             sort: 'createdAt desc',
           },
         })
@@ -65,16 +70,16 @@ export class CartApi extends BaseApi {
         return this.buildCartWithAvailableShippingMethods(response.body.results[0], locale);
       }
 
-      return this.createCart(account.accountId, businessUnitKey);
+      return this.createCart(account.accountId, organization);
     } catch (error) {
       //TODO: better error, get status code etc...
       throw new Error(`getForUser failed. ${error}`);
     }
   };
 
-  createCart: (customerId: string, businessUnitKey: string) => Promise<Cart> = async (
+  createCart: (customerId: string, organization: Organization) => Promise<Cart> = async (
     customerId: string,
-    businessUnitKey: string,
+    organization: Organization,
   ) => {
     try {
       const locale = await this.getCommercetoolsLocal();
@@ -86,8 +91,12 @@ export class CartApi extends BaseApi {
         customerId,
         // @ts-ignore
         businessUnit: {
-          key: businessUnitKey,
+          key: organization.businessUnit.key,
           typeId: 'business-unit',
+        },
+        store: {
+          key: organization.store.key,
+          typeId: 'store',
         },
         inventoryMode: 'ReserveOnOrder',
       };

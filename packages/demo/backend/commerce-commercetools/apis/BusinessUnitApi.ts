@@ -105,6 +105,7 @@ export class BusinessUnitApi extends BaseApi {
 
   getMe: (accountId: string) => Promise<any> = async (accountId: string) => {
     try {
+      // TODO: find the highest BU in the tree which I am associate
       const response = await this.query(`associates(customer(id="${accountId}"))`);
       if (response.results.length) {
         const businessUnit = response.results[0];
@@ -128,7 +129,6 @@ export class BusinessUnitApi extends BaseApi {
           },
         },
       );
-      console.log('GET', response.data);
 
       return response.data;
     } catch (e) {
@@ -140,6 +140,8 @@ export class BusinessUnitApi extends BaseApi {
     const thisNode = await this.get(key);
     const allNodes = await this.query(`topLevelUnit(key="${thisNode.topLevelUnit.key}")`);
     const data = allNodes.results;
+
+    // TODO: remove the ones that I am not associate
 
     const idMapping = data.reduce((acc, el, i) => {
       acc[el.key] = i;

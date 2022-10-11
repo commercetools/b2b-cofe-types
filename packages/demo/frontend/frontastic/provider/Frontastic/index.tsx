@@ -1,22 +1,32 @@
 import * as React from 'react';
 import { SWRConfig } from 'swr';
+import { useAccount as useAccountHook } from '../../../helpers/hooks/useAccount';
 import { fetchApiHub } from '../../lib/fetch-api-hub';
 import DarkModeProvider from '../DarkMode';
 import { FrontasticState, getFrontasticState } from './FrontasticState';
+import { UseAccount } from './UseAccount';
 
-const initialState: FrontasticState = {
+interface EnhancedFrontasticState extends FrontasticState {
+  useAccount: UseAccount;
+}
+const initialState: EnhancedFrontasticState = {
   useCart: {} as any,
-  useAccount: {} as any,
   useWishlist: {} as any,
+  useAccount: {} as any,
   useAdyen: {} as any,
   useProducts: {} as any,
-  useBusinessUnit: {} as any,
 };
 
-const FrontasticContext = React.createContext<FrontasticState>(initialState);
+const FrontasticContext = React.createContext<EnhancedFrontasticState>(initialState);
 
 export const FrontasticProvider: React.FC = ({ children }) => {
-  const state: FrontasticState = getFrontasticState();
+  const frontasticState: FrontasticState = getFrontasticState();
+  const account = useAccountHook();
+
+  const state = {
+    ...frontasticState,
+    useAccount: account,
+  };
   return (
     <SWRConfig value={{ fetcher: fetchApiHub }}>
       <DarkModeProvider>
@@ -60,10 +70,4 @@ export const useProducts = () => {
   const context = React.useContext(FrontasticContext);
   checkContext(context);
   return context.useProducts;
-};
-
-export const useBusinessUnit = () => {
-  const context = React.useContext(FrontasticContext);
-  checkContext(context);
-  return context.useBusinessUnit;
 };

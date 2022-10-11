@@ -8,7 +8,7 @@ export class CartFetcher {
     const cartApi = new CartApi(actionContext.frontasticContext, getLocale(request));
 
     if (request.sessionData?.account !== undefined) {
-      return await cartApi.getForUser(request.sessionData.account, request.sessionData.organization.businessUnit.key);
+      return await cartApi.getForUser(request.sessionData.account, request.sessionData.organization);
     }
 
     if (request.sessionData?.cartId !== undefined) {

@@ -3,7 +3,7 @@ import { CheckCircleIcon } from '@heroicons/react/outline';
 import { Organization } from '@Types/organization/organization';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { useFormat } from 'helpers/hooks/useFormat';
-import { useBusinessUnit } from 'frontastic';
+import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 
 type Props = {
   organization: Organization;
@@ -14,7 +14,7 @@ const BusinessUnitGeneral: React.FC<Props> = ({ organization }) => {
   const [name, setName] = useState(organization.businessUnit.name);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { updateName } = useBusinessUnit();
+  const { updateName } = useBusinessUnitStateContext();
 
   const updateCompanyName = async () => {
     setIsLoading(true);

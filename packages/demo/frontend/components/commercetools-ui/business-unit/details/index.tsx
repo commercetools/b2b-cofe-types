@@ -7,7 +7,7 @@ import StoresSection from 'components/commercetools-ui/business-unit/details/sto
 import UsersSection from 'components/commercetools-ui/business-unit/details/users';
 import { useFormat } from 'helpers/hooks/useFormat';
 import useHash from 'helpers/hooks/useHash';
-import { useBusinessUnit } from 'frontastic';
+import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 
 interface BusinessUnitDetailsProps {
   organization: Organization;
@@ -19,7 +19,7 @@ function classNames(...classes) {
 
 export const BusinessUnitDetails: React.FC<BusinessUnitDetailsProps> = ({ organization }) => {
   const { formatMessage: formatAccountMessage } = useFormat({ name: 'account' });
-  const { businessUnit } = useBusinessUnit();
+  const { businessUnit } = useBusinessUnitStateContext();
   const hash = useHash();
 
   const [tabs, setTabs] = useState([
@@ -42,14 +42,14 @@ export const BusinessUnitDetails: React.FC<BusinessUnitDetailsProps> = ({ organi
   };
 
   useEffect(() => {
-    if (businessUnit.isAdmin) {
+    if (businessUnit?.isAdmin) {
       setTabs([...tabs, { name: formatAccountMessage({ id: 'manage', defaultMessage: 'Manage' }), href: '#manage' }]);
       setMapping({
         ...mapping,
         ['#manage']: ManageSection,
       });
     }
-  }, [businessUnit.isAdmin]);
+  }, [businessUnit]);
 
   //current rendered content
   const Content = mapping[hash];

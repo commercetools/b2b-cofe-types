@@ -3,7 +3,7 @@ import { PencilAltIcon } from '@heroicons/react/solid';
 import { Organization } from '@Types/organization/organization';
 import CreateAddress from 'components/commercetools-ui/account/details/modals/createAddress';
 import { useFormat } from 'helpers/hooks/useFormat';
-import { useBusinessUnit } from 'frontastic';
+import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 
 type Props = {
   organization: Organization;
@@ -11,7 +11,7 @@ type Props = {
 
 const Addresses: React.FC<Props> = ({ organization }) => {
   const { formatMessage } = useFormat({ name: 'business-unit' });
-  const { addAddress, businessUnit } = useBusinessUnit();
+  const { addAddress, businessUnit } = useBusinessUnitStateContext();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 

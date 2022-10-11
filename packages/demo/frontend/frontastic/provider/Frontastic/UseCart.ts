@@ -8,6 +8,7 @@ import { ProjectSettings } from '@Types/ProjectSettings';
 
 export interface UseCart {
   data?: Cart;
+  getCart: () => Promise<void>;
   addItem: (variant: Variant, quantity: number) => Promise<void>;
   addItems: (lineItems: { variant: Variant; quantity: number }[]) => Promise<void>;
   updateCart: (payload: CartDetails) => Promise<Cart>;

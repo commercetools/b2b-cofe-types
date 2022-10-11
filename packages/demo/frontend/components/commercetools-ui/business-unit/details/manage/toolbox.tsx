@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { PlusIcon, UserIcon, XIcon, ViewListIcon } from '@heroicons/react/outline';
 import CreateAddress from 'components/commercetools-ui/account/details/modals/createAddress';
 import { useFormat } from 'helpers/hooks/useFormat';
-import { useBusinessUnit, useAccount } from 'frontastic';
+import { useAccount } from 'frontastic';
+import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 import CreateBusinessUnit from '../../new';
 
 const Toolbox = ({ selectedBU, getOrganizationTree, handleBUSelection }) => {
   const [isNewBUModalOpen, setIsNewBUModalOpen] = useState(false);
   const [isNewAddressModalOpen, setIsNewAddressModalOpen] = useState(false);
-  const { createBusinessUnitAndStore, addAddress } = useBusinessUnit();
+  const { createBusinessUnitAndStore, addAddress } = useBusinessUnitStateContext();
   const { account } = useAccount();
   const { formatMessage } = useFormat({ name: 'business-unit' });
 

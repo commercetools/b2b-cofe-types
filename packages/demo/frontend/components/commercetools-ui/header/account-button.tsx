@@ -3,9 +3,9 @@ import { Menu, Transition } from '@headlessui/react';
 import { UserIcon } from '@heroicons/react/outline';
 import { Account } from '@Types/account/Account';
 import { Organization } from '@Types/organization/organization';
+import { useAccount } from 'helpers/hooks/useAccount';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { Reference, ReferenceLink } from 'helpers/reference';
-import { logout } from 'frontastic/actions/account';
 
 interface AccountButtonProps {
   organization: Organization;
@@ -16,6 +16,7 @@ interface AccountButtonProps {
 
 const AccountButton: React.FC<AccountButtonProps> = ({ accountLink, account, businessUnitLink, organization }) => {
   const { formatMessage: formatAccountMessage } = useFormat({ name: 'account' });
+  const { logout } = useAccount();
 
   const handleLogout = () => {
     logout();

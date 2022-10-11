@@ -15,6 +15,11 @@ export const cartItems = () => {
   return useSWR('/action/cart/getCart', fetchApiHub, revalidateOptions);
 };
 
+export const getCart = async () => {
+  const res = await fetchApiHub('/action/cart/getCart', { method: 'GET' });
+  mutate('/action/cart/getCart', res);
+};
+
 export const addItem = async (variant: Variant, quantity: number) => {
   const payload = {
     variant: {

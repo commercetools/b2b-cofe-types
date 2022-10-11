@@ -7,4 +7,5 @@ export interface UseBusinessUnit {
   getMyOrganization: (key: string) => Promise<any>;
   updateName: (key: string, name: string) => Promise<any>;
   addAddress: (key: string, address: Omit<Address, 'addressId'>) => Promise<Address>;
+  setMyBusinessUnit: (businessUnitKey: string) => void;
 }
