@@ -141,7 +141,10 @@ const AdyenCheckout = ({ termsLink, cancellationLink, privacyLink }) => {
         />
       ),
     },
-    { name: formatMessage({ id: 'payment', defaultMessage: 'Payment' }), component: <Checkout /> },
+    {
+      name: formatMessage({ id: 'payment', defaultMessage: 'Payment' }),
+      component: <Checkout />,
+    },
   ];
 
   useEffect(() => {

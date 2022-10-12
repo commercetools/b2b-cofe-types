@@ -1,71 +1,62 @@
-import { useEffect, useState } from 'react';
-import AdyenCheckout from '@adyen/adyen-web';
-import { useCart, useAdyen } from 'frontastic';
-import '@adyen/adyen-web/dist/adyen.css';
-import toast from 'react-hot-toast';
+import React, { useState } from 'react';
+import { useFormat } from 'helpers/hooks/useFormat';
+import PoNumber from './payments/PoNumber';
 
-type Session = {
-  id: string;
-  sessionData: string;
-};
+const options = [
+  {
+    id: 'po-number',
+    default: true,
+    value: 'po-number',
+    label: 'Purchase Order (PO)',
+  },
+];
 
-type SessionConfig = {
-  environment: string;
-  clientKey: string;
-  session: Session;
-};
 
-const Checkout = () => {
-  const { data: cartList } = useCart();
-  const { createSession } = useAdyen();
-  const [session, setSession] = useState<Session>();
+const Checkout: React.FC = () => {
+  const { formatMessage } = useFormat({ name: 'checkout' });
 
-  const initializeSession = async (sessionConfiguration: SessionConfig) => {
-    const checkout = await AdyenCheckout(sessionConfiguration);
-    checkout.create('dropin').mount('#dropin-container');
+  const paymentMapToComponent = {
+    'po-number': <PoNumber />,
   };
 
-  useEffect(() => {
-    const host = typeof window !== 'undefined' ? window.location.origin : '';
+  const [PaymentMethodComponent, setPaymentMethodComponent] = useState<React.FC>(
+    paymentMapToComponent[options[0].value],
+  );
 
-    createSession(cartList.sum.centAmount, cartList.sum.currencyCode, `${host}/thank-you`).then((res) => {
-      const { id, sessionData } = res;
-
-      setSession({ id, sessionData });
-    });
-  }, [cartList, createSession]);
-
-  useEffect(() => {
-    if (session) {
-      const sessionConfiguration = {
-        //For demo swiss we allways set to test environment
-        environment: 'test',
-        //environment: process.env.NODE_ENV === 'production' ? 'live' : 'test',
-        clientKey: 'test_VDRCU3ALS5GMDC45GLZGUF6ANM3P75ZK',
-        session,
-        onPaymentCompleted: (result, component) => {
-          console.log(result);
-
-          if (result === 'Authorised') {
-          }
-        },
-        onError: (error, component) => {
-          console.log(error);
-
-          toast.error(error);
-        },
-      };
-
-      initializeSession(sessionConfiguration);
-    }
-  }, [session]);
+  const onChange = (value: string) => {
+    // setSelectedPaymentMethod(value);
+    setPaymentMethodComponent(paymentMapToComponent[value]);
+  };
 
   return (
-    <section
-      id="dropin-container"
-      aria-labelledby="cart-heading"
-      className="bg-white md:rounded md:shadow-md lg:col-span-7"
-    ></section>
+    <section className="bg-white md:rounded md:shadow-md lg:col-span-7 lg:p-5">
+      <fieldset className="mt-4 px-4 py-5 md:px-6 lg:px-0">
+        <div className="mb-4 text-xs font-bold uppercase leading-tight text-neutral-600">
+          <span>{formatMessage({ id: 'paymentMethods', defaultMessage: 'Payment methods' })}</span>
+        </div>
+        <div className="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
+          {options.map((option, index) => (
+            <div key={index} className="flex flex-col px-6 py-6">
+              <div className="flex flex-row">
+                <input
+                  id={option.id}
+                  name="notification-method"
+                  type="radio"
+                  defaultChecked={option.default}
+                  value={option.value}
+                  className="h-4 w-4 border-gray-300 text-accent-400 focus:ring-accent-400"
+                  onChange={(e) => onChange(e.target.value)}
+                />
+                <label htmlFor={option.id} className="ml-3 block text-sm font-medium text-gray-700 dark:text-light-100">
+                  {option.label}
+                </label>
+              </div>
+              {!!PaymentMethodComponent && PaymentMethodComponent}
+            </div>
+          ))}
+        </div>
+      </fieldset>
+    </section>
   );
 };
 
