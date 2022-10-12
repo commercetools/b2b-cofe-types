@@ -11,7 +11,6 @@ const options = [
   },
 ];
 
-
 const Checkout: React.FC = () => {
   const { formatMessage } = useFormat({ name: 'checkout' });
 
@@ -36,7 +35,7 @@ const Checkout: React.FC = () => {
         </div>
         <div className="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
           {options.map((option, index) => (
-            <div key={index} className="flex flex-col px-6 py-6">
+            <div key={index} className="flex flex-col p-6">
               <div className="flex flex-row">
                 <input
                   id={option.id}

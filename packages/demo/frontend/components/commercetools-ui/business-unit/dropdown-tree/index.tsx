@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useFormat } from 'helpers/hooks/useFormat';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 const flatten = (root) =>
   root
@@ -8,6 +9,7 @@ const flatten = (root) =>
     .filter((item) => !!item);
 const BusinessUnitDropdownTree = ({ tree }) => {
   const { businessUnit, setMyBusinessUnit } = useBusinessUnitStateContext();
+  const { formatMessage } = useFormat({ name: 'business-unit' });
   const flatted = useMemo(() => flatten([tree]), []);
 
   const setBusinessUnit = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -17,8 +19,11 @@ const BusinessUnitDropdownTree = ({ tree }) => {
   if (!businessUnit) return null;
 
   return (
-    <div className="px-1 sm:px-3 lg:px-6">
-      <select defaultValue={businessUnit.key} onChange={setBusinessUnit}>
+    <div className="mt-4 flex w-1/2 flex-row px-1 sm:px-3 lg:px-6">
+      <label className="basis-1/2">
+        <span>{formatMessage({ id: 'select-branch', defaultMessage: 'Select a branch:' })}</span>
+      </label>
+      <select defaultValue={businessUnit.key} onChange={setBusinessUnit} className="input input-primary">
         {flatted.map((item) => (
           <option key={item.key} value={item.key}>
             {item.name}

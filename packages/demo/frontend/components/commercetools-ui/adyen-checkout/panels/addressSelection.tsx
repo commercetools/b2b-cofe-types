@@ -62,10 +62,7 @@ const AddressSelection: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> =
         <span>{formatMessage({ id: 'select-address', defaultMessage: 'Select a saved address' })}</span>
       </label>
       {/* TODO: default value can be the last order on this BU */}
-      <select
-        onChange={addressSelectionHandler}
-        className="w-full appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
-      >
+      <select onChange={addressSelectionHandler} className="input input-primary">
         {businessUnit.addresses.map((address) => (
           <option key={address.id} value={address.id}>
             {mapAddressToString(address)}

@@ -31,11 +31,11 @@ const BusinessUnitGeneral: React.FC<Props> = ({ organization }) => {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="ml-2 border-2"
+            className="input input-primary"
           />
         </div>
         <div className="basis-1/2">
-          <label htmlFor="contact-email">
+          <label htmlFor="contact-email" className="ml-2">
             {formatMessage({ id: 'contact-email', defaultMessage: 'Contact Email' })}
           </label>
           <input
@@ -43,7 +43,7 @@ const BusinessUnitGeneral: React.FC<Props> = ({ organization }) => {
             type="text"
             defaultValue={organization.businessUnit.contactEmail}
             readOnly={true}
-            className="ml-2 border-2"
+            className="input input-primary ml-2"
           />
         </div>
         <div className="basis-1/2">
@@ -57,13 +57,15 @@ const BusinessUnitGeneral: React.FC<Props> = ({ organization }) => {
           />
         </div>
         <div className="basis-1/2">
-          <label htmlFor="type">{formatMessage({ id: 'type', defaultMessage: 'Unit type' })}</label>
+          <label htmlFor="type" className="ml-2">
+            {formatMessage({ id: 'type', defaultMessage: 'Unit type' })}
+          </label>
           <input
             id="type"
             type="text"
             defaultValue={organization.businessUnit.unitType}
             readOnly={true}
-            className="ml-2 border-2"
+            className="input input-primary ml-2"
           />
         </div>
       </div>

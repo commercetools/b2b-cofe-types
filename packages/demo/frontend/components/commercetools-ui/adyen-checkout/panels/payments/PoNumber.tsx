@@ -1,5 +1,5 @@
-import { useFormat } from 'helpers/hooks/useFormat';
 import React, { ChangeEvent, useState } from 'react';
+import { useFormat } from 'helpers/hooks/useFormat';
 
 const PoNumber: React.FC = () => {
   const { formatMessage } = useFormat({ name: 'checkout' });
@@ -32,7 +32,7 @@ const PoNumber: React.FC = () => {
         <label className="text-sm leading-tight text-neutral-700" htmlFor="billing-country">
           <span>{formatMessage({ id: 'po-number', defaultMessage: 'PO Number' })}</span> *
           <input
-            className=" w-full appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+            className="input input-primary"
             id="po-number"
             name="poNumber"
             type="text"
@@ -46,7 +46,7 @@ const PoNumber: React.FC = () => {
         <label className="text-sm leading-tight text-neutral-700" htmlFor="billing-country">
           <span>{formatMessage({ id: 'po-number-invoice', defaultMessage: 'Invoice Memo (optional)' })}</span>
           <input
-            className=" w-full appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+            className="input input-primary"
             id="invoice-memo"
             name="invoiceMemo"
             type="text"

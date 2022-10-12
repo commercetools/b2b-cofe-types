@@ -26,7 +26,7 @@ const AddressForm = ({
           <span>{formatCommonMessage({ id: 'firstName', defaultMessage: 'First name' })}</span> *
         </label>
         <input
-          className=" w-full appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+          className=" input input-primary"
           id="firstName"
           name="firstName"
           type="text"
@@ -41,7 +41,7 @@ const AddressForm = ({
           <span>{formatCommonMessage({ id: 'lastName', defaultMessage: 'Last name' })}</span> *
         </label>
         <input
-          className=" w-full appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+          className=" input input-primary"
           id="lastName"
           name="lastName"
           type="text"
@@ -55,7 +55,7 @@ const AddressForm = ({
           {formatCommonMessage({ id: 'phone', defaultMessage: 'Phone number' })}
         </label>
         <input
-          className=" w-full appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+          className=" input input-primary"
           id="phone"
           name="phone"
           type="text"
@@ -69,7 +69,7 @@ const AddressForm = ({
           <span>{formatCommonMessage({ id: 'email', defaultMessage: 'Email' })}</span> *
         </label>
         <input
-          className=" w-full appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+          className=" input input-primary"
           id="email"
           name="email"
           type="email"
@@ -87,7 +87,7 @@ const AddressForm = ({
           <span>{formatCommonMessage({ id: 'street.name', defaultMessage: 'Street name' })}</span> *
         </label>
         <input
-          className=" w-full appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+          className=" input input-primary"
           id="shipping-street-name"
           name="shippingStreetName"
           type="text"
@@ -102,7 +102,7 @@ const AddressForm = ({
           <span>{formatCommonMessage({ id: 'city', defaultMessage: 'City' })}</span> *
         </label>
         <input
-          className=" w-full appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+          className=" input input-primary"
           id="shipping-city"
           name="shippingCity"
           type="text"
@@ -117,7 +117,7 @@ const AddressForm = ({
           <span>{formatCommonMessage({ id: 'zipCode', defaultMessage: 'Postal code' })}</span> *
         </label>
         <input
-          className=" w-full appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+          className=" input input-primary"
           id="shipping-postalCode"
           name="shippingPostalCode"
           type="text"
@@ -134,7 +134,7 @@ const AddressForm = ({
         <select
           id="shipping-country"
           name="shippingCountry"
-          className=" w-full appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+          className=" input input-primary"
           onChange={handleChange}
           value={data.shippingCountry}
         >
@@ -177,7 +177,7 @@ const AddressForm = ({
               <span>{formatCommonMessage({ id: 'street.name', defaultMessage: 'Street name' })}</span> *
             </label>
             <input
-              className="w-full appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+              className="input input-primary"
               id="billing-street-name"
               name="billingStreetName"
               type="text"
@@ -192,7 +192,7 @@ const AddressForm = ({
               <span>{formatCommonMessage({ id: 'city', defaultMessage: 'City' })}</span> *
             </label>
             <input
-              className="w-full appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+              className="input input-primary"
               id="billing-city"
               name="billingCity"
               type="text"
@@ -207,7 +207,7 @@ const AddressForm = ({
               <span>{formatCommonMessage({ id: 'zipCode', defaultMessage: 'Postal code' })}</span> *
             </label>
             <input
-              className="w-full appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+              className="input input-primary"
               id="billing-postalCode"
               name="billingPostalCode"
               type="text"
@@ -224,7 +224,7 @@ const AddressForm = ({
             <select
               id="billing-country"
               name="billingCountry"
-              className="w-full appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+              className="input input-primary"
               onChange={handleChange}
               value={data.billingCountry}
             >
