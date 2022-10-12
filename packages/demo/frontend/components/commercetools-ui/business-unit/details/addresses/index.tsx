@@ -9,14 +9,14 @@ type Props = {
   organization: Organization;
 };
 
-const Addresses: React.FC<Props> = ({ organization }) => {
+const Addresses: React.FC<Props> = () => {
   const { formatMessage } = useFormat({ name: 'business-unit' });
   const { addAddress, businessUnit } = useBusinessUnitStateContext();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-  const addBusnessUnitAddress = (address) => {
-    addAddress(businessUnit.key, address);
+  const addBusnessUnitAddress = async (address) => {
+    await addAddress(businessUnit.key, address);
   };
 
   return (
@@ -35,8 +35,8 @@ const Addresses: React.FC<Props> = ({ organization }) => {
             </tr>
           </thead>
           <tbody className="business-unit-address__body">
-            {!!organization.businessUnit.addresses.length &&
-              organization.businessUnit.addresses.map((address) => (
+            {!!businessUnit.addresses.length &&
+              businessUnit.addresses.map((address) => (
                 <tr key={address.addressId}>
                   <td>{`${address.firstName} ${address.lastName}`}</td>
                   <td>{address.country}</td>
@@ -49,7 +49,7 @@ const Addresses: React.FC<Props> = ({ organization }) => {
                   </td>
                 </tr>
               ))}
-            {!organization.businessUnit.addresses.length && (
+            {!businessUnit.addresses.length && (
               <tr>
                 <td>{formatMessage({ id: 'no-address', defaultMessage: 'No addresses yet!' })}</td>
               </tr>
