@@ -23,7 +23,7 @@ const FooterTastic = ({ data }) => {
 
   return (
     <div className="fixed-screen-width lg:relative-width">
-      <Highlights />
+      {/* <Highlights /> */}
       <Footer columns={columns} copyright={data.copyright} copyrightLinks={data.copyrightLinks} />
     </div>
   );

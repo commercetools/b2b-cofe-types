@@ -152,20 +152,20 @@ const Header: React.FC<HeaderProps> = ({
 
               <div className="flex flex-1 items-center justify-end">
                 <div className="flex w-fit items-center">
-                  <DarkModeWidget className="mr-4 text-primary-400 hover:text-primary-500 dark:text-light-100" />
+                  {/* <DarkModeWidget className="mr-4 text-primary-400 hover:text-primary-500 dark:text-light-100" /> */}
                   <SearchButton />
+
+                  <span className="mx-4 h-6 w-px bg-gray-200 lg:mx-4" aria-hidden="true" />
+
+                  <WishListButton wishlistItemCount={wishlistItemCount} wishlistLink={wishlistLink} />
+                  <FlyingCartButton />
                   <AccountButton
                     account={account}
                     accountLink={accountLink}
                     organization={organization}
                     businessUnitLink={businessUnitLink}
                   />
-
-                  <span className="mx-4 h-6 w-px bg-gray-200 lg:mx-4" aria-hidden="true" />
-
-                  <WishListButton wishlistItemCount={wishlistItemCount} wishlistLink={wishlistLink} />
                   <CartButton cartItemCount={cartItemCount} cartLink={cartLink} />
-                  <FlyingCartButton />
                 </div>
               </div>
             </div>

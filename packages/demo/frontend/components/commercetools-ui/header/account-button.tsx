@@ -28,10 +28,10 @@ const AccountButton: React.FC<AccountButtonProps> = ({ accountLink, account, bus
         <Menu>
           <div className="relative flex space-x-8">
             <Menu.Button className="flex">
-              <span className="sr-only">Account</span>
-              <UserIcon className="h-6 w-6 text-primary-400 dark:text-light-100" aria-hidden="true" />
+              <span>Account</span>
+              {/* <UserIcon className="h-6 w-6 text-primary-400 dark:text-light-100" aria-hidden="true" /> */}
             </Menu.Button>
-            <div className="absolute -right-[1px] -bottom-[2px] h-[9px] w-[9px] rounded-md bg-green-700"></div>
+            {/* <div className="absolute -right-[1px] -bottom-[2px] h-[9px] w-[9px] rounded-md bg-green-700"></div> */}
           </div>
 
           <Transition
@@ -91,8 +91,8 @@ const AccountButton: React.FC<AccountButtonProps> = ({ accountLink, account, bus
               target={accountLink}
               className="-m-2 p-2 text-primary-400 hover:text-primary-500 dark:text-light-100"
             >
-              <span className="sr-only">Account</span>
-              <UserIcon className="h-6 w-6" aria-hidden="true" />
+              <span>Log In</span>
+              {/* <UserIcon className="h-6 w-6" aria-hidden="true" /> */}
             </ReferenceLink>
           </div>
         </div>

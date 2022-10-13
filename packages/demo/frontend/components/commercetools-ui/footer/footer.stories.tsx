@@ -17,7 +17,7 @@ const Template: Story<FooterProps> = (args) => (
 );
 const TemplateWithHighlights: Story<FooterProps> = (args) => (
   <div>
-    <Highlights />
+    {/* <Highlights /> */}
     <Footer columns={footerColumns} copyright="Catwalk" {...args} />
   </div>
 );
