@@ -4,7 +4,7 @@ import { Variant } from '@Types/product/Variant';
 import debounce from 'lodash.debounce';
 import { useCart, useProducts, useUIStateContext } from 'frontastic';
 import { LoadingIcon } from '../icons/loading';
-
+import styles from './index.module.css';
 interface DynamicCartItem {
   id: string;
   value: string;
@@ -188,7 +188,7 @@ export const DynamicCart: React.FC = () => {
                   id={`item_${lineItem.id}`}
                   ref={(el) => (lineItemsInputRef.current[i] = el)}
                   type="text"
-                  className="dynamic-cart-item__input border"
+                  className="dynamic-cart-item__input input input-primary"
                   onChange={(event) => updateItemValue(lineItem.id, event)}
                 />
                 {lineItem.isLoading && (
@@ -216,7 +216,7 @@ export const DynamicCart: React.FC = () => {
               </>
             )}
             {!!lineItem.items.length && !!lineItem.selectedProduct && !lineItem.selectedVariant && (
-              <ol className="dynamic-cart-item__search absolute hidden">
+              <ol className={`dynamic-cart-item__search absolute hidden ${styles.search}`}>
                 {lineItem.selectedProduct.variants.map((variant) => (
                   <li
                     className="dynamic-cart-item__search-item cursor-pointer border-b-2 bg-gray-100 hover:bg-gray-300"
@@ -230,7 +230,7 @@ export const DynamicCart: React.FC = () => {
               </ol>
             )}
             {!!lineItem.items.length && !lineItem.selectedProduct && !lineItem.selectedVariant && (
-              <ol className="dynamic-cart-item__search absolute hidden">
+              <ol className={`dynamic-cart-item__search absolute hidden ${styles.search}`}>
                 {lineItem.items.map((product) => (
                   <li
                     className="dynamic-cart-item__search-item cursor-pointer border-b-2 bg-gray-100 hover:bg-gray-300"

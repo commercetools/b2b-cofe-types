@@ -1,5 +1,7 @@
+import React from 'react';
 import { Cart } from '@Types/cart/Cart';
 import { useFormat } from 'helpers/hooks/useFormat';
+import AddToCartItem from './addToCartItem';
 import Item from './item';
 
 interface Props {
@@ -9,27 +11,58 @@ interface Props {
   readonly removeItem: (lineItemId: string) => void;
 }
 
-const ItemList = ({ cart, editItemQuantity, goToProductPage, removeItem }: Props) => {
-  //i18n messages
+const ItemList: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = ({
+  cart,
+  editItemQuantity,
+  goToProductPage,
+  removeItem,
+  className,
+}) => {
   const { formatMessage: formatCartMessage } = useFormat({ name: 'cart' });
 
   return (
-    <section aria-labelledby="cart-heading" className="lg:col-span-7">
+    <section aria-labelledby="cart-heading" className={className}>
       <h2 id="cart-heading" className="sr-only">
         {formatCartMessage({ id: 'cart.shopping.items', defaultMessage: 'Items in your shopping cart' })}
       </h2>
 
-      <ul role="list" className="divide-y divide-gray-200 border-b border-gray-200">
-        {cart.lineItems.map((lineItem, i) => (
-          <Item
-            key={i}
-            lineItem={lineItem}
-            editItemQuantity={editItemQuantity}
-            goToProductPage={goToProductPage}
-            removeItem={removeItem}
-          />
-        ))}
-      </ul>
+      <table className="cart-table w-full table-auto">
+        <thead className="cart-table__header">
+          <tr>
+            <th className="cart-table__header-action"></th>
+            <th className="cart-table__header-sku">
+              {formatCartMessage({ id: 'product-sku', defaultMessage: 'SKU' })}
+            </th>
+            <th className="cart-table__header-name">
+              {formatCartMessage({ id: 'product-name', defaultMessage: 'Name' })}
+            </th>
+            <th className="cart-table__header-available-quantity">
+              {formatCartMessage({ id: 'product-availability', defaultMessage: 'AQ' })}
+            </th>
+            <th className="cart-table__header-quantity">
+              {formatCartMessage({ id: 'product-quantity', defaultMessage: 'Quantity' })}
+            </th>
+            <th className="cart-table__header-price">
+              {formatCartMessage({ id: 'product-price', defaultMessage: 'Price' })}
+            </th>
+            <th className="cart-table__header-total-price">
+              {formatCartMessage({ id: 'product-total-price', defaultMessage: 'Total Price' })}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {cart.lineItems.map((lineItem, i) => (
+            <Item
+              key={i}
+              lineItem={lineItem}
+              editItemQuantity={editItemQuantity}
+              goToProductPage={goToProductPage}
+              removeItem={removeItem}
+            />
+          ))}
+          <AddToCartItem goToProductPage={goToProductPage} />
+        </tbody>
+      </table>
     </section>
   );
 };

@@ -11,4 +11,8 @@ export interface Variant {
   attributes?: Attributes;
   images?: string[];
   isOnStock?: boolean;
+  availability?: {
+    availableQuantity: number;
+    restockableInDays: number;
+  }
 }

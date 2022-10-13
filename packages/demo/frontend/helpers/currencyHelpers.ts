@@ -6,7 +6,7 @@ export class CurrencyHelpers {
   private static formatNumberForCurrency = function (costInCents: number) {
     return CurrencyHelpers.formatMoneyCurrency({
       centAmount: costInCents,
-      currencyCode: 'EUR',
+      currencyCode: 'USD',
       fractionDigits: 2,
     });
   };
@@ -20,7 +20,7 @@ export class CurrencyHelpers {
   };
 
   private static formatMoneyCurrency = function (price: Money) {
-    return Intl.NumberFormat('de-DE', { style: 'currency', currency: price?.currencyCode ?? 'EUR' }).format(
+    return Intl.NumberFormat('en-US', { style: 'currency', currency: price?.currencyCode ?? 'USD' }).format(
       (price?.centAmount ?? 0) / Math.pow(10, price?.fractionDigits ?? 2),
     );
   };

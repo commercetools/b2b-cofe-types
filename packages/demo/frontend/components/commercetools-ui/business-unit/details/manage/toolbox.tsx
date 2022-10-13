@@ -37,23 +37,23 @@ const Toolbox = ({ selectedBU, getOrganizationTree, handleBUSelection }) => {
         <h2>{`Toolbox: actions on ${selectedBU.name}`}</h2>
         <button
           title={formatMessage({ id: 'add-bu-selection', defaultMessage: 'Create a new division' })}
-          className="button button-primary--small mr-2"
+          className="button button-primary--small mt-4 mr-2"
           onClick={() => setIsNewBUModalOpen(true)}
         >
           <PlusIcon className="h-4 w-4" />
         </button>
         <button
           title={formatMessage({ id: 'add-address-selection', defaultMessage: 'Add address to company/division' })}
-          className="button button-primary--small mx-2"
+          className="button button-primary--small mx-2 mt-4"
           onClick={() => setIsNewAddressModalOpen(true)}
         >
           <ViewListIcon className="h4 w-4" />
         </button>
-        <button className="button button-primary--small mx-2" onClick={() => setIsNewBUModalOpen(true)}>
+        <button className="button button-primary--small mx-2 mt-4" onClick={() => setIsNewBUModalOpen(true)}>
           <UserIcon className="h4 w-4" />
         </button>
         <button
-          className="button button-primary--small ml-2"
+          className="button button-primary--small mt-4 ml-2"
           title={formatMessage({ id: 'clear-bu-selection', defaultMessage: 'Clear selection' })}
           onClick={() => handleBUSelection()}
         >
