@@ -82,15 +82,19 @@ const Manage = () => {
     } else if (type === 'leaf') {
       if (node.type === 'add') {
         return (
-          <div style={{ fontSize: '12px' }} onClick={() => openBusinessUnitModal(node.parentId)}>
+          <div className="-ml-4" style={{ fontSize: '12px' }} onClick={() => openBusinessUnitModal(node.parentId)}>
             {node.label}
           </div>
         );
       } else if (node.type === 'user') {
-        return <div style={{ fontSize: '12px' }}>{node.label}</div>;
+        return (
+          <div className="-ml-4" style={{ fontSize: '12px' }}>
+            {node.label}
+          </div>
+        );
       } else if (node.type === 'address') {
         return (
-          <div style={{ fontSize: '12px' }} onClick={() => openAddressModal(node.parentId)}>
+          <div className="-ml-4" style={{ fontSize: '12px' }} onClick={() => openAddressModal(node.parentId)}>
             {node.label}
           </div>
         );
@@ -107,11 +111,11 @@ const Manage = () => {
       );
     } else if (type === 'leaf') {
       if (node.type === 'add') {
-        return <PlusIcon className="h-2 w-2" onClick={() => openBusinessUnitModal(node.parentId)} />;
+        return <PlusIcon className="-ml-6 h-2 w-2" onClick={() => openBusinessUnitModal(node.parentId)} />;
       } else if (node.type === 'user') {
-        return <UserAddIcon className="h-2 w-2" />;
+        return <UserAddIcon className="-ml-6 h-2 w-2" />;
       } else if (node.type === 'address') {
-        return <OfficeBuildingIcon className="h-2 w-2" onClick={() => openAddressModal(node.parentId)} />;
+        return <OfficeBuildingIcon className="-ml-6 h-2 w-2" onClick={() => openAddressModal(node.parentId)} />;
       }
     }
   };
@@ -129,6 +133,7 @@ const Manage = () => {
         </div>
         {!!selectedNode && (
           <div className="w-2/3">
+            {/* @ts-ignore */}
             <h2 className="my-4 text-lg">{selectedNode.name}</h2>
             Stores:
             <ol className="list-decimal">
