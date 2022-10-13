@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Address } from '@Types/account/Address';
 import { useAccount } from 'helpers/hooks/useAccount';
 import { useFormat } from 'helpers/hooks/useFormat';
+import { mapAddressToString } from 'helpers/utils/addressUtil';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 
 interface Props {
@@ -43,17 +44,6 @@ const AddressSelection: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> =
   const addressSelectionHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const address = businessUnit.addresses.find((address) => address.id === event.target.value);
     updateAddress(address);
-  };
-
-  const mapAddressToString = (address: Address): string => {
-    const addressPieces = [
-      `${address.streetNumber || ''} ${address.streetName || ''}`,
-      `(${address.firstName || ''} ${address.lastName || ''})`,
-      address.city || '',
-      address.state || '',
-      address.country || '',
-    ];
-    return addressPieces.filter((piece) => piece).join(', ');
   };
 
   return (
