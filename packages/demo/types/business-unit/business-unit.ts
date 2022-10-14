@@ -41,6 +41,7 @@ export interface BusinessUnit {
   topLevelUnit?: BusinessUnitResourceIdentifier;
   version?: number;
   children?: BusinessUnit[];
+  isRootAdmin?: boolean;
   isAdmin?: boolean;
 }
 

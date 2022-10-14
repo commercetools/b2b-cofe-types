@@ -10,33 +10,47 @@ export const useBusinessUnit = (): UseBusinessUnit => {
   const { account } = useAccount();
   const { getCart } = useCart();
 
-  const getMyOrganization = async (key: string): Promise<any> => {
-    const result = await fetchApiHub(`/action/business-unit/getMyOrganization?key=${key}`, { method: 'GET' });
+  const getMyOrganization = async (): Promise<any> => {
+    if (!businessUnit) {
+      return null;
+    }
+    const result = await fetchApiHub(`/action/business-unit/getMyOrganization?key=${businessUnit.key}`, {
+      method: 'GET',
+    });
     return result.map((bu) => ({
       ...bu,
       id: bu.key,
       label: bu.name,
       parentId: bu.parentUnit ? bu.parentUnit.key : null,
-      items: [
-        {
-          id: `add__${bu.key}`,
-          type: 'add',
-          label: 'Add Branch',
-          parentId: bu.key,
-        },
-        {
-          id: `address__${bu.key}`,
-          type: 'address',
-          label: 'Add Address',
-          parentId: bu.key,
-        },
-        {
-          id: `user__${bu.key}`,
-          type: 'user',
-          label: 'Add User',
-          parentId: bu.key,
-        },
-      ],
+      items: businessUnit.isRootAdmin
+        ? [
+            {
+              id: `add__${bu.key}`,
+              type: 'add',
+              label: 'Add Branch',
+              parentId: bu.key,
+            },
+            {
+              id: `address__${bu.key}`,
+              type: 'address',
+              label: 'Add Address',
+              parentId: bu.key,
+            },
+            {
+              id: `user__${bu.key}`,
+              type: 'user',
+              label: 'Add User',
+              parentId: bu.key,
+            },
+          ]
+        : [
+            {
+              id: `user__${bu.key}`,
+              type: 'user',
+              label: 'Add User',
+              parentId: bu.key,
+            },
+          ],
     }));
   };
 

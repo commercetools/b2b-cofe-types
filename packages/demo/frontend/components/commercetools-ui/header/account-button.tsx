@@ -6,6 +6,7 @@ import { Organization } from '@Types/organization/organization';
 import { useAccount } from 'helpers/hooks/useAccount';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { Reference, ReferenceLink } from 'helpers/reference';
+import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 
 interface AccountButtonProps {
   organization: Organization;
@@ -17,6 +18,7 @@ interface AccountButtonProps {
 const AccountButton: React.FC<AccountButtonProps> = ({ accountLink, account, businessUnitLink, organization }) => {
   const { formatMessage: formatAccountMessage } = useFormat({ name: 'account' });
   const { logout } = useAccount();
+  const { businessUnit } = useBusinessUnitStateContext();
 
   const handleLogout = () => {
     logout();
@@ -60,16 +62,18 @@ const AccountButton: React.FC<AccountButtonProps> = ({ accountLink, account, bus
                         formatAccountMessage({ id: 'user', defaultMessage: 'User ' })}
                   </ReferenceLink>
                 </Menu.Item>
-                <Menu.Item>
-                  <ReferenceLink
-                    target={businessUnitLink}
-                    className={`block w-72 cursor-pointer py-2 px-4 text-sm text-primary-400 hover:bg-gray-100 dark:bg-primary-400  dark:text-light-100`}
-                  >
-                    {organization?.businessUnit &&
-                      formatAccountMessage({ id: 'comapny', defaultMessage: 'Company: ' }) +
-                        organization.businessUnit.name}
-                  </ReferenceLink>
-                </Menu.Item>
+                {businessUnit?.isAdmin && (
+                  <Menu.Item>
+                    <ReferenceLink
+                      target={businessUnitLink}
+                      className={`block w-72 cursor-pointer py-2 px-4 text-sm text-primary-400 hover:bg-gray-100 dark:bg-primary-400  dark:text-light-100`}
+                    >
+                      {organization?.businessUnit &&
+                        formatAccountMessage({ id: 'comapny', defaultMessage: 'Company: ' }) +
+                          organization.businessUnit.name}
+                    </ReferenceLink>
+                  </Menu.Item>
+                )}
                 {account && (
                   <Menu.Item>
                     <button

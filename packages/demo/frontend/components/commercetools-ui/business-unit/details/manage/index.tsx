@@ -2,16 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { OfficeBuildingIcon, UserAddIcon } from '@heroicons/react/outline';
 import { PlusIcon, ChevronDoubleRightIcon, ChevronDoubleDownIcon } from '@heroicons/react/solid';
-import { ReactTree, TreeNodeList, TreeNode, TreeRenderFn } from '@naisutech/react-tree';
+import { ReactTree, TreeNodeList, TreeNode } from '@naisutech/react-tree';
 import CreateAddress from 'components/commercetools-ui/account/details/modals/createAddress';
-import { useCenteredTree } from 'helpers/hooks/useCenteredTree';
 import { mapAddressToString } from 'helpers/utils/addressUtil';
 import { useAccount } from 'frontastic';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 import CreateBusinessUnit from '../../new';
 
 const Manage = () => {
-  const { dimensions, translate, containerRef } = useCenteredTree();
   const { businessUnit, getMyOrganization } = useBusinessUnitStateContext();
 
   const [isNewBUModalOpen, setIsNewBUModalOpen] = useState(false);
@@ -72,7 +70,7 @@ const Manage = () => {
   }, [businessUnit]);
 
   const getOrganizationTree = async () => {
-    const res = await getMyOrganization(businessUnit.key);
+    const res = await getMyOrganization();
     setTree(res);
   };
 

@@ -97,7 +97,11 @@ export class BusinessUnitApi extends BaseApi {
 
   private isUserAdminInBusinessUnit = (businessUnit: BusinessUnit, accountId: string): boolean => {
     const currentUserAssociate = businessUnit.associates.find((associate) => associate.customer.id === accountId);
-    if (currentUserAssociate?.roles.some((role) => role === AssociateRole.Admin)) {
+    return currentUserAssociate?.roles.some((role) => role === AssociateRole.Admin)
+  };
+
+  private isUserRootAdminInBusinessUnit = (businessUnit: BusinessUnit, accountId: string): boolean => {
+    if (this.isUserAdminInBusinessUnit(businessUnit, accountId)) {
       return !businessUnit.parentUnit;
     }
     return false;
@@ -110,6 +114,7 @@ export class BusinessUnitApi extends BaseApi {
       if (response.results.length) {
         const businessUnit = response.results[0];
         businessUnit.isAdmin = this.isUserAdminInBusinessUnit(businessUnit, accountId);
+        businessUnit.isRootAdmin = this.isUserRootAdminInBusinessUnit(businessUnit, accountId);
         return businessUnit;
       }
       return response;
