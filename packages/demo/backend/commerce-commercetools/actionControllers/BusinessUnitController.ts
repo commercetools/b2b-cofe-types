@@ -11,6 +11,7 @@ import { getLocale } from '../utils/Request';
 import { AccountRegisterBody } from './AccountController';
 import { Store, StoreKeyReference } from '../../../types/store/store';
 import { ChannelApi } from '../apis/ChannelApi';
+import { CustomerApi } from '../apis/CustomerApi';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -101,6 +102,43 @@ export const create: ActionHook = async (request: Request, actionContext: Action
   const response: Response = {
     statusCode: 200,
     body: JSON.stringify(store),
+    sessionData: request.sessionData,
+  };
+
+  return response;
+};
+
+export const addAssociate: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
+  const customerApi = new CustomerApi(actionContext.frontasticContext, getLocale(request));
+  const addUserBody: { email: string; roles: AssociateRole[] } = JSON.parse(request.body);
+
+  const account = await customerApi.get(addUserBody.email);
+  if (!account) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: 'User not found' }),
+      sessionData: request.sessionData,
+    };
+  }
+
+  const businessUnit = await businessUnitApi.update(request.query['key'], [
+    {
+      action: 'addAssociate',
+      associate: {
+        customer: {
+          typeId: 'customer',
+          // @ts-ignore
+          id: account.id,
+        },
+        roles: addUserBody.roles,
+      },
+    },
+  ]);
+
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(businessUnit),
     sessionData: request.sessionData,
   };
 

@@ -3,17 +3,20 @@ import React, { useEffect, useState } from 'react';
 import { OfficeBuildingIcon, UserAddIcon } from '@heroicons/react/outline';
 import { PlusIcon, ChevronDoubleRightIcon, ChevronDoubleDownIcon } from '@heroicons/react/solid';
 import { ReactTree, TreeNodeList, TreeNode } from '@naisutech/react-tree';
+import { AssociateRole } from '@Types/associate/Associate';
 import CreateAddress from 'components/commercetools-ui/account/details/modals/createAddress';
 import { mapAddressToString } from 'helpers/utils/addressUtil';
 import { useAccount } from 'frontastic';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 import CreateBusinessUnit from '../../new';
+import AddUser from './add-user';
 
 const Manage = () => {
-  const { businessUnit, getMyOrganization } = useBusinessUnitStateContext();
+  const { businessUnit, getMyOrganization, addUser } = useBusinessUnitStateContext();
 
   const [isNewBUModalOpen, setIsNewBUModalOpen] = useState(false);
   const [isNewAddressModalOpen, setIsNewAddressModalOpen] = useState(false);
+  const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
   const { createBusinessUnitAndStore, addAddress } = useBusinessUnitStateContext();
   const { account } = useAccount();
 
@@ -21,6 +24,7 @@ const Manage = () => {
   const [selectedLeafKey, setSelectedLeafkey] = useState<string>('');
   const [selectedNode, setSelectedNode] = useState<TreeNode>();
 
+  // create BU
   const createBusinessUnit = async (data) => {
     if (!!selectedLeafKey) {
       await createBusinessUnitAndStore(
@@ -44,9 +48,8 @@ const Manage = () => {
     setIsNewBUModalOpen(false);
   };
 
+  // Add address
   const addBusnessUnitAddress = async (address) => {
-    console.log(selectedLeafKey);
-
     if (!!selectedLeafKey) {
       await addAddress(selectedLeafKey, address);
     }
@@ -61,6 +64,25 @@ const Manage = () => {
   const closeAddressModal = () => {
     setSelectedLeafkey('');
     setIsNewAddressModalOpen(false);
+  };
+
+  // Add User
+  const openAddUserModal = (key) => {
+    setSelectedLeafkey(key);
+    setIsAddUserModalOpen(true);
+  };
+
+  const closeAddUserModal = () => {
+    setSelectedLeafkey('');
+    setIsAddUserModalOpen(false);
+  };
+
+  const addUserToBusinessUnit = async (email: string, roles: AssociateRole[]): Promise<void> => {
+    if (!!selectedLeafKey) {
+      await addUser(selectedLeafKey, email, roles);
+      await getOrganizationTree();
+    }
+    closeAddUserModal();
   };
 
   useEffect(() => {
@@ -86,7 +108,7 @@ const Manage = () => {
         );
       } else if (node.type === 'user') {
         return (
-          <div className="-ml-4" style={{ fontSize: '12px' }}>
+          <div className="-ml-4" style={{ fontSize: '12px' }} onClick={() => openAddUserModal(node.parentId)}>
             {node.label}
           </div>
         );
@@ -111,7 +133,7 @@ const Manage = () => {
       if (node.type === 'add') {
         return <PlusIcon className="-ml-6 h-2 w-2" onClick={() => openBusinessUnitModal(node.parentId)} />;
       } else if (node.type === 'user') {
-        return <UserAddIcon className="-ml-6 h-2 w-2" />;
+        return <UserAddIcon className="-ml-6 h-2 w-2" onClick={() => openAddUserModal(node.parentId)} />;
       } else if (node.type === 'address') {
         return <OfficeBuildingIcon className="-ml-6 h-2 w-2" onClick={() => openAddressModal(node.parentId)} />;
       }
@@ -169,6 +191,7 @@ const Manage = () => {
         onClose={closeBusinessUnitModal}
       />
       <CreateAddress open={isNewAddressModalOpen} onClose={closeAddressModal} addAddress={addBusnessUnitAddress} />
+      <AddUser open={isAddUserModalOpen} onClose={closeAddUserModal} addUser={addUserToBusinessUnit} />
     </div>
   );
 };

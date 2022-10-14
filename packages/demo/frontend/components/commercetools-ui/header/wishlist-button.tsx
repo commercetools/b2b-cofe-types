@@ -23,7 +23,7 @@ const WishListButton: React.FC<WishListButtonProps> = ({ wishlistItemCount, wish
         /> */}
         {wishlistItemCount > 0 && (
           <>
-            <span className="bg-accent-400 hover:bg-accent-500 absolute -top-0 -right-1 h-4 w-4 rounded-full">
+            <span className="absolute -top-0 -right-1 h-4 w-4 rounded-full bg-accent-400 hover:bg-accent-500">
               <span className="flex h-full w-full items-center justify-center text-xs text-white group-hover:text-white">
                 {wishlistItemCount}
               </span>

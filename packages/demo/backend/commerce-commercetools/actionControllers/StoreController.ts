@@ -34,29 +34,29 @@ export const create: ActionHook = async (request: Request, actionContext: Action
   return response;
 };
 
-async function getParentDistChannels(parentStores: any): Promise<ChannelResourceIdentifier[]>  {
-    return parentStores.reduce((prev: ChannelResourceIdentifier[], item: Store) => {
-        if (item.distributionChannels.length) {
-            return [...prev, ...item.distributionChannels?.map(channel => ({id: channel.id, typeId: 'channel'}))]
-        }
-        return prev;
-    },[]);
+async function getParentDistChannels(parentStores: any): Promise<ChannelResourceIdentifier[]> {
+  return parentStores.reduce((prev: ChannelResourceIdentifier[], item: Store) => {
+    if (item.distributionChannels.length) {
+      return [...prev, ...item.distributionChannels?.map((channel) => ({ id: channel.id, typeId: 'channel' }))];
+    }
+    return prev;
+  }, []);
 }
 
-async function getParentSupplyChannels(parentStores: any): Promise<ChannelResourceIdentifier[]>  {
-    return parentStores.reduce((prev: ChannelResourceIdentifier[], item: Store) => {
-        if (item.supplyChannels.length) {
-            return [...prev, ...item.supplyChannels?.map(channel => ({id: channel.id, typeId: 'channel'}))]
-        }
-        return prev;
-    },[]);
+async function getParentSupplyChannels(parentStores: any): Promise<ChannelResourceIdentifier[]> {
+  return parentStores.reduce((prev: ChannelResourceIdentifier[], item: Store) => {
+    if (item.supplyChannels.length) {
+      return [...prev, ...item.supplyChannels?.map((channel) => ({ id: channel.id, typeId: 'channel' }))];
+    }
+    return prev;
+  }, []);
 }
 
 async function mapRequestToStore(request: Request, actionContext: ActionContext, storeApi: StoreApi): Promise<Store> {
   const storeBody: AccountRegisterBody = JSON.parse(request.body);
   const key = storeBody.account.company.toLowerCase().replace(/ /g, '_');
   const parentBusinessUnit = storeBody.parentBusinessUnit;
-  let supplyChannels: ChannelResourceIdentifier[]  = [];
+  let supplyChannels: ChannelResourceIdentifier[] = [];
   let distributionChannels: ChannelResourceIdentifier[] = [];
   if (parentBusinessUnit) {
     const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));

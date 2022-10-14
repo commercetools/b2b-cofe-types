@@ -6,6 +6,7 @@ import * as WishlistActions from './actionControllers/WishlistController';
 import * as ProjectActions from './actionControllers/ProjectController';
 import * as StoreActions from './actionControllers/StoreController';
 import * as BusinessUnitActions from './actionControllers/BusinessUnitController';
+import * as CustomerActions from './actionControllers/CustomerController';
 
 import {
   DynamicPageContext,
@@ -131,6 +132,7 @@ export default {
     account: AccountActions,
     cart: CartActions,
     channel: ChannelActions,
+    customer: CustomerActions,
     product: ProductActions,
     wishlist: WishlistActions,
     project: ProjectActions,

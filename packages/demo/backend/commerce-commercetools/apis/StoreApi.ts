@@ -56,9 +56,9 @@ export class StoreApi extends BaseApi {
       return this.getApiForProject()
         .stores()
         .get({
-            queryArgs: {
-                where
-            }
+          queryArgs: {
+            where,
+          },
         })
         .execute()
         .then((response) => {

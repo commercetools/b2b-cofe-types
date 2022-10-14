@@ -4,6 +4,9 @@ import { useAccount, useCart } from 'frontastic';
 import { fetchApiHub } from 'frontastic/lib/fetch-api-hub';
 import { UseBusinessUnit } from 'frontastic/provider/Frontastic/UseBusinessUnit';
 import { createStore } from '../../frontastic/actions/stores';
+import { BusinessUnit } from '@Types/business-unit/business-unit';
+import { AssociateRole } from '@Types/associate/Associate';
+import { Account } from '@Types/account/Account';
 
 export const useBusinessUnit = (): UseBusinessUnit => {
   const [businessUnit, setBusinessUnit] = useState(null);
@@ -91,6 +94,14 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     );
   };
 
+  const addUser = async (key: string, email: string, roles: AssociateRole[]): Promise<BusinessUnit> => {
+    return fetchApiHub(`/action/business-unit/addAssociate?key=${key}`, { method: 'POST' }, { email, roles });
+  };
+
+  const getUser = async (id: string): Promise<Account> => {
+    return fetchApiHub(`/action/customer/getById?id=${id}`, { method: 'GET' });
+  };
+
   useEffect(() => {
     if (account?.accountId) {
       (async () => {
@@ -101,6 +112,8 @@ export const useBusinessUnit = (): UseBusinessUnit => {
   }, [account]);
 
   return {
+    addUser,
+    getUser,
     addAddress,
     businessUnit,
     createBusinessUnitAndStore,
