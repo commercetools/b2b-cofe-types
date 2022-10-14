@@ -40,8 +40,8 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     }));
   };
 
-  const createBusinessUnitAndStore = async (account, customer, parentBusinessUnit = null): Promise<any> => {
-    const store = await createStore(account);
+  const createBusinessUnitAndStore = async (account, customer, parentBusinessUnit: string = null): Promise<any> => {
+    const store = await createStore(account, parentBusinessUnit);
 
     return await fetchApiHub(
       '/action/business-unit/create',

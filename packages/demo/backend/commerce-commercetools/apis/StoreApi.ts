@@ -50,4 +50,24 @@ export class StoreApi extends BaseApi {
       throw '';
     }
   };
+
+  query: (where: string) => Promise<any> = async (where: string): Promise<any> => {
+    try {
+      return this.getApiForProject()
+        .stores()
+        .get({
+            queryArgs: {
+                where
+            }
+        })
+        .execute()
+        .then((response) => {
+          return response.body;
+        });
+    } catch (e) {
+      console.log(e);
+
+      throw '';
+    }
+  };
 }
