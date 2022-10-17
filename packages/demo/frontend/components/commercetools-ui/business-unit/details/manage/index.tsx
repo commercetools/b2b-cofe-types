@@ -177,9 +177,9 @@ const Manage = () => {
             <ol className="list-decimal">
               {/* @ts-ignore */}
               {selectedNode.associates?.map((associate) => (
-                <li key={associate.customer.id} className="ml-8">{`${associate.customer.id}: ${associate.roles.join(
-                  ' ,',
-                )}`}</li>
+                <li key={associate.customer.id} className="ml-8">{`${
+                  associate.customer.firstName || associate.customer.id
+                } ${associate.customer.lastName || ''}: ${associate.roles.join(' ,')}`}</li>
               ))}
             </ol>
           </div>

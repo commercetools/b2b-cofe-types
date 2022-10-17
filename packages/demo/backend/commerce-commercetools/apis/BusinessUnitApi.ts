@@ -2,6 +2,7 @@ import { BaseApi } from './BaseApi';
 import axios from 'axios';
 import { BusinessUnit, BusinessUnitPagedQueryResponse } from '../../../types/business-unit/business-unit';
 import { AssociateRole } from '../../../types/associate/Associate';
+import { mapReferencedAssociates } from '../mappers/BusinessUnitMappers';
 
 export class BusinessUnitApi extends BaseApi {
   getAccessToken = async (): Promise<string> => {
@@ -77,12 +78,14 @@ export class BusinessUnitApi extends BaseApi {
     }
   };
 
-  query: (where: string) => Promise<BusinessUnitPagedQueryResponse> = async (where: string) => {
+  query: (where: string, expand?: string) => Promise<BusinessUnitPagedQueryResponse> = async (where: string, expand?: string) => {
     try {
       const accessToken = await this.getAccessToken();
       const whereClause = where ? `?where=${encodeURIComponent(where)}` : '';
+      const expandClause = expand ? `${whereClause ? '&' : '?'}expand=${encodeURIComponent(expand)}` : '';
+
       const response = await axios.get(
-        `https://api.us-central1.gcp.commercetools.com/${this.projectKey}/business-units${whereClause}`,
+        `https://api.us-central1.gcp.commercetools.com/${this.projectKey}/business-units${whereClause}${expandClause}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -110,9 +113,10 @@ export class BusinessUnitApi extends BaseApi {
   getMe: (accountId: string) => Promise<any> = async (accountId: string) => {
     try {
       // TODO: find the highest BU in the tree which I am associate
-      const response = await this.query(`associates(customer(id="${accountId}"))`);
+      const response = await this.query(`associates(customer(id="${accountId}"))`, 'associates[*].customer');
+
       if (response.results.length) {
-        const businessUnit = response.results[0];
+        const businessUnit = mapReferencedAssociates(response.results[0]);
         businessUnit.isAdmin = this.isUserAdminInBusinessUnit(businessUnit, accountId);
         businessUnit.isRootAdmin = this.isUserRootAdminInBusinessUnit(businessUnit, accountId);
         return businessUnit;
@@ -143,7 +147,8 @@ export class BusinessUnitApi extends BaseApi {
 
   getTree: (key: string) => Promise<BusinessUnit[]> = async (key: string) => {
     const thisNode = await this.get(key);
-    const { results } = await this.query(`topLevelUnit(key="${thisNode.topLevelUnit.key}")`);
-    return results;
+    const { results } = await this.query(`topLevelUnit(key="${thisNode.topLevelUnit.key}")`, 'associates[*].customer');
+
+    return results.map(bu => mapReferencedAssociates(bu));
   };
 }

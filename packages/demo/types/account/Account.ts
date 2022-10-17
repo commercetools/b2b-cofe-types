@@ -19,6 +19,7 @@ export interface Account {
 }
 
 export interface CustomerReference {
+  obj?: any;
   id: string;
   typeId: 'customer';
 }
