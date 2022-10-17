@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from 'react';
 import NextLink from 'next/link';
 import { Product } from '@Types/product/Product';
@@ -25,7 +26,7 @@ const List: React.FC<Props> = ({ products, filtering }) => {
         {products?.map((product) => (
           <NextLink href={product._url} key={product.productId}>
             <a className="group">
-              <div className="aspect-w-1 aspect-h-1 w-full rounded-lg bg-white-200 transition-shadow hover:shadow-xl xl:aspect-w-7 xl:aspect-h-8">
+              <div className="bg-white-200 aspect-w-1 aspect-h-1 xl:aspect-w-7 xl:aspect-h-8 w-full rounded-lg transition-shadow hover:shadow-xl">
                 <Image
                   src={product.variants[0].images[0]}
                   alt={product.name}
