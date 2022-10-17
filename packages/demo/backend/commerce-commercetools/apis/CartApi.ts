@@ -60,6 +60,7 @@ export class CartApi extends BaseApi {
               `customerId="${account.accountId}"`,
               `cartState="Active"`,
               `businessUnit(key="${organization.businessUnit.key}")`,
+              `store(key="${organization.store.key}")`,
             ],
             sort: 'createdAt desc',
           },

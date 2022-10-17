@@ -12,4 +12,5 @@ export interface UseBusinessUnit {
   addUser: (key: string, email: string, roles: AssociateRole[]) => Promise<BusinessUnit>;
   getUser: (id: string) => Promise<Account>;
   setMyBusinessUnit: (businessUnitKey: string) => void;
+  setMyStore: (storeKey: string) => void;
 }

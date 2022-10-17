@@ -78,6 +78,11 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     setBusinessUnit(res);
   };
 
+  const setMyStore = async (storeKey: string) => {
+    await fetchApiHub('/action/store/setMe', { method: 'POST' }, { key: storeKey });
+    await getCart();
+  };
+
   const updateName = async (key: string, name: string): Promise<any> => {
     return fetchApiHub(
       `/action/business-unit/update`,
@@ -119,6 +124,7 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     createBusinessUnitAndStore,
     getMyOrganization,
     setMyBusinessUnit,
+    setMyStore,
     updateName,
   };
 };

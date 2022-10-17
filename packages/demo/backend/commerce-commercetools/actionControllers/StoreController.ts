@@ -34,6 +34,37 @@ export const create: ActionHook = async (request: Request, actionContext: Action
   return response;
 };
 
+export const setMe: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const storeApi = new StoreApi(actionContext.frontasticContext, getLocale(request));
+
+  const data = JSON.parse(request.body);
+
+  const store = await storeApi.get(data.key);
+
+  let distributionChannel = request.sessionData?.organization?.distributionChannel;
+
+  if (store?.distributionChannels?.length) {
+    distributionChannel = store.distributionChannels[0];
+  }
+
+  const response: Response = {
+    statusCode: 200,
+    sessionData: {
+      ...request.sessionData,
+      organization: {
+        ...request.sessionData?.organization,
+        store: {
+          typeId: 'store',
+          key: data.key,
+        },
+        distributionChannel,
+      },
+    },
+  };
+
+  return response;
+};
+
 async function getParentDistChannels(parentStores: any): Promise<ChannelResourceIdentifier[]> {
   return parentStores.reduce((prev: ChannelResourceIdentifier[], item: Store) => {
     if (item.distributionChannels.length) {
