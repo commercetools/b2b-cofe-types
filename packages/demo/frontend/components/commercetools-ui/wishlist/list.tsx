@@ -45,7 +45,7 @@ const List: React.FC<Props> = ({ items, removeLineItems }) => {
                   alt="Front side of charcoal cotton t-shirt."
                   width={100}
                   height={13}
-                  className="h-24 w-24 rounded-md object-cover object-center sm:h-32 sm:w-32"
+                  className="h-24 w-24 rounded-md object-scale-down object-center sm:h-32 sm:w-32"
                   src={item.variant.images[0]}
                   onClick={() => goToProductPage(item._url)}
                 />

@@ -139,7 +139,7 @@ export default function ProductDetail({ product, onAddToCart, onAddToWishlist, v
                       layout="fill"
                       src={image.src}
                       alt={image.alt}
-                      className="w-full object-cover object-center sm:rounded-lg"
+                      className="w-full object-scale-down object-center sm:rounded-lg"
                     />
                   </Tab.Panel>
                 ))}
