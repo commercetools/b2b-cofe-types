@@ -21,7 +21,14 @@ const Register: React.FC<RegisterProps> = ({ logo, loginLink }) => {
   const { register, loggedIn } = useAccount();
 
   //register data
-  const [data, setData] = useState({ email: '', password: '', confirmPassword: '', company: '' });
+  const [data, setData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    company: '',
+    lastName: '',
+    firstName: '',
+  });
 
   //error
   const [error, setError] = useState('');
@@ -61,6 +68,8 @@ const Register: React.FC<RegisterProps> = ({ logo, loginLink }) => {
     try {
       // set email as confirmed by default for demo
       const response = await register({
+        firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
         password: data.password,
         company: data.company,
@@ -138,6 +147,34 @@ const Register: React.FC<RegisterProps> = ({ logo, loginLink }) => {
                   <input
                     id="company"
                     name="company"
+                    required
+                    className="block w-full appearance-none rounded-md border border-gray-300 py-2 px-3 shadow-sm placeholder:text-gray-400 focus:border-accent-400 focus:outline-none focus:ring-accent-400 sm:text-sm"
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-light-100">
+                  {formatMessage({ id: 'firstName', defaultMessage: 'firstName' })}
+                </label>
+                <div className="mt-1">
+                  <input
+                    id="firstName"
+                    name="firstName"
+                    required
+                    className="block w-full appearance-none rounded-md border border-gray-300 py-2 px-3 shadow-sm placeholder:text-gray-400 focus:border-accent-400 focus:outline-none focus:ring-accent-400 sm:text-sm"
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 dark:text-light-100">
+                  {formatMessage({ id: 'lastName', defaultMessage: 'Lastname' })}
+                </label>
+                <div className="mt-1">
+                  <input
+                    id="lastName"
+                    name="lastName"
                     required
                     className="block w-full appearance-none rounded-md border border-gray-300 py-2 px-3 shadow-sm placeholder:text-gray-400 focus:border-accent-400 focus:outline-none focus:ring-accent-400 sm:text-sm"
                     onChange={handleChange}
