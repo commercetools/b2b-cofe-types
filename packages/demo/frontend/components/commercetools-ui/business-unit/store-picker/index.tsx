@@ -14,7 +14,7 @@ const StorePicker: React.FC<Props> = ({ organization }) => {
     setMyStore(event.target.value);
   };
 
-  if (!organization.store) return null;
+  if (!organization?.store) return null;
 
   return (
     <div className="mr-4 w-32 flex-row">
