@@ -80,12 +80,15 @@ export class BusinessUnitApi extends BaseApi {
     }
   };
 
-  query: (where: string, expand?: string) => Promise<BusinessUnitPagedQueryResponse> = async (where: string, expand?: string) => {
+  query: (where: string, expand?: string) => Promise<BusinessUnitPagedQueryResponse> = async (
+    where: string,
+    expand?: string,
+  ) => {
     try {
       const accessToken = await this.getAccessToken();
       const whereClause = where ? `?where=${encodeURIComponent(where)}` : '';
       const expandClause = expand ? `${whereClause ? '&' : '?'}expand=${encodeURIComponent(expand)}` : '';
-      const limitClause = (whereClause || expandClause) ? `&limit=${MAX_LIMIT}` : `?limit=${MAX_LIMIT}`;
+      const limitClause = whereClause || expandClause ? `&limit=${MAX_LIMIT}` : `?limit=${MAX_LIMIT}`;
 
       const response = await axios.get(
         `https://api.us-central1.gcp.commercetools.com/${this.projectKey}/business-units${whereClause}${expandClause}${limitClause}`,
@@ -152,6 +155,6 @@ export class BusinessUnitApi extends BaseApi {
     const thisNode = await this.get(key);
     const { results } = await this.query(`topLevelUnit(key="${thisNode.topLevelUnit.key}")`, 'associates[*].customer');
 
-    return results.map(bu => mapReferencedAssociates(bu));
+    return results.map((bu) => mapReferencedAssociates(bu));
   };
 }
