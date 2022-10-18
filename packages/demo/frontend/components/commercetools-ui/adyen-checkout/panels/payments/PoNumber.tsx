@@ -1,8 +1,10 @@
 import React, { ChangeEvent, useState } from 'react';
 import { useFormat } from 'helpers/hooks/useFormat';
+import { useCart } from 'frontastic';
 
 const PoNumber: React.FC = () => {
   const { formatMessage } = useFormat({ name: 'checkout' });
+  const { orderCart } = useCart();
   const [data, setData] = useState({
     poNumber: '',
     invoiceMemo: '',
@@ -54,7 +56,7 @@ const PoNumber: React.FC = () => {
             value={data.invoiceMemo}
           />
         </label>
-        <button className="button button-primary">
+        <button className="button button-primary" type="button" onClick={orderCart}>
           {formatMessage({ id: 'place-order', defaultMessage: 'Place order' })}
         </button>
       </div>
