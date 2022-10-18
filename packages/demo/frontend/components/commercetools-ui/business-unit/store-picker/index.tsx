@@ -1,8 +1,8 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import { Organization } from '@Types/organization/organization';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
-import { useRouter } from 'next/router';
 
 interface Props {
   organization: Organization;
@@ -20,11 +20,11 @@ const StorePicker: React.FC<Props> = ({ organization }) => {
   if (!organization?.store) return null;
 
   return (
-    <div className="mr-4 w-32 flex-row">
+    <div className="mr-4 w-56 flex-row">
       <select
         defaultValue={organization.store.key}
         onChange={setStore}
-        className="w-32 appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+        className="store-picker w-56 appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
       >
         {organization.businessUnit.stores.map((item) => (
           <option key={item.key} value={item.key}>

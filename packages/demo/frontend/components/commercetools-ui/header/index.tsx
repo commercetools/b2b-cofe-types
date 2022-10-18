@@ -4,11 +4,11 @@ import { MenuIcon } from '@heroicons/react/outline';
 import { Account } from '@Types/account/Account';
 import { Organization } from '@Types/organization/organization';
 import Typography from 'components/commercetools-ui/typography';
+import { useFormat } from 'helpers/hooks/useFormat';
 import { headerNavigation } from 'helpers/mocks/mockData';
 import { Reference, ReferenceLink } from 'helpers/reference';
 import Image, { NextFrontasticImage } from 'frontastic/lib/image';
 import StorePicker from '../business-unit/store-picker';
-import DarkModeWidget from '../darkmode-widget';
 import AccountButton from './account-button';
 import CartButton from './cart-button';
 import { FlyingCartButton } from './flying-cart-button';
@@ -56,6 +56,7 @@ const Header: React.FC<HeaderProps> = ({
   cartLink,
 }) => {
   const [open, setOpen] = useState(false);
+  const { formatMessage: formatAccountMessage } = useFormat({ name: 'account' });
 
   return (
     <div className="fixed-screen-width lg:relative-width">
@@ -72,7 +73,7 @@ const Header: React.FC<HeaderProps> = ({
         <nav aria-label="Top" className="mx-auto max-w-full border-b border-gray-200 px-6 lg:px-8">
           {/* Secondary navigation */}
           <div className="h-full">
-            <div className="flex h-16 items-center justify-between">
+            <div className="flex items-center justify-between">
               {/* Logo */}
               <ReferenceLink target={logoLink} className="flex h-full items-center py-4 pr-2 md:py-3">
                 <span className="sr-only">Catwalk</span>
@@ -151,13 +152,12 @@ const Header: React.FC<HeaderProps> = ({
                 </div>
               </Popover.Group>
 
-              <div className="flex items-center justify-end">
-                <div className="flex grow items-center">
+              <div className="flex flex-col items-center justify-end">
+                <div className="flex grow items-center pt-2">
                   {/* <DarkModeWidget className="mr-4 text-primary-400 hover:text-primary-500 dark:text-light-100" /> */}
                   <SearchButton />
 
                   <span className="mx-4 h-6 w-px bg-gray-200 lg:mx-4" aria-hidden="true" />
-                  <StorePicker organization={organization} />
                   <WishListButton wishlistItemCount={wishlistItemCount} wishlistLink={wishlistLink} />
                   <FlyingCartButton />
                   <AccountButton
@@ -167,6 +167,21 @@ const Header: React.FC<HeaderProps> = ({
                     businessUnitLink={businessUnitLink}
                   />
                   <CartButton cartItemCount={cartItemCount} cartLink={cartLink} />
+                </div>
+                <div className="flex w-full grow items-center py-2">
+                  <span>
+                    {account.firstName
+                      ? formatAccountMessage({ id: 'hello', defaultMessage: 'Hi, ' }) + account.firstName
+                      : account.lastName
+                      ? formatAccountMessage({ id: 'hello', defaultMessage: 'Hi, ' }) + account.lastName
+                      : formatAccountMessage({ id: 'hello', defaultMessage: 'Hi, ' }) +
+                        formatAccountMessage({ id: 'user', defaultMessage: 'User ' })}
+                  </span>
+                  <span className="mx-4 h-8 w-px bg-gray-200 lg:mx-4" aria-hidden="true" />
+                  <div className="flex items-center">
+                    <span>Account:&nbsp;</span>
+                    <StorePicker organization={organization} />
+                  </div>
                 </div>
               </div>
             </div>
