@@ -1,10 +1,9 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import NextLink from 'next/link';
 import { Product } from '@Types/product/Product';
-import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useFormat } from 'helpers/hooks/useFormat';
-import Image from 'frontastic/lib/image';
+import { useCart } from 'frontastic';
+import ListItem from './list-item';
 
 interface Props {
   products: Product[];
@@ -14,6 +13,7 @@ interface Props {
 const List: React.FC<Props> = ({ products, filtering }) => {
   //i18n messages
   const { formatMessage: formatProductMessage } = useFormat({ name: 'product' });
+  const { data } = useCart();
 
   return (
     <div className="mx-auto max-w-2xl pt-8 pb-16 lg:max-w-7xl lg:pt-4">
@@ -23,25 +23,7 @@ const List: React.FC<Props> = ({ products, filtering }) => {
           filtering ? '3' : '4'
         } xl:gap-x-8`}
       >
-        {products?.map((product) => (
-          <NextLink href={product._url} key={product.productId}>
-            <a className="group">
-              <div className="bg-white-200 aspect-w-1 aspect-h-1 w-full rounded-lg transition-shadow hover:shadow-xl xl:aspect-w-7 xl:aspect-h-8">
-                <Image
-                  src={product.variants[0].images[0]}
-                  alt={product.name}
-                  className="h-full w-full rounded-lg object-scale-down object-center"
-                />
-              </div>
-              <h3 className="mt-4 overflow-hidden truncate text-lg font-bold text-gray-700 dark:text-light-100">
-                {product.name}
-              </h3>
-              <p className="text-sm text-gray-900 dark:text-light-100">
-                {CurrencyHelpers.formatForCurrency(product.variants[0].price)}
-              </p>
-            </a>
-          </NextLink>
-        ))}
+        {!!data && products?.map((product) => <ListItem product={product} key={product.productId} />)}
       </div>
     </div>
   );

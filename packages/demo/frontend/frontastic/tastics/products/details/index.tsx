@@ -40,7 +40,7 @@ function ProductDetailsTastic({ data }) {
         },
       ]),
     ).values(),
-  ].filter(item=>item.key) as UIColor[];
+  ].filter((item) => item.key) as UIColor[];
 
   const sizes = [
     ...new Map(
