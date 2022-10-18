@@ -2,16 +2,19 @@ import React from 'react';
 import { Organization } from '@Types/organization/organization';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
+import { useRouter } from 'next/router';
 
 interface Props {
   organization: Organization;
 }
 const StorePicker: React.FC<Props> = ({ organization }) => {
   const { setMyStore } = useBusinessUnitStateContext();
+  const router = useRouter();
   const { formatMessage } = useFormat({ name: 'business-unit' });
 
-  const setStore = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setMyStore(event.target.value);
+  const setStore = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+    await setMyStore(event.target.value);
+    router.reload();
   };
 
   if (!organization?.store) return null;

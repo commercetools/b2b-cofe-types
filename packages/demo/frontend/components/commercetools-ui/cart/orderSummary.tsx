@@ -65,7 +65,7 @@ const OrderSummary = ({
     },
   );
 
-  const productPrice = cart?.lineItems.reduce(
+  const productPrice = cart?.lineItems?.reduce(
     (a, b: LineItem) => {
       if (b.discountedPrice) {
         return {

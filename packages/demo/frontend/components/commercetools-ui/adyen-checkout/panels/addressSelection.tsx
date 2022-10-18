@@ -32,10 +32,10 @@ const AddressSelection: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> =
   };
 
   useEffect(() => {
-    if (businessUnit?.addresses?.length) {
+    if (businessUnit?.addresses?.length && account) {
       updateAddress(businessUnit.addresses[0]);
     }
-  }, [businessUnit?.addresses]);
+  }, [businessUnit?.addresses, account]);
 
   if (!businessUnit?.addresses?.length) {
     return null;
