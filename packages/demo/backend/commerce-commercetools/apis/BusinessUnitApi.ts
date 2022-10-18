@@ -4,6 +4,8 @@ import { BusinessUnit, BusinessUnitPagedQueryResponse } from '../../../types/bus
 import { AssociateRole } from '../../../types/associate/Associate';
 import { mapReferencedAssociates } from '../mappers/BusinessUnitMappers';
 
+const MAX_LIMIT = 50;
+
 export class BusinessUnitApi extends BaseApi {
   getAccessToken = async (): Promise<string> => {
     const response = await axios.post(
@@ -22,7 +24,7 @@ export class BusinessUnitApi extends BaseApi {
     try {
       const accessToken = await this.getAccessToken();
       const response = await axios.get(
-        `https://api.us-central1.gcp.commercetools.com/${this.projectKey}/business-units`,
+        `https://api.us-central1.gcp.commercetools.com/${this.projectKey}/business-units?limit=${MAX_LIMIT}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -83,9 +85,10 @@ export class BusinessUnitApi extends BaseApi {
       const accessToken = await this.getAccessToken();
       const whereClause = where ? `?where=${encodeURIComponent(where)}` : '';
       const expandClause = expand ? `${whereClause ? '&' : '?'}expand=${encodeURIComponent(expand)}` : '';
+      const limitClause = (whereClause || expandClause) ? `&limit=${MAX_LIMIT}` : `?limit=${MAX_LIMIT}`;
 
       const response = await axios.get(
-        `https://api.us-central1.gcp.commercetools.com/${this.projectKey}/business-units${whereClause}${expandClause}`,
+        `https://api.us-central1.gcp.commercetools.com/${this.projectKey}/business-units${whereClause}${expandClause}${limitClause}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
