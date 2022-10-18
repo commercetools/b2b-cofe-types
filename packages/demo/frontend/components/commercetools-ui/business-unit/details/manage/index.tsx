@@ -147,12 +147,12 @@ const Manage = () => {
   return (
     <div>
       <div className="flex flex-row">
-        <div className="w-1/3">
+        <div className="w-1/2">
           {/* @ts-ignore */}
           <ReactTree nodes={tree} RenderIcon={handleIconRenderer} RenderNode={handleRenderNodes} />
         </div>
         {!!selectedNode && (
-          <div className="w-2/3">
+          <div className="w-1/2">
             {/* @ts-ignore */}
             <h2 className="my-4 text-lg">{selectedNode.name}</h2>
             Stores:
