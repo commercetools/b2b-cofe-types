@@ -173,81 +173,54 @@ export default function ProductDetail({ product, onAddToCart, onAddToWishlist, v
 
             <form className="mt-6">
               {/* Colors */}
-              <div>
-                <h3 className="text-sm font-medium text-gray-900 dark:text-light-100">
-                  {formatProductMessage({ id: 'color', defaultMessage: 'Color' })}
-                </h3>
+              {!!product?.colors?.length && (
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-light-100">
+                    {formatProductMessage({ id: 'color', defaultMessage: 'Color' })}
+                  </h3>
 
-                <RadioGroup value={selectedColor} onChange={setSelectedColor} className="mt-2">
-                  <RadioGroup.Label className="sr-only">Choose a color</RadioGroup.Label>
-                  <div className="flex items-center space-x-3">
-                    {product?.colors?.map(
-                      (color: { name: string; bgColor: string; selectedColor: string; key: string }) => (
-                        <RadioGroup.Option
-                          key={color.name}
-                          value={color}
-                          className={({ active, checked }) =>
-                            classNames(
-                              color.selectedColor,
-                              (active && checked) || selectedColor?.key === color.key
-                                ? 'ring-2 ring-accent-400 ring-offset-1'
-                                : '',
-                              !active && checked ? 'ring-2 ring-accent-400 ring-offset-1' : '',
-                              'relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none',
-                            )
-                          }
-                        >
-                          <RadioGroup.Label>
-                            <p className="sr-only">{color.name}</p>
-                          </RadioGroup.Label>
-                          <span
-                            aria-hidden="true"
-                            className={classNames(
-                              color.bgColor,
-                              'h-8 w-8 rounded-full border border-black border-opacity-10',
-                            )}
-                          />
-                        </RadioGroup.Option>
-                      ),
-                    )}
-                  </div>
-                </RadioGroup>
-              </div>
-              {product?.sizes.length > 1 && (
-                <div className="mt-8">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-sm font-medium text-gray-900 dark:text-light-100">
-                      {formatProductMessage({ id: 'size', defaultMessage: 'Size' })}
-                    </h2>
-                  </div>
-
-                  <RadioGroup value={selectedSize} onChange={setSelectedSize} className="mt-2">
-                    <RadioGroup.Label className="sr-only">Choose a size</RadioGroup.Label>
-                    <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
-                      {product?.sizes?.map((size: { label: string; key: string }) => (
-                        <RadioGroup.Option
-                          key={size.label}
-                          value={size}
-                          className={({ active, checked }) =>
-                            classNames(
-                              active || selectedSize?.key == size.key ? 'ring-2 ring-accent-400 ring-offset-2' : '',
-                              checked
-                                ? 'bg-transparent text-gray-900 hover:bg-gray-50 dark:text-light-100'
-                                : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50',
-                              'flex cursor-pointer items-center justify-center rounded-md border py-3 px-3 text-sm font-medium uppercase sm:flex-1',
-                            )
-                          }
-                        >
-                          <RadioGroup.Label>
-                            <p>{size.label}</p>
-                          </RadioGroup.Label>
-                        </RadioGroup.Option>
-                      ))}
+                  <RadioGroup value={selectedColor} onChange={setSelectedColor} className="mt-2">
+                    <RadioGroup.Label className="sr-only">Choose a color</RadioGroup.Label>
+                    <div className="flex items-center space-x-3">
+                      {product?.colors?.map(
+                        (color: { name: string; bgColor: string; selectedColor: string; key: string }) => (
+                          <RadioGroup.Option
+                            key={color.name}
+                            value={color}
+                            className={({ active, checked }) =>
+                              classNames(
+                                color.selectedColor,
+                                (active && checked) || selectedColor?.key === color.key
+                                  ? 'ring-2 ring-accent-400 ring-offset-1'
+                                  : '',
+                                !active && checked ? 'ring-2 ring-accent-400 ring-offset-1' : '',
+                                'relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none',
+                              )
+                            }
+                          >
+                            <RadioGroup.Label>
+                              <p className="sr-only">{color.name}</p>
+                            </RadioGroup.Label>
+                            <span
+                              aria-hidden="true"
+                              className={classNames(
+                                color.bgColor,
+                                'h-8 w-8 rounded-full border border-black border-opacity-10',
+                              )}
+                            />
+                          </RadioGroup.Option>
+                        ),
+                      )}
                     </div>
                   </RadioGroup>
                 </div>
               )}
 
+              {!!variant.attributes?.narcotic && !!variant.attributes?.['product-alert-text'] && (
+                <div>
+                  <p className="text-red-500 text-sm">{variant.attributes?.['product-alert-text']}</p>
+                </div>
+              )}
               <div className="mt-10 flex sm:flex-1">
                 <button
                   type="button"

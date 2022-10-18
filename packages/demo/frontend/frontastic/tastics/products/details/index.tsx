@@ -40,13 +40,13 @@ function ProductDetailsTastic({ data }) {
         },
       ]),
     ).values(),
-  ] as UIColor[];
+  ].filter(item=>item.key) as UIColor[];
 
   const sizes = [
     ...new Map(
       product.variants?.map((v: Variant) => [v.attributes.commonSize?.label, v.attributes.commonSize]),
     ).values(),
-  ] as UISize[];
+  ].filter((item) => item) as UISize[];
 
   // this maps the entire payload to a component
   // friendly datastructure, so data and presentation
