@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { XIcon } from '@heroicons/react/solid';
 import { LineItem } from '@Types/cart/LineItem';
+import debounce from 'lodash.debounce';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { LoadingIcon } from '../icons/loading';
 
@@ -14,6 +15,7 @@ interface Props {
 const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem }: Props) => {
   const [count, setCount] = useState(lineItem.count);
   const [isLoading, setIsLoading] = useState(false);
+  const isMountedRef = useRef(false);
 
   const handleRemoveItem = async () => {
     setIsLoading(true);
@@ -21,15 +23,22 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem }: Props
     setIsLoading(false);
   };
 
-  const handleQuantityKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && count !== lineItem.count) {
-      e.preventDefault();
+  const modifyQuantity = useCallback(
+    debounce(async (quantity) => {
       setIsLoading(true);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      await editItemQuantity(lineItem.lineItemId, count);
+      await editItemQuantity(lineItem.lineItemId, quantity);
       setIsLoading(false);
+    }, 500),
+    [lineItem],
+  );
+
+  useEffect(() => {
+    if (isMountedRef.current) {
+      modifyQuantity(count);
     }
-  };
+    isMountedRef.current = true;
+  }, [count]);
 
   return (
     <tr className={`line-item border-b-2 ${isLoading ? 'disabled' : ''}`}>
@@ -56,17 +65,16 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem }: Props
           value={count}
           type="number"
           disabled={isLoading}
-          onChange={(e) => setCount(parseInt(e.target.value, 10))}
+          onChange={(e) => setCount(parseInt(e.target.value || '0', 10))}
           className="input input-primary"
-          onKeyDown={handleQuantityKeyPress}
         />
       </td>
       <td>{CurrencyHelpers.formatForCurrency(lineItem.price)}</td>
       <td>{CurrencyHelpers.formatForCurrency(lineItem.totalPrice)}</td>
       {isLoading && (
-        <td>
+        <div className="line-item__loading">
           <LoadingIcon className="mt-1/2 h-4 w-4 animate-spin text-black" />
-        </td>
+        </div>
       )}
     </tr>
   );

@@ -19,4 +19,9 @@
         height: 100%;
         background-color: rgba(156, 163, 175, 0.455)
     }
+    &__loading {
+        position: absolute;
+        top: 15px;
+        right: 10px;
+    }
 }
