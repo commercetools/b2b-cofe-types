@@ -7,6 +7,7 @@ import Typography from 'components/commercetools-ui/typography';
 import { headerNavigation } from 'helpers/mocks/mockData';
 import { Reference, ReferenceLink } from 'helpers/reference';
 import Image, { NextFrontasticImage } from 'frontastic/lib/image';
+import StorePicker from '../business-unit/store-picker';
 import DarkModeWidget from '../darkmode-widget';
 import AccountButton from './account-button';
 import CartButton from './cart-button';
@@ -86,7 +87,7 @@ const Header: React.FC<HeaderProps> = ({
                 </div>
               </ReferenceLink>
 
-              <div className="flex flex-1 items-center lg:hidden">
+              <div className="flex items-center lg:hidden">
                 <button
                   type="button"
                   className="-ml-2 rounded-md bg-none p-2 text-primary-400 dark:text-light-100"
@@ -150,13 +151,13 @@ const Header: React.FC<HeaderProps> = ({
                 </div>
               </Popover.Group>
 
-              <div className="flex flex-1 items-center justify-end">
-                <div className="flex w-fit items-center">
+              <div className="flex items-center justify-end">
+                <div className="flex grow items-center">
                   {/* <DarkModeWidget className="mr-4 text-primary-400 hover:text-primary-500 dark:text-light-100" /> */}
                   <SearchButton />
 
                   <span className="mx-4 h-6 w-px bg-gray-200 lg:mx-4" aria-hidden="true" />
-
+                  <StorePicker organization={organization} />
                   <WishListButton wishlistItemCount={wishlistItemCount} wishlistLink={wishlistLink} />
                   <FlyingCartButton />
                   <AccountButton

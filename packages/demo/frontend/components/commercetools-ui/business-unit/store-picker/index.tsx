@@ -17,11 +17,12 @@ const StorePicker: React.FC<Props> = ({ organization }) => {
   if (!organization.store) return null;
 
   return (
-    <div className="mt-4 flex w-1/2 flex-row px-1 sm:px-3 lg:px-6">
-      <label className="basis-1/2">
-        <span>{formatMessage({ id: 'select-branch', defaultMessage: 'Select a store:' })}</span>
-      </label>
-      <select defaultValue={organization.store.key} onChange={setStore} className="input input-primary">
+    <div className="mr-4 w-32 flex-row">
+      <select
+        defaultValue={organization.store.key}
+        onChange={setStore}
+        className="w-32 appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+      >
         {organization.businessUnit.stores.map((item) => (
           <option key={item.key} value={item.key}>
             {item.key}
