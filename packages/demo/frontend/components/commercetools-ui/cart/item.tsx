@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { XIcon } from '@heroicons/react/solid';
 import { LineItem } from '@Types/cart/LineItem';
-import debounce from 'lodash.debounce';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { LoadingIcon } from '../icons/loading';
 
@@ -13,9 +12,7 @@ interface Props {
 }
 
 const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem }: Props) => {
-  const [count, setCount] = useState(lineItem.count);
   const [isLoading, setIsLoading] = useState(false);
-  const isMountedRef = useRef(false);
 
   const handleRemoveItem = async () => {
     setIsLoading(true);
@@ -23,25 +20,22 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem }: Props
     setIsLoading(false);
   };
 
-  const modifyQuantity = useCallback(
-    debounce(async (quantity) => {
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const count = parseInt(e.target.value, 10) || 1;
+    if (count !== lineItem.count) {
       setIsLoading(true);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      await editItemQuantity(lineItem.lineItemId, quantity);
+      await editItemQuantity(lineItem.lineItemId, count);
       setIsLoading(false);
-    }, 500),
-    [lineItem],
-  );
-
-  useEffect(() => {
-    if (isMountedRef.current) {
-      modifyQuantity(count);
     }
-    isMountedRef.current = true;
-  }, [count]);
+  };
 
   return (
-    <tr className={`line-item border-b-2 ${isLoading ? 'disabled' : ''}`}>
+    <tr
+      className={`line-item border-b-2 ${isLoading ? 'disabled' : ''} ${
+        lineItem.variant?.attributes?.['narcotic'] ? 'bg-red-100' : ''
+      }`}
+    >
       <td>
         <button type="button" className="button mt-1" onClick={handleRemoveItem}>
           <XIcon className="h-4 w-4 text-gray-400"></XIcon>
@@ -62,10 +56,10 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem }: Props
       </td>
       <td>
         <input
-          value={count}
+          value={lineItem.count}
           type="number"
           disabled={isLoading}
-          onChange={(e) => setCount(parseInt(e.target.value || '0', 10))}
+          onChange={handleChange}
           className="input input-primary"
         />
       </td>

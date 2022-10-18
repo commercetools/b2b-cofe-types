@@ -170,10 +170,10 @@ const Header: React.FC<HeaderProps> = ({
                 </div>
                 <div className="flex w-full grow items-center py-2">
                   <span>
-                    {account.firstName
-                      ? formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) + account.firstName
-                      : account.lastName
-                      ? formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) + account.lastName
+                    {account?.firstName
+                      ? formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) + account?.firstName
+                      : account?.lastName
+                      ? formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) + account?.lastName
                       : formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) +
                         formatAccountMessage({ id: 'user', defaultMessage: 'User ' })}
                   </span>
