@@ -218,7 +218,7 @@ export default function ProductDetail({ product, onAddToCart, onAddToWishlist, v
 
               {!!variant.attributes?.narcotic && !!variant.attributes?.['product-alert-text'] && (
                 <div>
-                  <p className="text-red-500 text-sm">{variant.attributes?.['product-alert-text']}</p>
+                  <p className="text-sm text-red-500">{variant.attributes?.['product-alert-text']}</p>
                 </div>
               )}
               <div className="mt-10 flex sm:flex-1">
