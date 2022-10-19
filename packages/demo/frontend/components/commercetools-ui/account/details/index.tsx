@@ -4,7 +4,13 @@ import useHash from 'helpers/hooks/useHash';
 import Redirect from 'helpers/redirect';
 import { Reference } from 'helpers/reference';
 import { useAccount } from 'frontastic';
-import { AddressesSection, GeneralSection, SecuritySection, OrdersHistorySection } from './sections/exporter';
+import {
+  AddressesSection,
+  GeneralSection,
+  SecuritySection,
+  OrdersHistorySection,
+  QuotesSection,
+} from './sections/exporter';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -32,6 +38,7 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ loginLink }) => {
     { name: formatAccountMessage({ id: 'general', defaultMessage: 'General' }), href: '#' },
     { name: formatAccountMessage({ id: 'addresses', defaultMessage: 'Addresses' }), href: '#addresses' },
     { name: formatAccountMessage({ id: 'orders', defaultMessage: 'Orders' }), href: '#orders' },
+    { name: formatAccountMessage({ id: 'quotes', defaultMessage: 'Quotes' }), href: '#quotes' },
     { name: formatAccountMessage({ id: 'security', defaultMessage: 'Security' }), href: '#security' },
   ];
 
@@ -45,6 +52,7 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ loginLink }) => {
     '#': GeneralSection,
     '#addresses': AddressesSection,
     '#security': SecuritySection,
+    '#quotes': QuotesSection,
     '#orders': OrdersHistorySection,
   };
 
