@@ -92,7 +92,7 @@ const Cart = ({
             editItemQuantity={editItemQuantity}
             goToProductPage={goToProductPage}
             removeItem={(lineItemId: string) => removeItem(lineItemId)}
-            className="mb-8 h-screen lg:col-span-12"
+            className="mb-8 lg:col-span-12"
           />
           <OrderSummary cart={cart} onSubmit={onCheckout} showDiscountsForm={false} />
         </form>
