@@ -1,3 +1,4 @@
+import { QuoteRequest } from '@commercetools/platform-sdk';
 import { Cart } from '@Types/cart/Cart';
 import { Discount } from '@Types/cart/Discount';
 import { Order } from '@Types/cart/Order';
@@ -21,4 +22,5 @@ export interface UseCart {
   orderCart: () => Promise<void>;
   orderHistory?: () => Promise<Order[]>;
   getProjectSettings?: () => Promise<ProjectSettings>;
+  createQuoteRequestFromCurrentCart?: (comment: string) => Promise<QuoteRequest>;
 }

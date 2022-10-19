@@ -1,13 +1,3 @@
-import * as AccountActions from './actionControllers/AccountController';
-import * as ProductActions from './actionControllers/ProductController';
-import * as CartActions from './actionControllers/CartController';
-import * as ChannelActions from './actionControllers/ChannelController';
-import * as WishlistActions from './actionControllers/WishlistController';
-import * as ProjectActions from './actionControllers/ProjectController';
-import * as StoreActions from './actionControllers/StoreController';
-import * as BusinessUnitActions from './actionControllers/BusinessUnitController';
-import * as CustomerActions from './actionControllers/CustomerController';
-
 import {
   DynamicPageContext,
   DynamicPageRedirectResult,
@@ -22,6 +12,7 @@ import { SearchRouter } from './utils/SearchRouter';
 import { Result } from '../../types/product/Result';
 import { CategoryRouter } from './utils/CategoryRouter';
 import dataSources from './dataSources';
+import { actions } from './actionControllers';
 import { ChannelApi } from './apis/ChannelApi';
 
 export default {
@@ -128,15 +119,5 @@ export default {
     return null;
   },
   'data-sources': dataSources,
-  actions: {
-    account: AccountActions,
-    cart: CartActions,
-    channel: ChannelActions,
-    customer: CustomerActions,
-    product: ProductActions,
-    wishlist: WishlistActions,
-    project: ProjectActions,
-    store: StoreActions,
-    'business-unit': BusinessUnitActions,
-  },
+  actions,
 } as ExtensionRegistry;

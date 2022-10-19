@@ -14,6 +14,7 @@ import {
   redeemDiscountCode,
   removeDiscountCode,
   getProjectSettings,
+  createQuoteRequestFromCurrentCart
 } from '../../actions/cart';
 import { query } from '../../actions/product';
 import { getWishlist, addToWishlist, removeLineItem, updateLineItem } from '../../actions/wishlist';
@@ -49,6 +50,7 @@ export const getFrontasticState = (): FrontasticState => {
       getProjectSettings,
       redeemDiscountCode,
       removeDiscountCode,
+      createQuoteRequestFromCurrentCart,
     },
     useWishlist: {
       ...getWishlist(),

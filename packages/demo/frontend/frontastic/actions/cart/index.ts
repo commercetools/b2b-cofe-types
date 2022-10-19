@@ -1,8 +1,9 @@
-import useSWR, { mutate } from 'swr';
+import { QuoteRequest } from '@commercetools/platform-sdk';
 import { Address } from '@Types/account/Address';
 import { Cart } from '@Types/cart/Cart';
 import { Discount } from '@Types/cart/Discount';
 import { Variant } from '@Types/product/Variant';
+import useSWR, { mutate } from 'swr';
 import { fetchApiHub, revalidateOptions } from 'frontastic';
 
 export type CartDetails = {
@@ -177,4 +178,8 @@ export const removeDiscountCode = async (discount: Discount) => {
     payload,
   );
   mutate('/action/cart/getCart', res);
+};
+
+export const createQuoteRequestFromCurrentCart = async (comment: string): Promise<QuoteRequest> => {
+  return await fetchApiHub('/action/quote/createQuoteRequest', { method: 'POST' }, { comment });
 };

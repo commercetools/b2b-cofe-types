@@ -57,6 +57,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",
+    "@commercetools/platform-sdk": "^4.0.0",
     "@storybook/addon-actions": "^6.5.4",
     "@storybook/addon-essentials": "^6.5.4",
     "@storybook/addon-interactions": "^6.5.4",
