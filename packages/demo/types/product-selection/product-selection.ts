@@ -3,8 +3,3 @@ export interface ProductSelectionResourceIdentifier {
     key: string;
     type: "product-selection"
 }
-
-export interface ProductSelectionSettingDraft {
-    productSelection: ProductSelectionResourceIdentifier;
-    active: boolean;
-}

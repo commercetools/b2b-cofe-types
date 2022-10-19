@@ -1,5 +1,4 @@
 import { ChannelResourceIdentifier } from '../channel/channel';
-import { ProductSelectionSettingDraft } from '../product-selection/product-selection';
 
 export interface Store {
   key: string;
@@ -7,7 +6,6 @@ export interface Store {
   id?: string;
   distributionChannels?: ChannelResourceIdentifier[];
   supplyChannels?: ChannelResourceIdentifier[];
-  productSelections?: ProductSelectionSettingDraft[];
 }
 
 export interface StoreKeyReference {
