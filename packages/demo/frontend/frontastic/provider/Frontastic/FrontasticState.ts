@@ -14,13 +14,15 @@ import {
   redeemDiscountCode,
   removeDiscountCode,
   getProjectSettings,
-  createQuoteRequestFromCurrentCart
+  createQuoteRequestFromCurrentCart,
 } from '../../actions/cart';
 import { query } from '../../actions/product';
+import { getMyQuoteRequests } from '../../actions/quotes';
 import { getWishlist, addToWishlist, removeLineItem, updateLineItem } from '../../actions/wishlist';
 import { UseAdyen } from './UseAdyen';
 import { UseCart } from './UseCart';
 import { UseProducts } from './UseProducts';
+import { UseQuotes } from './UseQuotes';
 import { UseWishlist } from './UseWishlist';
 
 export interface FrontasticState {
@@ -28,6 +30,7 @@ export interface FrontasticState {
   useWishlist: UseWishlist;
   useAdyen: UseAdyen;
   useProducts: UseProducts;
+  useQuotes: UseQuotes;
 }
 
 export const getFrontasticState = (): FrontasticState => {
@@ -61,6 +64,9 @@ export const getFrontasticState = (): FrontasticState => {
     useAdyen: {
       createSession,
       adyenCheckout,
+    },
+    useQuotes: {
+      getMyQuoteRequests,
     },
   };
 };

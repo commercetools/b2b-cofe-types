@@ -2,6 +2,7 @@ import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { CartApi } from '../apis/CartApi';
 import { QuoteApi } from '../apis/QuoteApi';
 import { getLocale } from '../utils/Request';
+import {mapCustomerReferences} from '../mappers/QuoteMappers';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -36,9 +37,71 @@ export const createQuoteRequest: ActionHook = async (request: Request, actionCon
     statusCode: 200,
     body: JSON.stringify(quoteRequest),
     sessionData: {
-        ...request.sessionData,
-        cartId: undefined,
+      ...request.sessionData,
+      cartId: undefined,
     },
+  };
+
+  return response;
+};
+
+export const getMyQuoteRequests: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const quoteApi = new QuoteApi(actionContext.frontasticContext, getLocale(request));
+
+  const accountId = request.sessionData?.account?.accountId;
+  if (!accountId) {
+    throw new Error('No active user');
+  }
+
+  const quoteRequests = await quoteApi.getQuoteRequests(accountId);
+
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(mapCustomerReferences(quoteRequests)),
+    sessionData: request.sessionData,
+  };
+
+  return response;
+};
+
+export const getMyQuotesOverview: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const quoteApi = new QuoteApi(actionContext.frontasticContext, getLocale(request));
+
+  const accountId = request.sessionData?.account?.accountId;
+  if (!accountId) {
+    throw new Error('No active user');
+  }
+
+  const quoteRequests = mapCustomerReferences(await quoteApi.getQuoteRequests(accountId));
+  const stagedQuotes = await quoteApi.getStagedQuotes(accountId);
+  const quotes = await quoteApi.getQuotes(accountId);
+
+  // combine quote-requests + quote + staged-quote
+  const res = quoteRequests.results?.map(quoteRequest => {
+    const stagedQuote = stagedQuotes.results?.find(stagedQuote => stagedQuote.quoteRequest.id === quoteRequest.id);
+    if (stagedQuote) {
+        // @ts-ignore
+        quoteRequest.staged = stagedQuote;
+        // @ts-ignore
+        quoteRequest.quoteRequestState = stagedQuote.stagedQuoteState;
+    }
+    const quote = quotes.results?.find(quote => quote.quoteRequest.id === quoteRequest.id);
+    if (quote) {
+        // @ts-ignore
+        quoteRequest.quoted = quote;
+        // @ts-ignore
+        quoteRequest.quoteRequestState = quote.quoteState;
+    }
+    return quoteRequest;
+  })
+
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify({
+        ...quoteRequests,
+        results: res
+    }),
+    sessionData: request.sessionData,
   };
 
   return response;

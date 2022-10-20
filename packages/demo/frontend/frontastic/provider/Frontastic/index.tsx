@@ -15,6 +15,7 @@ const initialState: EnhancedFrontasticState = {
   useAccount: {} as any,
   useAdyen: {} as any,
   useProducts: {} as any,
+  useQuotes: {} as any,
 };
 
 const FrontasticContext = React.createContext<EnhancedFrontasticState>(initialState);
@@ -70,4 +71,10 @@ export const useProducts = () => {
   const context = React.useContext(FrontasticContext);
   checkContext(context);
   return context.useProducts;
+};
+
+export const useQuotes = () => {
+  const context = React.useContext(FrontasticContext);
+  checkContext(context);
+  return context.useQuotes;
 };
