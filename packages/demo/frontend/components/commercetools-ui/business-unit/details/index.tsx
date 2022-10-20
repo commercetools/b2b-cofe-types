@@ -5,6 +5,7 @@ import GeneralSection from 'components/commercetools-ui/business-unit/details/ge
 import ManageSection from 'components/commercetools-ui/business-unit/details/manage';
 import StoresSection from 'components/commercetools-ui/business-unit/details/stores';
 import UsersSection from 'components/commercetools-ui/business-unit/details/users';
+import QuotesSection from 'components/commercetools-ui/business-unit/details/quotes';
 import { useFormat } from 'helpers/hooks/useFormat';
 import useHash from 'helpers/hooks/useHash';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
@@ -27,6 +28,7 @@ export const BusinessUnitDetails: React.FC<BusinessUnitDetailsProps> = ({ organi
     { name: formatAccountMessage({ id: 'addresses', defaultMessage: 'Addresses' }), href: '#addresses' },
     { name: formatAccountMessage({ id: 'stores', defaultMessage: 'Stores' }), href: '#stores' },
     { name: formatAccountMessage({ id: 'users', defaultMessage: 'Users' }), href: '#users' },
+    { name: formatAccountMessage({ id: 'quotes', defaultMessage: 'Quotes' }), href: '#quotes' },
   ]);
 
   const [mapping, setMapping] = useState<Record<string, React.FC<{ organization: object }>>>({
@@ -34,6 +36,7 @@ export const BusinessUnitDetails: React.FC<BusinessUnitDetailsProps> = ({ organi
     '#addresses': AddressesSection,
     '#stores': StoresSection,
     '#users': UsersSection,
+    '#quotes': QuotesSection,
   });
 
   //tabs change (mobile only)
