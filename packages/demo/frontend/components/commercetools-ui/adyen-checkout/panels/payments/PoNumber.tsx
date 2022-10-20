@@ -82,7 +82,6 @@ const PoNumber: React.FC = () => {
               className="input input-primary"
               id="comment"
               name="comment"
-              type="text"
               required
               onChange={handleChange}
               value={data.comment}
