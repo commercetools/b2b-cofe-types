@@ -2,9 +2,9 @@ import { ChannelResourceIdentifier } from '@Types/channel/channel';
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { Store } from '@Types/store/store';
 import { StoreApi } from '../apis/StoreApi';
+import { CartApi } from '../apis/CartApi';
 import { getLocale } from '../utils/Request';
 import { BusinessUnitApi } from '../apis/BusinessUnitApi';
-import { CartFetcher } from '../utils/CartFetcher';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -37,12 +37,11 @@ export const create: ActionHook = async (request: Request, actionContext: Action
 
 export const setMe: ActionHook = async (request: Request, actionContext: ActionContext) => {
   const storeApi = new StoreApi(actionContext.frontasticContext, getLocale(request));
+  const cartApi = new CartApi(actionContext.frontasticContext, getLocale(request));
 
   const data = JSON.parse(request.body);
 
   const store = await storeApi.get(data.key);
-  const cart = await CartFetcher.fetchCart(request, actionContext);
-  const cartId = cart.cartId;
 
   let distributionChannel = request.sessionData?.organization?.distributionChannel;
 
@@ -50,19 +49,24 @@ export const setMe: ActionHook = async (request: Request, actionContext: ActionC
     distributionChannel = store.distributionChannels[0];
   }
 
+  const organization = {
+    ...request.sessionData?.organization,
+    store: {
+      typeId: 'store',
+      key: data.key,
+    },
+    distributionChannel,
+  };
+
+  const cart = await cartApi.getForUser(request.sessionData?.account, organization);
+  const cartId = cart.cartId;
+
   const response: Response = {
     statusCode: 200,
     sessionData: {
       ...request.sessionData,
       cartId,
-      organization: {
-        ...request.sessionData?.organization,
-        store: {
-          typeId: 'store',
-          key: data.key,
-        },
-        distributionChannel,
-      },
+      organization,
     },
   };
 

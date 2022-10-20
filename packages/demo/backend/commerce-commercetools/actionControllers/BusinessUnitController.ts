@@ -37,27 +37,27 @@ export const get: ActionHook = async (request: Request, actionContext: ActionCon
 };
 
 export const getMe: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const response: Response = {
-    statusCode: 200,
-    sessionData: request.sessionData,
-  };
+  let organization = request.sessionData?.organization;
+  let businessUnit = organization?.businessUnit;
 
-  if (request.sessionData?.account?.accountId) {
+  if (request.sessionData?.account?.accountId && !businessUnit) {
     const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
     const channelApi = new ChannelApi(actionContext.frontasticContext, getLocale(request));
-    const businessUnit = await businessUnitApi.getMe(request.sessionData?.account?.accountId);
+    businessUnit = await businessUnitApi.getMe(request.sessionData?.account?.accountId);
 
     if (businessUnit) {
-      const organization = await channelApi.getOrganizationByBusinessUnit(businessUnit);
-      response.body = JSON.stringify(businessUnit);
-      response.sessionData = {
-        ...response.sessionData,
-        organization,
-      };
+      organization = await channelApi.getOrganizationByBusinessUnit(businessUnit);
     }
   }
 
-  return response;
+  return {
+    statusCode: 200,
+    body: JSON.stringify(businessUnit),
+    sessionData: {
+      ...request.sessionData,
+      organization,
+    },
+  };
 };
 
 export const setMe: ActionHook = async (request: Request, actionContext: ActionContext) => {

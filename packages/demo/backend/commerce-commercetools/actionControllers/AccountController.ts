@@ -229,6 +229,7 @@ export const logout: ActionHook = async (request: Request, actionContext: Action
     body: JSON.stringify({}),
     sessionData: {
       ...request.sessionData,
+      organization: undefined,
       account: undefined,
     },
   } as Response;
