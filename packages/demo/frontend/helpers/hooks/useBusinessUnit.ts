@@ -80,7 +80,6 @@ export const useBusinessUnit = (): UseBusinessUnit => {
 
   const setMyStore = async (storeKey: string) => {
     await fetchApiHub('/action/store/setMe', { method: 'POST' }, { key: storeKey });
-    await getCart();
   };
 
   const updateName = async (key: string, name: string): Promise<any> => {

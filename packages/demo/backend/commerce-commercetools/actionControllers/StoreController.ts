@@ -4,6 +4,7 @@ import { Store } from '@Types/store/store';
 import { StoreApi } from '../apis/StoreApi';
 import { getLocale } from '../utils/Request';
 import { BusinessUnitApi } from '../apis/BusinessUnitApi';
+import { CartFetcher } from '../utils/CartFetcher';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -40,6 +41,8 @@ export const setMe: ActionHook = async (request: Request, actionContext: ActionC
   const data = JSON.parse(request.body);
 
   const store = await storeApi.get(data.key);
+  const cart = await CartFetcher.fetchCart(request, actionContext);
+  const cartId = cart.cartId;
 
   let distributionChannel = request.sessionData?.organization?.distributionChannel;
 
@@ -51,6 +54,7 @@ export const setMe: ActionHook = async (request: Request, actionContext: ActionC
     statusCode: 200,
     sessionData: {
       ...request.sessionData,
+      cartId,
       organization: {
         ...request.sessionData?.organization,
         store: {
