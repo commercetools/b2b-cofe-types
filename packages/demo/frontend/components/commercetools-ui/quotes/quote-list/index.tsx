@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useState } from 'react';
 import { QuoteRequest } from '@commercetools/platform-sdk';
+import { EyeIcon } from '@heroicons/react/solid';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { DateHelpers } from 'helpers/dateHelpers';
-import { EyeIcon } from '@heroicons/react/solid';
 
 interface Props {
   quoteRequestList: QuoteRequest[];

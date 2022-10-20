@@ -791,7 +791,10 @@ export class CartApi extends BaseApi {
     return CartMapper.commercetoolsCartToCart(replicatedCommercetoolsCart, locale);
   };
 
-  deleteCart: (primaryCartId: string, cartVersion: number) => Promise<void>  = async (primaryCartId: string, cartVersion: number) => {
+  deleteCart: (primaryCartId: string, cartVersion: number) => Promise<void> = async (
+    primaryCartId: string,
+    cartVersion: number,
+  ) => {
     await this.getApiForProject()
       .carts()
       .withId({
@@ -803,7 +806,7 @@ export class CartApi extends BaseApi {
         },
       })
       .execute();
-  }
+  };
 
   protected doesCartNeedLocaleUpdate: (commercetoolsCart: CommercetoolsCart, locale: Locale) => boolean = (
     commercetoolsCart: CommercetoolsCart,

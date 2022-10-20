@@ -1,15 +1,23 @@
-import { QuotePagedQueryResponse, QuoteRequest, QuoteRequestDraft, QuoteRequestPagedQueryResponse, StagedQuotePagedQueryResponse } from '@commercetools/platform-sdk';
+import {
+  QuotePagedQueryResponse,
+  QuoteRequest,
+  QuoteRequestDraft,
+  QuoteRequestPagedQueryResponse,
+  StagedQuotePagedQueryResponse,
+} from '@commercetools/platform-sdk';
 import { BaseApi } from './BaseApi';
 
 export class QuoteApi extends BaseApi {
-  createQuoteRequest: (quoteRequest: QuoteRequestDraft) => Promise<QuoteRequest> = async (quoteRequest: QuoteRequestDraft) => {
+  createQuoteRequest: (quoteRequest: QuoteRequestDraft) => Promise<QuoteRequest> = async (
+    quoteRequest: QuoteRequestDraft,
+  ) => {
     try {
       return this.getApiForProject()
         .quoteRequests()
         .post({
           body: {
-            ...quoteRequest
-          }
+            ...quoteRequest,
+          },
         })
         .execute()
         .then((response) => {
@@ -23,7 +31,9 @@ export class QuoteApi extends BaseApi {
     }
   };
 
-  getQuoteRequestsByCustomer: (customerId: string) => Promise<QuoteRequestPagedQueryResponse> = async (customerId: string) => {
+  getQuoteRequestsByCustomer: (customerId: string) => Promise<QuoteRequestPagedQueryResponse> = async (
+    customerId: string,
+  ) => {
     try {
       return this.getApiForProject()
         .quoteRequests()
@@ -32,7 +42,7 @@ export class QuoteApi extends BaseApi {
             where: `customer(id="${customerId}")`,
             expand: 'customer',
             limit: 50,
-          }
+          },
         })
         .execute()
         .then((response) => {
@@ -46,7 +56,9 @@ export class QuoteApi extends BaseApi {
     }
   };
 
-  getStagedQuotesByCustomer: (customerId: string) => Promise<StagedQuotePagedQueryResponse> = async (customerId: string) => {
+  getStagedQuotesByCustomer: (customerId: string) => Promise<StagedQuotePagedQueryResponse> = async (
+    customerId: string,
+  ) => {
     try {
       return this.getApiForProject()
         .stagedQuotes()
@@ -55,7 +67,7 @@ export class QuoteApi extends BaseApi {
             where: `customer(id="${customerId}")`,
             expand: 'customer',
             limit: 50,
-          }
+          },
         })
         .execute()
         .then((response) => {
@@ -78,7 +90,7 @@ export class QuoteApi extends BaseApi {
             where: `customer(id="${customerId}")`,
             expand: 'customer',
             limit: 50,
-          }
+          },
         })
         .execute()
         .then((response) => {
@@ -92,7 +104,9 @@ export class QuoteApi extends BaseApi {
     }
   };
 
-  getQuoteRequestsByBusinessUnit: (businessUnitKey: string) => Promise<QuoteRequestPagedQueryResponse> = async (businessUnitKey: string) => {
+  getQuoteRequestsByBusinessUnit: (businessUnitKey: string) => Promise<QuoteRequestPagedQueryResponse> = async (
+    businessUnitKey: string,
+  ) => {
     try {
       return this.getApiForProject()
         .quoteRequests()
@@ -101,7 +115,7 @@ export class QuoteApi extends BaseApi {
             where: `businessUnit(key="${businessUnitKey}")`,
             expand: 'customer',
             limit: 50,
-          }
+          },
         })
         .execute()
         .then((response) => {
@@ -115,7 +129,9 @@ export class QuoteApi extends BaseApi {
     }
   };
 
-  getStagedQuotesByBusinessUnit: (businessUnitKey: string) => Promise<StagedQuotePagedQueryResponse> = async (businessUnitKey: string) => {
+  getStagedQuotesByBusinessUnit: (businessUnitKey: string) => Promise<StagedQuotePagedQueryResponse> = async (
+    businessUnitKey: string,
+  ) => {
     try {
       return this.getApiForProject()
         .stagedQuotes()
@@ -124,7 +140,7 @@ export class QuoteApi extends BaseApi {
             where: `businessUnit(key="${businessUnitKey}")`,
             expand: 'customer',
             limit: 50,
-          }
+          },
         })
         .execute()
         .then((response) => {
@@ -138,7 +154,9 @@ export class QuoteApi extends BaseApi {
     }
   };
 
-  getQuotesByBusinessUnit: (businessUnitKey: string) => Promise<QuotePagedQueryResponse> = async (businessUnitKey: string) => {
+  getQuotesByBusinessUnit: (businessUnitKey: string) => Promise<QuotePagedQueryResponse> = async (
+    businessUnitKey: string,
+  ) => {
     try {
       return this.getApiForProject()
         .quotes()
@@ -147,7 +165,7 @@ export class QuoteApi extends BaseApi {
             where: `businessUnit(key="${businessUnitKey}")`,
             expand: 'customer',
             limit: 50,
-          }
+          },
         })
         .execute()
         .then((response) => {

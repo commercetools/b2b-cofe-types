@@ -1,8 +1,8 @@
 import React, { ChangeEvent, useState } from 'react';
+import { useRouter } from 'next/router';
+import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useCart } from 'frontastic';
-import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
-import { useRouter } from 'next/router';
 
 const PoNumber: React.FC = () => {
   const { formatMessage } = useFormat({ name: 'checkout' });

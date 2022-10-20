@@ -67,7 +67,7 @@ export const getFrontasticState = (): FrontasticState => {
     },
     useQuotes: {
       getMyQuoteRequests,
-      getMyBusinessUserQuoteRequests
+      getMyBusinessUserQuoteRequests,
     },
   };
 };
