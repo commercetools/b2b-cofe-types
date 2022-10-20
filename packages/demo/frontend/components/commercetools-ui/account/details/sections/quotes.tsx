@@ -45,8 +45,8 @@ const QuotesHistory: FC = () => {
       <div className="divide-y divide-gray-200"></div>
       <div className="flex items-stretch justify-center py-10">
         {isLoading && <LoadingIcon className="h-8 w-8 text-gray-500" />}
-        {!isLoading && !quoteList.length && <div>No quotes yet!</div>}
-        {!isLoading && !!quoteList.length && <QuoteList quoteRequestList={quoteList} />}
+        {!isLoading && !quoteList?.length && <div>No quotes yet!</div>}
+        {!isLoading && !!quoteList?.length && <QuoteList quoteRequestList={quoteList} />}
       </div>
     </div>
   );
