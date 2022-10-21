@@ -72,7 +72,11 @@ export class CartMapper {
           locale,
         ),
         totalPrice: ProductMapper.commercetoolsMoneyToMoney(commercetoolsLineItem.totalPrice),
-        variant: ProductMapper.commercetoolsProductVariantToVariant(commercetoolsLineItem.variant, locale, commercetoolsLineItem.price),
+        variant: ProductMapper.commercetoolsProductVariantToVariant(
+          commercetoolsLineItem.variant,
+          locale,
+          commercetoolsLineItem.price,
+        ),
         isGift:
           commercetoolsLineItem?.lineItemMode !== undefined && commercetoolsLineItem.lineItemMode === 'GiftLineItem',
       };

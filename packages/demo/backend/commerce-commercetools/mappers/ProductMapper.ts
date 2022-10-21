@@ -88,7 +88,7 @@ export class ProductMapper {
   static commercetoolsProductVariantToVariant: (
     commercetoolsVariant: CommercetoolsProductVariant,
     locale: Locale,
-    productPrice?: Price
+    productPrice?: Price,
   ) => Variant = (commercetoolsVariant: CommercetoolsProductVariant, locale: Locale, productPrice?: Price) => {
     const attributes = ProductMapper.commercetoolsAttributesToAttributes(commercetoolsVariant.attributes, locale);
     const { price, discountedPrice, discounts } = ProductMapper.extractPriceAndDiscounts(commercetoolsVariant, locale);
@@ -110,21 +110,24 @@ export class ProductMapper {
     } as Variant;
   };
 
-  static getPriceChannelAvailability: (variant: CommercetoolsProductVariant, productPrice?: Price) => ProductVariantAvailability = (variant: CommercetoolsProductVariant, productPrice?: Price) => {
+  static getPriceChannelAvailability: (
+    variant: CommercetoolsProductVariant,
+    productPrice?: Price,
+  ) => ProductVariantAvailability = (variant: CommercetoolsProductVariant, productPrice?: Price) => {
     let channelId = '';
     if (productPrice) {
-        channelId = productPrice.channel?.id;
+      channelId = productPrice.channel?.id;
     } else {
-        channelId = variant.scopedPrice?.channel?.id || variant.price?.channel?.id
+      channelId = variant.scopedPrice?.channel?.id || variant.price?.channel?.id;
     }
     if (!channelId) {
-        return variant.availability
+      return variant.availability;
     }
     if (!variant.availability?.channels?.[channelId]) {
-        return variant.availability;
+      return variant.availability;
     }
     return variant.availability.channels[channelId];
-  }
+  };
 
   static commercetoolsAttributesToAttributes: (
     commercetoolsAttributes: CommercetoolsAttribute[],
