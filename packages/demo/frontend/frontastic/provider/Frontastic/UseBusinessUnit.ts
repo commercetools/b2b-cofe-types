@@ -2,6 +2,7 @@ import { Account } from '@Types/account/Account';
 import { Address } from '@Types/account/Address';
 import { AssociateRole } from '@Types/associate/Associate';
 import { BusinessUnit } from '@Types/business-unit/business-unit';
+import { ChannelResourceIdentifier } from '@Types/channel/channel';
 
 export interface UseBusinessUnit {
   businessUnit: BusinessUnit;
@@ -12,5 +13,5 @@ export interface UseBusinessUnit {
   addUser: (key: string, email: string, roles: AssociateRole[]) => Promise<BusinessUnit>;
   getUser: (id: string) => Promise<Account>;
   setMyBusinessUnit: (businessUnitKey: string) => void;
-  setMyStore: (storeKey: string) => void;
+  setMyStore: (storeKey: string) => Promise<ChannelResourceIdentifier>;
 }

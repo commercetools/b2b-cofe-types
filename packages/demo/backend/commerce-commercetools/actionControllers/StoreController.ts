@@ -63,6 +63,7 @@ export const setMe: ActionHook = async (request: Request, actionContext: ActionC
 
   const response: Response = {
     statusCode: 200,
+    body: JSON.stringify(distributionChannel),
     sessionData: {
       ...request.sessionData,
       cartId,

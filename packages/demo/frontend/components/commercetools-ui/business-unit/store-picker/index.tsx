@@ -1,20 +1,33 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { Organization } from '@Types/organization/organization';
-import { useFormat } from 'helpers/hooks/useFormat';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
+import { useCart } from 'frontastic';
 
 interface Props {
   organization: Organization;
 }
 const StorePicker: React.FC<Props> = ({ organization }) => {
   const { setMyStore } = useBusinessUnitStateContext();
+  const { getCart } = useCart();
   const router = useRouter();
-  const { formatMessage } = useFormat({ name: 'business-unit' });
 
   const setStore = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-    await setMyStore(event.target.value);
-    router.reload();
+    const distributionChannel = await setMyStore(event.target.value);
+    getCart();
+    router.replace(
+      {
+        pathname: router.pathname,
+        query: {
+          ...router.query, // list all the queries here
+          distributionChannelId: distributionChannel.id, // override the color property
+        },
+      },
+      undefined,
+      {
+        shallow: false,
+      },
+    );
   };
 
   if (!organization?.store) return null;

@@ -21,7 +21,8 @@ export class SearchRouter {
     const urlMatches = getPath(request)?.match(/\/search/);
 
     const additionalQueryArgs = {};
-    const distributionChannelId = request.sessionData?.organization?.distributionChannel?.id;
+    const distributionChannelId =
+      request.query?.['distributionChannelId'] || request.sessionData?.organization?.distributionChannel?.id;
 
     if (distributionChannelId) {
       // @ts-ignore

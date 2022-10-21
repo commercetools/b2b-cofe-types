@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
+import { Account } from '@Types/account/Account';
 import { Address } from '@Types/account/Address';
+import { AssociateRole } from '@Types/associate/Associate';
+import { BusinessUnit } from '@Types/business-unit/business-unit';
+import { ChannelResourceIdentifier } from '@Types/channel/channel';
 import { useAccount, useCart } from 'frontastic';
 import { fetchApiHub } from 'frontastic/lib/fetch-api-hub';
 import { UseBusinessUnit } from 'frontastic/provider/Frontastic/UseBusinessUnit';
 import { createStore } from '../../frontastic/actions/stores';
-import { BusinessUnit } from '@Types/business-unit/business-unit';
-import { AssociateRole } from '@Types/associate/Associate';
-import { Account } from '@Types/account/Account';
 
 export const useBusinessUnit = (): UseBusinessUnit => {
   const [businessUnit, setBusinessUnit] = useState(null);
@@ -78,8 +79,8 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     setBusinessUnit(res);
   };
 
-  const setMyStore = async (storeKey: string) => {
-    await fetchApiHub('/action/store/setMe', { method: 'POST' }, { key: storeKey });
+  const setMyStore = async (storeKey: string): Promise<ChannelResourceIdentifier> => {
+    return fetchApiHub('/action/store/setMe', { method: 'POST' }, { key: storeKey });
   };
 
   const updateName = async (key: string, name: string): Promise<any> => {
