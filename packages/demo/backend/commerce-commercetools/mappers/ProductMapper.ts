@@ -5,9 +5,11 @@ import {
   CategoryReference,
   FacetResults as CommercetoolsFacetResults,
   Money as CommercetoolsMoney,
+  Price,
   ProductProjection as CommercetoolsProductProjection,
   ProductType as CommercetoolsProductType,
   ProductVariant as CommercetoolsProductVariant,
+  ProductVariantAvailability,
   RangeFacetResult as CommercetoolsRangeFacetResult,
   TermFacetResult as CommercetoolsTermFacetResult,
   TypedMoney,
@@ -86,7 +88,8 @@ export class ProductMapper {
   static commercetoolsProductVariantToVariant: (
     commercetoolsVariant: CommercetoolsProductVariant,
     locale: Locale,
-  ) => Variant = (commercetoolsVariant: CommercetoolsProductVariant, locale: Locale) => {
+    productPrice?: Price
+  ) => Variant = (commercetoolsVariant: CommercetoolsProductVariant, locale: Locale, productPrice?: Price) => {
     const attributes = ProductMapper.commercetoolsAttributesToAttributes(commercetoolsVariant.attributes, locale);
     const { price, discountedPrice, discounts } = ProductMapper.extractPriceAndDiscounts(commercetoolsVariant, locale);
 
@@ -102,10 +105,26 @@ export class ProductMapper {
       price: price,
       discountedPrice: discountedPrice,
       discounts: discounts,
-      availability: commercetoolsVariant.availability,
+      availability: ProductMapper.getPriceChannelAvailability(commercetoolsVariant, productPrice),
       isOnStock: commercetoolsVariant.availability?.isOnStock || undefined,
     } as Variant;
   };
+
+  static getPriceChannelAvailability: (variant: CommercetoolsProductVariant, productPrice?: Price) => ProductVariantAvailability = (variant: CommercetoolsProductVariant, productPrice?: Price) => {
+    let channelId = '';
+    if (productPrice) {
+        channelId = productPrice.channel?.id;
+    } else {
+        channelId = variant.scopedPrice?.channel?.id || variant.price?.channel?.id
+    }
+    if (!channelId) {
+        return variant.availability
+    }
+    if (!variant.availability?.channels?.[channelId]) {
+        return variant.availability;
+    }
+    return variant.availability.channels[channelId];
+  }
 
   static commercetoolsAttributesToAttributes: (
     commercetoolsAttributes: CommercetoolsAttribute[],

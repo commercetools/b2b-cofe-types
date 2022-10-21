@@ -77,7 +77,7 @@ const Header: React.FC<HeaderProps> = ({
               {/* Logo */}
               <ReferenceLink target={logoLink} className="flex h-full items-center py-4 pr-2 md:py-3">
                 <span className="sr-only">Catwalk</span>
-                <div className="relative h-8 w-[60px] px-4 pr-3 sm:w-[120px] sm:pr-7">
+                <div className="relative h-20 w-[60px] px-4 pr-3 sm:w-[120px] sm:pr-7">
                   <Image
                     media={logo.media ? logo.media : { media: {} }}
                     className="dark:invert"
