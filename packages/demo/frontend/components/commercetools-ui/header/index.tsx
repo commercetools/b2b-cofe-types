@@ -179,7 +179,7 @@ const Header: React.FC<HeaderProps> = ({
                   </span>
                   <span className="mx-4 h-8 w-px bg-gray-200 lg:mx-4" aria-hidden="true" />
                   <div className="flex items-center">
-                    <span>Account:&nbsp;</span>
+                    <span>Store:&nbsp;</span>
                     <StorePicker organization={organization} />
                   </div>
                 </div>
