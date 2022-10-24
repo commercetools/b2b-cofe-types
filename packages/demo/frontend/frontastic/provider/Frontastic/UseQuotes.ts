@@ -1,6 +1,6 @@
-import { QuoteRequestPagedQueryResponse } from '@commercetools/platform-sdk';
+import { QuoteRequest } from '../../../../types/quotes/QuoteRequest';
 
 export interface UseQuotes {
-  getMyQuoteRequests: () => Promise<QuoteRequestPagedQueryResponse>;
-  getMyBusinessUserQuoteRequests: () => Promise<QuoteRequestPagedQueryResponse>;
+  getMyQuoteRequests: () => Promise<QuoteRequest[]>;
+  getMyBusinessUserQuoteRequests: () => Promise<QuoteRequest[]>;
 }

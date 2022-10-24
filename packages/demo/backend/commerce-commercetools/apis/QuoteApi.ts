@@ -1,14 +1,20 @@
 import {
-  QuotePagedQueryResponse,
-  QuoteRequest,
+  QuoteRequest as CommercetoolsQuoteRequest,
   QuoteRequestDraft,
-  QuoteRequestPagedQueryResponse,
-  StagedQuotePagedQueryResponse,
+  StagedQuote as CommercetoolsStagedQuote,
 } from '@commercetools/platform-sdk';
+import {
+  mapCommercetoolsQuote,
+  mapCommercetoolsQuoteRequest,
+  mapCommercetoolsStagedQuote,
+} from '../mappers/QuoteMappers';
 import { BaseApi } from './BaseApi';
+import { QuoteRequest } from '../../../types/quotes/QuoteRequest';
+import { Quote } from '@Types/quotes/Quote';
+import { StagedQuote } from '@Types/quotes/StagedQuote';
 
 export class QuoteApi extends BaseApi {
-  createQuoteRequest: (quoteRequest: QuoteRequestDraft) => Promise<QuoteRequest> = async (
+  createQuoteRequest: (quoteRequest: QuoteRequestDraft) => Promise<CommercetoolsQuoteRequest> = async (
     quoteRequest: QuoteRequestDraft,
   ) => {
     try {
@@ -31,10 +37,10 @@ export class QuoteApi extends BaseApi {
     }
   };
 
-  getQuoteRequestsByCustomer: (customerId: string) => Promise<QuoteRequestPagedQueryResponse> = async (
-    customerId: string,
-  ) => {
+  getQuoteRequestsByCustomer: (customerId: string) => Promise<QuoteRequest[]> = async (customerId: string) => {
     try {
+      const locale = await this.getCommercetoolsLocal();
+
       return this.getApiForProject()
         .quoteRequests()
         .get({
@@ -46,7 +52,7 @@ export class QuoteApi extends BaseApi {
         })
         .execute()
         .then((response) => {
-          return response.body;
+          return mapCommercetoolsQuoteRequest(response.body.results, locale);
         })
         .catch((error) => {
           throw error;
@@ -56,9 +62,8 @@ export class QuoteApi extends BaseApi {
     }
   };
 
-  getStagedQuotesByCustomer: (customerId: string) => Promise<StagedQuotePagedQueryResponse> = async (
-    customerId: string,
-  ) => {
+  getStagedQuotesByCustomer: (customerId: string) => Promise<StagedQuote[]> = async (customerId: string) => {
+    const locale = await this.getCommercetoolsLocal();
     try {
       return this.getApiForProject()
         .stagedQuotes()
@@ -71,7 +76,7 @@ export class QuoteApi extends BaseApi {
         })
         .execute()
         .then((response) => {
-          return response.body;
+          return mapCommercetoolsStagedQuote(response.body.results, locale);
         })
         .catch((error) => {
           throw error;
@@ -81,7 +86,8 @@ export class QuoteApi extends BaseApi {
     }
   };
 
-  getQuotesByCustomer: (customerId: string) => Promise<QuotePagedQueryResponse> = async (customerId: string) => {
+  getQuotesByCustomer: (customerId: string) => Promise<Quote[]> = async (customerId: string) => {
+    const locale = await this.getCommercetoolsLocal();
     try {
       return this.getApiForProject()
         .quotes()
@@ -94,7 +100,7 @@ export class QuoteApi extends BaseApi {
         })
         .execute()
         .then((response) => {
-          return response.body;
+          return mapCommercetoolsQuote(response.body.results, locale);
         })
         .catch((error) => {
           throw error;
@@ -104,9 +110,10 @@ export class QuoteApi extends BaseApi {
     }
   };
 
-  getQuoteRequestsByBusinessUnit: (businessUnitKey: string) => Promise<QuoteRequestPagedQueryResponse> = async (
+  getQuoteRequestsByBusinessUnit: (businessUnitKey: string) => Promise<QuoteRequest[]> = async (
     businessUnitKey: string,
   ) => {
+    const locale = await this.getCommercetoolsLocal();
     try {
       return this.getApiForProject()
         .quoteRequests()
@@ -119,7 +126,7 @@ export class QuoteApi extends BaseApi {
         })
         .execute()
         .then((response) => {
-          return response.body;
+          return mapCommercetoolsQuoteRequest(response.body.results, locale);
         })
         .catch((error) => {
           throw error;
@@ -129,9 +136,10 @@ export class QuoteApi extends BaseApi {
     }
   };
 
-  getStagedQuotesByBusinessUnit: (businessUnitKey: string) => Promise<StagedQuotePagedQueryResponse> = async (
+  getStagedQuotesByBusinessUnit: (businessUnitKey: string) => Promise<StagedQuote[]> = async (
     businessUnitKey: string,
   ) => {
+    const locale = await this.getCommercetoolsLocal();
     try {
       return this.getApiForProject()
         .stagedQuotes()
@@ -144,7 +152,7 @@ export class QuoteApi extends BaseApi {
         })
         .execute()
         .then((response) => {
-          return response.body;
+          return mapCommercetoolsStagedQuote(response.body.results, locale);
         })
         .catch((error) => {
           throw error;
@@ -154,9 +162,8 @@ export class QuoteApi extends BaseApi {
     }
   };
 
-  getQuotesByBusinessUnit: (businessUnitKey: string) => Promise<QuotePagedQueryResponse> = async (
-    businessUnitKey: string,
-  ) => {
+  getQuotesByBusinessUnit: (businessUnitKey: string) => Promise<Quote[]> = async (businessUnitKey: string) => {
+    const locale = await this.getCommercetoolsLocal();
     try {
       return this.getApiForProject()
         .quotes()
@@ -169,7 +176,7 @@ export class QuoteApi extends BaseApi {
         })
         .execute()
         .then((response) => {
-          return response.body;
+          return mapCommercetoolsQuote(response.body.results, locale);
         })
         .catch((error) => {
           throw error;

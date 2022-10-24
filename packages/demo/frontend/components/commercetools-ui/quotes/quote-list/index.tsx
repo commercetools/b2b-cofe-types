@@ -1,22 +1,18 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useState } from 'react';
-import { Quote, QuoteRequest, StagedQuote } from '@commercetools/platform-sdk';
 import { EyeIcon } from '@heroicons/react/solid';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { DateHelpers } from 'helpers/dateHelpers';
+import { QuoteRequest } from '../../../../../types/quotes/QuoteRequest';
 import QuoteDetails from '../details';
 
-export interface QuoteDetail extends QuoteRequest {
-  staged?: StagedQuote;
-  quoted?: Quote;
-}
 interface Props {
-  quoteRequestList: QuoteDetail[];
+  quoteRequestList: QuoteRequest[];
 }
 
 const QuoteList: React.FC<Props> = ({ quoteRequestList }) => {
   const [isQuoteRequestDetailsOpen, setIsQuoteRequestDetailsOpen] = useState(false);
-  const [currentSelectedQuoteRequest, setCurrentSelectedQuoteRequest] = useState<QuoteDetail>(null);
+  const [currentSelectedQuoteRequest, setCurrentSelectedQuoteRequest] = useState<QuoteRequest>(null);
   const openQuoteRequestDetails = (quoteRequest) => {
     setCurrentSelectedQuoteRequest(quoteRequest);
     setIsQuoteRequestDetailsOpen(true);

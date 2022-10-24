@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
-import QuoteList, { QuoteDetail } from 'components/commercetools-ui/quotes/quote-list';
+import QuoteList from 'components/commercetools-ui/quotes/quote-list';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useAccount, useQuotes } from 'frontastic';
+import { QuoteRequest } from '../../../../../../types/quotes/QuoteRequest';
 
 const Quotes = () => {
   const { account } = useAccount();
@@ -10,13 +11,13 @@ const Quotes = () => {
   const { formatMessage: formatAccountMessage } = useFormat({ name: 'account' });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [quoteList, setQuoteList] = useState<QuoteDetail[]>([]);
+  const [quoteList, setQuoteList] = useState<QuoteRequest[]>([]);
 
   useEffect(() => {
     if (account?.accountId) {
       (async () => {
         setIsLoading(true);
-        const { results } = await getMyBusinessUserQuoteRequests();
+        const results = await getMyBusinessUserQuoteRequests();
         setQuoteList(results);
         setIsLoading(false);
       })();

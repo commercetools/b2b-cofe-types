@@ -1,18 +1,20 @@
 import React, { Fragment } from 'react';
-import { QuoteRequest } from '@commercetools/platform-sdk';
 import { Transition, Dialog } from '@headlessui/react';
-import { mode } from 'tailwind.config';
-import { LoadingIcon } from '../../icons/loading';
+import { CheckIcon, XIcon } from '@heroicons/react/outline';
+import { OrderItems } from 'components/commercetools-ui/account/details/sections/order-items';
+import { useDarkMode } from 'frontastic';
+import { QuoteRequest } from '../../../../../types/quotes/QuoteRequest';
 import { QuoteHistory } from '../history';
-import { QuoteDetail } from '../quote-list';
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  data: QuoteDetail;
+  data: QuoteRequest;
 }
 
 const QuoteDetails: React.FC<Props> = ({ open, onClose, data }) => {
+  const { mode } = useDarkMode();
+
   const quoteHistoryData = {
     quoteRequest: {
       createdAt: data?.createdAt,
@@ -72,6 +74,29 @@ const QuoteDetails: React.FC<Props> = ({ open, onClose, data }) => {
                     </div>
                     <div className="mt-12">
                       <QuoteHistory data={quoteHistoryData} />
+                    </div>
+                    {!!data?.quoted && (
+                      <div>
+                        <h3 className="mt-4 text-xl font-extrabold tracking-tight text-gray-900 dark:text-light-100">
+                          Actions
+                        </h3>
+                        <div className="flex flex-row justify-between">
+                          <button className="button button-secondary flex flex-row">
+                            <XIcon className="h-4 w-4 text-white" />
+                            Decline
+                          </button>
+                          <button className="button button-primary flex flex-row">
+                            <CheckIcon className="h-4 w-4 text-white" />
+                            Accept
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    <div>
+                      <h3 className="mt-4 text-xl font-extrabold tracking-tight text-gray-900 dark:text-light-100">
+                        Details
+                      </h3>
+                      <OrderItems lineItems={data?.lineItems} />
                     </div>
                   </div>
                 </div>
