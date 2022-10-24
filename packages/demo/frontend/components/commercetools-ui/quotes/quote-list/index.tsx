@@ -3,8 +3,10 @@ import React, { useState } from 'react';
 import { EyeIcon } from '@heroicons/react/solid';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { DateHelpers } from 'helpers/dateHelpers';
+import { LineItem } from '../../../../../types/cart/LineItem';
 import { QuoteRequest } from '../../../../../types/quotes/QuoteRequest';
 import QuoteDetails from '../details';
+import styles from './index.module.css';
 
 interface Props {
   quoteRequestList: QuoteRequest[];
@@ -17,6 +19,10 @@ const QuoteList: React.FC<Props> = ({ quoteRequestList }) => {
     setCurrentSelectedQuoteRequest(quoteRequest);
     setIsQuoteRequestDetailsOpen(true);
     setIsQuoteRequestDetailsOpen(true);
+  };
+
+  const getTotalLineItems = (lineItems: LineItem[]): number => {
+    return lineItems.reduce((prev, curr) => prev + curr.count, 0);
   };
 
   return (
@@ -37,14 +43,14 @@ const QuoteList: React.FC<Props> = ({ quoteRequestList }) => {
         </thead>
         <tbody>
           {quoteRequestList.map((quote) => (
-            <tr key={quote.id}>
+            <tr className={styles.row} key={quote.id}>
               <td>{DateHelpers.formatDate(quote.createdAt)}</td>
               {/* @ts-ignore */}
-              <td>{quote.customer.email}</td>
+              <td className={styles.trim}>{quote.customer.email}</td>
               {/* @ts-ignore */}
-              <td>{quote.businessUnit.key}</td>
-              <td>{quote.store.key}</td>
-              <td>{quote.lineItems.length}</td>
+              <td className={styles.trim}>{quote.businessUnit.key}</td>
+              <td className={styles.trim}>{quote.store.key}</td>
+              <td>{getTotalLineItems(quote.lineItems)}</td>
               <td>{quote.comment}</td>
               <td>{CurrencyHelpers.formatForCurrency(quote.totalPrice)}</td>
               <td className="text-green-300">{quote.quoteRequestState}</td>

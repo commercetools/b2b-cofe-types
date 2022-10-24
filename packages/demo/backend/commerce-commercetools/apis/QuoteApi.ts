@@ -1,8 +1,4 @@
-import {
-  QuoteRequest as CommercetoolsQuoteRequest,
-  QuoteRequestDraft,
-  StagedQuote as CommercetoolsStagedQuote,
-} from '@commercetools/platform-sdk';
+import { QuoteRequest as CommercetoolsQuoteRequest, QuoteRequestDraft } from '@commercetools/platform-sdk';
 import {
   mapCommercetoolsQuote,
   mapCommercetoolsQuoteRequest,
@@ -70,7 +66,7 @@ export class QuoteApi extends BaseApi {
         .get({
           queryArgs: {
             where: `customer(id="${customerId}")`,
-            expand: 'customer',
+            expand: ['customer', 'quotationCart'],
             limit: 50,
           },
         })
@@ -146,7 +142,7 @@ export class QuoteApi extends BaseApi {
         .get({
           queryArgs: {
             where: `businessUnit(key="${businessUnitKey}")`,
-            expand: 'customer',
+            expand: ['customer', 'quotationCart'],
             limit: 50,
           },
         })

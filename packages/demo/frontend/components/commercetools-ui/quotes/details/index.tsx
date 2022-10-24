@@ -1,10 +1,11 @@
 import React, { Fragment } from 'react';
 import { Transition, Dialog } from '@headlessui/react';
 import { CheckIcon, XIcon } from '@heroicons/react/outline';
-import { OrderItems } from 'components/commercetools-ui/account/details/sections/order-items';
+import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useDarkMode } from 'frontastic';
 import { QuoteRequest } from '../../../../../types/quotes/QuoteRequest';
 import { QuoteHistory } from '../history';
+import { QuoteItems } from '../quote-items';
 
 interface Props {
   open: boolean;
@@ -96,7 +97,23 @@ const QuoteDetails: React.FC<Props> = ({ open, onClose, data }) => {
                       <h3 className="mt-4 text-xl font-extrabold tracking-tight text-gray-900 dark:text-light-100">
                         Details
                       </h3>
-                      <OrderItems lineItems={data?.lineItems} />
+                      <dl className="flex-auto space-y-6 divide-y divide-gray-200 text-sm text-gray-600 sm:grid sm:grid-cols-3 sm:gap-x-6 sm:space-y-0 sm:divide-y-0 lg:flex-none lg:gap-x-8">
+                        <div className="flex justify-between pt-6 sm:block sm:pt-0">
+                          <dt className="font-medium text-gray-900">Quote request ID</dt>
+                          <dd className="sm:mt-1">{data.id}</dd>
+                        </div>
+                        <div className="flex justify-between pt-6 font-medium text-gray-900 sm:block sm:pt-0">
+                          <dt>Requested total amount</dt>
+                          <dd className="sm:mt-1">{CurrencyHelpers.formatForCurrency(data.totalPrice)}</dd>
+                        </div>
+                        {!!data.quoted && (
+                          <div className="flex justify-between pt-6 font-medium text-green-400 sm:block sm:pt-0">
+                            <dt>Suggested total amount</dt>
+                            <dd className="sm:mt-1">{CurrencyHelpers.formatForCurrency(data.quoted.totalPrice)}</dd>
+                          </div>
+                        )}
+                      </dl>
+                      <QuoteItems quoteRequestLineItems={data?.lineItems} quoteLineItems={data?.quoted?.lineItems} />
                     </div>
                   </div>
                 </div>
