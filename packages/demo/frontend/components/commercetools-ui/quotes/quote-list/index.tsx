@@ -44,7 +44,7 @@ const QuoteList: React.FC<Props> = ({ quoteRequestList }) => {
         <tbody>
           {quoteRequestList.map((quote) => (
             <tr className={styles.row} key={quote.id}>
-              <td>{DateHelpers.formatDate(quote.createdAt)}</td>
+              <td>{new Date(quote.createdAt).toLocaleString()}</td>
               {/* @ts-ignore */}
               <td className={styles.trim}>{quote.customer.email}</td>
               {/* @ts-ignore */}
