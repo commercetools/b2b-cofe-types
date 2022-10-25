@@ -1,4 +1,4 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, useState } from 'react';
 import { Cart } from '@Types/cart/Cart';
 import { LineItem } from '@Types/cart/LineItem';
 import { useTranslation, Trans } from 'react-i18next';
@@ -6,6 +6,9 @@ import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { Reference, ReferenceLink } from 'helpers/reference';
 import DiscountForm from '../discount-form';
+import { LoadingIcon } from '../icons/loading';
+import { useRouter } from 'next/router';
+import { useCart } from 'frontastic';
 
 interface Props {
   readonly cart: Cart;
@@ -14,6 +17,7 @@ interface Props {
   readonly disableSubmitButton?: boolean;
   readonly showSubmitButton?: boolean;
   readonly showDiscountsForm?: boolean;
+  currentStep?: string;
 
   termsLink?: Reference;
   cancellationLink?: Reference;
@@ -30,10 +34,17 @@ const OrderSummary = ({
   termsLink,
   cancellationLink,
   privacyLink,
+  currentStep,
 }: Props) => {
   //i18n messages
   const { formatMessage: formatCartMessage } = useFormat({ name: 'cart' });
   const { t } = useTranslation(['checkout']);
+  const router = useRouter();
+  const { createQuoteRequestFromCurrentCart, getCart } = useCart();
+
+  const [isCommentDisplayed, setIsCommentDisplayed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [quoteComment, setQuoteComment] = useState('');
 
   const submitButtonClassName = `${disableSubmitButton ? 'opacity-75 pointer-events-none' : ''} ${
     !showDiscountsForm ? 'mt-7' : ''
@@ -105,6 +116,14 @@ const OrderSummary = ({
     },
   );
 
+  const handleCreateQuote = async () => {
+    setIsLoading(true);
+    await createQuoteRequestFromCurrentCart(quoteComment);
+    setIsLoading(false);
+    getCart();
+    router.push('/thank-you');
+  };
+
   return (
     <section
       aria-labelledby="summary-heading"
@@ -165,20 +184,56 @@ const OrderSummary = ({
           </div>
         )}
       </dl>
-      {showDiscountsForm && <DiscountForm cart={cart} className="py-10" />}
-      {showSubmitButton && (
+      {isCommentDisplayed && (
         <div>
-          <button type="submit" onClick={onSubmit} className={submitButtonClassName}>
-            {submitButtonLabel || formatCartMessage({ id: 'checkout', defaultMessage: 'Checkout' })}
-          </button>
-
-          {submitButtonLabel === formatCartMessage({ id: 'ContinueAndPay', defaultMessage: 'Continue and pay' }) && (
-            <p className="px-1 py-5 text-center text-xs">
-              <Trans i18nKey="disclaimer" t={t} components={interpolatedComponents} />
-            </p>
-          )}
+          <label className="text-sm leading-tight text-neutral-700" htmlFor="comment">
+            <span>{formatCartMessage({ id: 'comment', defaultMessage: 'Comment' })}</span>
+            <textarea
+              className="input input-primary"
+              id="comment"
+              name="comment"
+              required
+              onChange={(e) => setQuoteComment(e.target.value)}
+              value={quoteComment}
+            />
+          </label>
         </div>
       )}
+      {showDiscountsForm && <DiscountForm cart={cart} className="py-10" />}
+      <div className="flex flex-col items-center">
+        <>
+          {!isCommentDisplayed && showSubmitButton && (
+            <>
+              <button type="submit" onClick={onSubmit} className={submitButtonClassName}>
+                {submitButtonLabel || formatCartMessage({ id: 'checkout', defaultMessage: 'Checkout' })}
+              </button>
+              {currentStep === 'cart' && (
+                <button className="mt-4" type="button" onClick={() => setIsCommentDisplayed(true)}>
+                  {formatCartMessage({ id: 'create-quote-question', defaultMessage: 'Or ask for a quote' })}
+                </button>
+              )}
+
+              {submitButtonLabel ===
+                formatCartMessage({ id: 'ContinueAndPay', defaultMessage: 'Continue and pay' }) && (
+                <p className="px-1 py-5 text-center text-xs">
+                  <Trans i18nKey="disclaimer" t={t} components={interpolatedComponents} />
+                </p>
+              )}
+            </>
+          )}
+          {isCommentDisplayed && showSubmitButton && (
+            <button
+              disabled={isLoading}
+              className="button button-primary flex flex-row"
+              type="button"
+              onClick={handleCreateQuote}
+            >
+              {formatCartMessage({ id: 'create-quote', defaultMessage: 'Submit quote request' })}
+              {isLoading && <LoadingIcon className="h-6 w-6 animate-spin" />}
+            </button>
+          )}
+        </>
+      </div>
     </section>
   );
 };

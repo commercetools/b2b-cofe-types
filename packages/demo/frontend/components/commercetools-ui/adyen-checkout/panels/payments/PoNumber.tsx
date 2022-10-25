@@ -1,22 +1,18 @@
 import React, { ChangeEvent, useState } from 'react';
-import { useRouter } from 'next/router';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useCart } from 'frontastic';
 
 const PoNumber: React.FC = () => {
   const { formatMessage } = useFormat({ name: 'checkout' });
-  const { orderCart, createQuoteRequestFromCurrentCart, getCart } = useCart();
+  const { orderCart } = useCart();
   const [data, setData] = useState({
     poNumber: '',
     invoiceMemo: '',
     comment: '',
   });
 
-  const router = useRouter();
 
-  const [isCommentDisplayed, setIsCommentDisplayed] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setData({
@@ -25,13 +21,6 @@ const PoNumber: React.FC = () => {
     });
   };
 
-  const handleCreateQuote = async () => {
-    setIsLoading(true);
-    await createQuoteRequestFromCurrentCart(data.comment);
-    setIsLoading(false);
-    getCart();
-    router.push('/thank-you');
-  };
 
   return (
     <form>
@@ -74,42 +63,10 @@ const PoNumber: React.FC = () => {
           />
         </label>
       </div>
-      {isCommentDisplayed && (
-        <div>
-          <label className="text-sm leading-tight text-neutral-700" htmlFor="comment">
-            <span>{formatMessage({ id: 'comment', defaultMessage: 'Comment' })}</span>
-            <textarea
-              className="input input-primary"
-              id="comment"
-              name="comment"
-              required
-              onChange={handleChange}
-              value={data.comment}
-            />
-          </label>
-        </div>
-      )}
-      {!isCommentDisplayed && (
-        <>
-          <button className="button button-primary--small mr-4 mt-4" type="button" onClick={orderCart}>
-            {formatMessage({ id: 'place-order', defaultMessage: 'Place order' })}
-            {isLoading && <LoadingIcon className="h-6 w-6 animate-spin" />}
-          </button>
-          <button
-            className="button button-primary--small mt-4"
-            type="button"
-            onClick={() => setIsCommentDisplayed(true)}
-          >
-            {formatMessage({ id: 'create-quote-question', defaultMessage: 'Or ask for a quote' })}
-          </button>
-        </>
-      )}
-      {isCommentDisplayed && (
-        <button className="button button-primary mt-4" type="button" onClick={handleCreateQuote}>
-          {formatMessage({ id: 'create-quote', defaultMessage: 'Submit quote request' })}
-          {isLoading && <LoadingIcon className="h-6 w-6 animate-spin" />}
-        </button>
-      )}
+      <button className="button button-primary--small mr-4 mt-4" type="button" onClick={orderCart}>
+        {formatMessage({ id: 'place-order', defaultMessage: 'Place order' })}
+        {isLoading && <LoadingIcon className="h-6 w-6 animate-spin" />}
+      </button>
     </form>
   );
 };
