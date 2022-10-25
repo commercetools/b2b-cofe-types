@@ -1197,42 +1197,42 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@commercetools/platform-sdk@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@commercetools/platform-sdk/-/platform-sdk-4.0.0.tgz#43548003170c7f752834f64787f460b874e5c38d"
-  integrity sha512-6xwh316j1/z5BW8UvBx7oa5ZFTJQNify9CS8nYEVjV18VuG2pKqs/mtgNLfYrFzpyBGF++1BByyxyu6EQiEHVg==
+"@commercetools/platform-sdk@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@commercetools/platform-sdk/-/platform-sdk-4.1.0.tgz#846baa3c5b457e0ca30e0597532de3b5149414b6"
+  integrity sha512-jTFan0K7aMyX6Rv6NqqWgS3PIj1O2GYLWHlhEMCXdhA15wP2rzaskyTY2E+voUyB2BR7C4JrniAi4DHsj+kdjQ==
   dependencies:
-    "@commercetools/sdk-client-v2" "^2.0.0"
-    "@commercetools/sdk-middleware-auth" "^6.0.4"
-    "@commercetools/sdk-middleware-http" "^6.0.4"
-    "@commercetools/sdk-middleware-logger" "^2.1.1"
+    "@commercetools/sdk-client-v2" "^2.0.1"
+    "@commercetools/sdk-middleware-auth" "^7.0.0"
+    "@commercetools/sdk-middleware-http" "^7.0.0"
+    "@commercetools/sdk-middleware-logger" "^3.0.0"
     querystring "^0.2.1"
 
-"@commercetools/sdk-client-v2@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@commercetools/sdk-client-v2/-/sdk-client-v2-2.0.0.tgz#4fcdca5bcd4e8d42f54effeafc6bd5357ae802dc"
-  integrity sha512-FvaPLjVO205Ta9XIhsVuUrxFTw3XyV5ZDUEBWRlvBtWzeRYHEdXErDa8E/UO53wcYdqlXO8XGN5X7EORWPCS3A==
+"@commercetools/sdk-client-v2@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@commercetools/sdk-client-v2/-/sdk-client-v2-2.0.1.tgz#a31d2504d9bb07a03523e89ba2f14c62e3f7eb00"
+  integrity sha512-gj3G4iR5iGOIUA1+N4hR1sKFlFHBE9momHt1Jr2TAg1gVxyO9tbCfEExTuQFUFDqfMCSaGair78+g1i8itgvpg==
   dependencies:
     buffer "^6.0.3"
     node-fetch "^2.6.1"
     querystring "^0.2.1"
 
-"@commercetools/sdk-middleware-auth@^6.0.4":
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/@commercetools/sdk-middleware-auth/-/sdk-middleware-auth-6.2.0.tgz#31d8ce402229154a441ed9f922898a002d6f919b"
-  integrity sha512-qFi0PZR0niaYqPH4VrXLlJC7McI56VaKjzghdvaYUNPks0jbKZYk0PKgBmXX0VW3mEbJBdlCNb1APBvK7YfreQ==
+"@commercetools/sdk-middleware-auth@^7.0.0":
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/@commercetools/sdk-middleware-auth/-/sdk-middleware-auth-7.0.1.tgz#20260740a423589d9210747e460f8ca917b3787b"
+  integrity sha512-XLRm+o3Yd0mkVoyzsOA98PUu0U0ajQdBHMhZ8N2XMOtL4OY8zsgT8ap5JneXV8zWZNiwIYYAYoUDwBlLZh2lAQ==
   dependencies:
-    node-fetch "^2.3.0"
+    node-fetch "^2.6.7"
 
-"@commercetools/sdk-middleware-http@^6.0.4":
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/@commercetools/sdk-middleware-http/-/sdk-middleware-http-6.1.0.tgz#e4aebc0a4865dab00cd986449d7b395dc86fe124"
-  integrity sha512-j/k66riaQv50Y3iK0CLJglHh56id7PfxGIDyL0PjlLSkQe2TPVGFnM//CZAQ8a6fHT9adQYLxDMYqlb1nWEDZw==
+"@commercetools/sdk-middleware-http@^7.0.0":
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/@commercetools/sdk-middleware-http/-/sdk-middleware-http-7.0.1.tgz#d040f1b56397589ddd98fbc705ee3a707227569e"
+  integrity sha512-8S+VPe2xkG7dx50yyy0BVE/KY8nN/7lxB9+UUCf/gIrEUizGXDZmhKbTxwYFoIhTtiUAZXnmfyyjCfbQkLgR5g==
 
-"@commercetools/sdk-middleware-logger@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@commercetools/sdk-middleware-logger/-/sdk-middleware-logger-2.1.1.tgz#9283fdc8c403a7e2d4d06637e6015770b864e64a"
-  integrity sha512-k/Jm3lsWbszPBHtPAvu0rINTq398p4ddv0zbAH8R4p6Yc1GkBEy6tNgHPzX/eFskI/qerPy9IsW1xK8pqgtHHQ==
+"@commercetools/sdk-middleware-logger@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@commercetools/sdk-middleware-logger/-/sdk-middleware-logger-3.0.0.tgz#4bfc7441d485b3f1046001f44200d12926accb84"
+  integrity sha512-DhMXAA2yIch/AaGxy7st85Z1HFmeLtHWGkr9z5rX4xKjan4PHGB/IE5saAR+SNGHhs6+1Lp8vZEHDo3tFqVLmg==
 
 "@eslint/eslintrc@^1.0.5":
   version "1.0.5"
@@ -5295,7 +5295,7 @@ nice-try@^1.0.4:
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
 
-node-fetch@^2.3.0, node-fetch@^2.6.1:
+node-fetch@^2.6.1:
   version "2.6.6"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.6.tgz#1751a7c01834e8e1697758732e9efb6eeadfaf89"
   integrity sha512-Z8/6vRlTUChSdIgMa51jxQ4lrw/Jy5SOW10ObaA47/RElsAN2c5Pn8bTgFGWn/ibwzXTE8qwr1Yzx28vsecXEA==

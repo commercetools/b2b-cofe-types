@@ -30,6 +30,9 @@ const QuoteDetails: React.FC<Props> = ({ open, onClose, data }) => {
       createdAt: data?.quoted?.createdAt,
     },
   };
+  if (!data) {
+    return null;
+  }
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog className={`${mode} default fixed inset-0 z-10 overflow-y-auto`} onClose={onClose}>
@@ -100,16 +103,16 @@ const QuoteDetails: React.FC<Props> = ({ open, onClose, data }) => {
                       <dl className="flex-auto space-y-6 divide-y divide-gray-200 text-sm text-gray-600 sm:grid sm:grid-cols-3 sm:gap-x-6 sm:space-y-0 sm:divide-y-0 lg:flex-none lg:gap-x-8">
                         <div className="flex justify-between pt-6 sm:block sm:pt-0">
                           <dt className="font-medium text-gray-900">Quote request ID</dt>
-                          <dd className="sm:mt-1">{data.id}</dd>
+                          <dd className="sm:mt-1">{data?.id}</dd>
                         </div>
                         <div className="flex justify-between pt-6 font-medium text-gray-900 sm:block sm:pt-0">
                           <dt>Requested total amount</dt>
-                          <dd className="sm:mt-1">{CurrencyHelpers.formatForCurrency(data.totalPrice)}</dd>
+                          <dd className="sm:mt-1">{CurrencyHelpers.formatForCurrency(data?.totalPrice)}</dd>
                         </div>
                         {!!data.quoted && (
                           <div className="flex justify-between pt-6 font-medium text-green-400 sm:block sm:pt-0">
                             <dt>Suggested total amount</dt>
-                            <dd className="sm:mt-1">{CurrencyHelpers.formatForCurrency(data.quoted.totalPrice)}</dd>
+                            <dd className="sm:mt-1">{CurrencyHelpers.formatForCurrency(data?.quoted?.totalPrice)}</dd>
                           </div>
                         )}
                       </dl>

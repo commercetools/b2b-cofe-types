@@ -51,7 +51,7 @@ const QuoteList: React.FC<Props> = ({ quoteRequestList }) => {
               <td className={styles.trim}>{quote.businessUnit.key}</td>
               <td className={styles.trim}>{quote.store.key}</td>
               <td>{getTotalLineItems(quote.lineItems)}</td>
-              <td>{quote.comment}</td>
+              <td className={styles.trim}>{quote.comment}</td>
               <td>{CurrencyHelpers.formatForCurrency(quote.totalPrice)}</td>
               <td className="text-green-300">{quote.quoteRequestState}</td>
               <td>

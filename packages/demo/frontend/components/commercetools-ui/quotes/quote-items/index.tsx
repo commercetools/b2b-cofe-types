@@ -34,12 +34,23 @@ export const QuoteItems: React.FC<Props> = ({ quoteRequestLineItems, quoteLineIt
     };
   });
 
-  const hasLineItemNewPrice = (
+  const hasDiscountedPrice = (
     lineItem:
       | { quoteRequestLineItem: LineItem; quoteLineItem: LineItem }
       | { quoteRequestLineItem: LineItem; quoteLineItem?: undefined },
   ) => {
     return !!lineItem.quoteLineItem && !!lineItem.quoteLineItem.discounts?.length;
+  };
+
+  const hasLineItemNewPrice = (
+    lineItem:
+      | { quoteRequestLineItem: LineItem; quoteLineItem: LineItem }
+      | { quoteRequestLineItem: LineItem; quoteLineItem?: undefined },
+  ) => {
+    return (
+      !!lineItem.quoteLineItem &&
+      lineItem.quoteLineItem.price?.centAmount !== lineItem.quoteRequestLineItem.price?.centAmount
+    );
   };
 
   const hasLineItemNewCount = (
@@ -109,7 +120,7 @@ export const QuoteItems: React.FC<Props> = ({ quoteRequestLineItems, quoteLineIt
             </td>
             <td className="flex py-6 pr-8 dark:text-light-100">
               <span>{CurrencyHelpers.formatForCurrency(lineItem.quoteRequestLineItem.price)}</span>
-              {hasLineItemNewPrice(lineItem) && (
+              {hasDiscountedPrice(lineItem) && (
                 <>
                   <ArrowSmRightIcon className="mx-1 mt-0.5 h-4 w-4 text-green-400" />
                   <span>
@@ -118,6 +129,12 @@ export const QuoteItems: React.FC<Props> = ({ quoteRequestLineItems, quoteLineIt
                         lineItem.quoteLineItem.discounts[0]?.discountedAmount.centAmount,
                     )}
                   </span>
+                </>
+              )}
+              {hasLineItemNewPrice(lineItem) && (
+                <>
+                  <ArrowSmRightIcon className="mx-1 mt-0.5 h-4 w-4 text-green-400" />
+                  <span>{CurrencyHelpers.formatForCurrency(lineItem.quoteLineItem.price)}</span>
                 </>
               )}
             </td>
