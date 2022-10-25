@@ -1,9 +1,10 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Transition, Dialog } from '@headlessui/react';
 import { CheckIcon, XIcon } from '@heroicons/react/outline';
-import { CurrencyHelpers } from 'helpers/currencyHelpers';
-import { useDarkMode } from 'frontastic';
 import { QuoteRequest } from '@Types/quotes/QuoteRequest';
+import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
+import { CurrencyHelpers } from 'helpers/currencyHelpers';
+import { useDarkMode, useQuotes } from 'frontastic';
 import { QuoteHistory } from '../history';
 import { QuoteItems } from '../quote-items';
 
@@ -15,21 +16,39 @@ interface Props {
 
 const QuoteDetails: React.FC<Props> = ({ open, onClose, data }) => {
   const { mode } = useDarkMode();
+  const { updateQuoteState } = useQuotes();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleUpdateQuote = async (id, state) => {
+    setIsLoading(true);
+    await updateQuoteState(id, state);
+    setIsLoading(false);
+    onClose();
+  };
 
   const quoteHistoryData = {
     quoteRequest: {
-      createdAt: data?.createdAt,
+      createdAt: data?.lastModifiedAt || data?.createdAt,
       isAvailable: true,
+      status: data?.quoteRequestState,
     },
     stagedQuote: {
       isAvailable: !!data?.staged,
-      createdAt: data?.staged?.createdAt,
+      createdAt: data?.staged?.lastModifiedAt || data?.staged?.createdAt,
+      status: data?.staged?.stagedQuoteState,
     },
     quote: {
       isAvailable: !!data?.quoted,
-      createdAt: data?.quoted?.createdAt,
+      createdAt: data?.quoted?.lastModifiedAt || data?.quoted?.createdAt,
+      status: data?.quoted?.quoteState,
     },
   };
+
+  const hasAnyComments = () => {
+    return !!data?.comment || !!data?.quoted?.buyerComment || !!data?.quoted?.sellerComment;
+  };
+
   if (!data) {
     return null;
   }
@@ -79,24 +98,53 @@ const QuoteDetails: React.FC<Props> = ({ open, onClose, data }) => {
                     <div className="mt-12">
                       <QuoteHistory data={quoteHistoryData} />
                     </div>
-                    {!!data?.quoted && (
+                    {!!data?.quoted && data.quoted.quoteState === 'Pending' && (
                       <div>
                         <h3 className="mt-4 text-xl font-extrabold tracking-tight text-gray-900 dark:text-light-100">
                           Actions
                         </h3>
                         <div className="flex flex-row justify-between">
-                          <button className="button button-secondary flex flex-row">
-                            <XIcon className="h-4 w-4 text-white" />
+                          <button
+                            className="button button-secondary flex flex-row"
+                            onClick={() => handleUpdateQuote(data?.quoted.id, 'Declined')}
+                          >
+                            {!isLoading && <XIcon className="h-4 w-4 text-white" />}
+                            {isLoading && <LoadingIcon className="h-4 w-4 animate-spin text-white" />}
                             Decline
                           </button>
-                          <button className="button button-primary flex flex-row">
-                            <CheckIcon className="h-4 w-4 text-white" />
+                          <button
+                            className="button button-primary flex flex-row"
+                            onClick={() => handleUpdateQuote(data?.quoted.id, 'Accepted')}
+                          >
+                            {!isLoading && <CheckIcon className="h-4 w-4 text-white" />}
+                            {isLoading && <LoadingIcon className="h-4 w-4 animate-spin text-white" />}
                             Accept
                           </button>
                         </div>
                       </div>
                     )}
                     <div>
+                      {hasAnyComments() && (
+                        <>
+                          <h3 className="mt-4 text-xl font-extrabold tracking-tight text-gray-900 dark:text-light-100">
+                            Comments:
+                          </h3>
+                          <div>
+                            {data?.quoted?.buyerComment && (
+                              <>
+                                <strong>You:</strong>
+                                <span>{data?.comment || data?.quoted?.buyerComment}</span>
+                              </>
+                            )}
+                            {data?.quoted?.sellerComment && (
+                              <>
+                                <strong>Seller:</strong>
+                                <span>{data?.quoted?.sellerComment}</span>
+                              </>
+                            )}
+                          </div>
+                        </>
+                      )}
                       <h3 className="mt-4 text-xl font-extrabold tracking-tight text-gray-900 dark:text-light-100">
                         Details
                       </h3>
@@ -109,7 +157,7 @@ const QuoteDetails: React.FC<Props> = ({ open, onClose, data }) => {
                           <dt>Requested total amount</dt>
                           <dd className="sm:mt-1">{CurrencyHelpers.formatForCurrency(data?.totalPrice)}</dd>
                         </div>
-                        {!!data.quoted && (
+                        {!!data?.quoted && (
                           <div className="flex justify-between pt-6 font-medium text-green-400 sm:block sm:pt-0">
                             <dt>Suggested total amount</dt>
                             <dd className="sm:mt-1">{CurrencyHelpers.formatForCurrency(data?.quoted?.totalPrice)}</dd>

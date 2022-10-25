@@ -1,3 +1,4 @@
+import { Quote, QuoteState } from '@commercetools/platform-sdk';
 import { QuoteRequest } from '@Types/quotes/QuoteRequest';
 import { fetchApiHub } from 'frontastic/lib/fetch-api-hub';
 
@@ -7,4 +8,8 @@ export const getMyQuoteRequests = async (): Promise<QuoteRequest[]> => {
 
 export const getMyBusinessUserQuoteRequests = async (): Promise<QuoteRequest[]> => {
   return await fetchApiHub('/action/quote/getMyBusinessUnitQuotesOverview', { method: 'GET' });
+};
+
+export const updateQuoteState = async (id: string, state: QuoteState): Promise<Quote> => {
+  return await fetchApiHub(`/action/quote/updateQuoteState?id=${id}`, { method: 'POST' }, { state });
 };

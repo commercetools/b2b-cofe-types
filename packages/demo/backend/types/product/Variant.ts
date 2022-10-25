@@ -14,5 +14,5 @@ export interface Variant {
   availability?: {
     availableQuantity: number;
     restockableInDays: number;
-  }
+  };
 }

@@ -1,10 +1,5 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
-import {
-  BusinessUnit,
-  BusinessUnitStatus,
-  BusinessUnitType,
-  StoreMode,
-} from '@Types/business-unit/BusinessUnit';
+import { BusinessUnit, BusinessUnitStatus, BusinessUnitType, StoreMode } from '@Types/business-unit/BusinessUnit';
 import { AssociateRole } from '@Types/associate/Associate';
 import { BusinessUnitApi } from '../apis/BusinessUnitApi';
 import { getLocale } from '../utils/Request';

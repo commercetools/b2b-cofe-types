@@ -1,5 +1,5 @@
 export interface ChannelResourceIdentifier {
-    id?: string;
-    key: string;
-    typeId: "channel";
+  id?: string;
+  key: string;
+  typeId: 'channel';
 }

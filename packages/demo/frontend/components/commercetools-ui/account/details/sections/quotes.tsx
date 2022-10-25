@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
+import { QuoteRequest } from '@Types/quotes/QuoteRequest';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import QuoteList from 'components/commercetools-ui/quotes/quote-list';
 import { useAccount } from 'helpers/hooks/useAccount';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useQuotes } from 'frontastic';
-import { QuoteRequest } from '@Types/quotes/QuoteRequest';
 
 const QuotesHistory: FC = () => {
   const { account } = useAccount();

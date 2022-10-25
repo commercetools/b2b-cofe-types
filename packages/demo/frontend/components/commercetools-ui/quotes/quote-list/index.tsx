@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useState } from 'react';
 import { EyeIcon } from '@heroicons/react/solid';
-import { CurrencyHelpers } from 'helpers/currencyHelpers';
-import { DateHelpers } from 'helpers/dateHelpers';
 import { LineItem } from '@Types/cart/LineItem';
 import { QuoteRequest } from '@Types/quotes/QuoteRequest';
+import { CurrencyHelpers } from 'helpers/currencyHelpers';
+import { DateHelpers } from 'helpers/dateHelpers';
 import QuoteDetails from '../details';
 import styles from './index.module.css';
 

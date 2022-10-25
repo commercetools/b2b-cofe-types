@@ -1,4 +1,10 @@
-import { QuoteRequest as CommercetoolsQuoteRequest, QuoteRequestDraft } from '@commercetools/platform-sdk';
+import {
+  QuoteRequest as CommercetoolsQuoteRequest,
+  QuoteRequestDraft,
+  Quote as CommercetoolsQuote,
+  StagedQuote as CommercetoolsStagedQuote,
+  QuoteState,
+} from '@commercetools/platform-sdk';
 import {
   mapCommercetoolsQuote,
   mapCommercetoolsQuoteRequest,
@@ -21,6 +27,44 @@ export class QuoteApi extends BaseApi {
             ...quoteRequest,
           },
         })
+        .execute()
+        .then((response) => {
+          return response.body;
+        })
+        .catch((error) => {
+          throw error;
+        });
+    } catch {
+      throw '';
+    }
+  };
+  getStagedQuote: (ID: string) => Promise<CommercetoolsStagedQuote> = async (ID: string) => {
+    try {
+      return this.getApiForProject()
+        .stagedQuotes()
+        .withId({ ID })
+        .get({
+          queryArgs: {
+            expand: 'customer',
+          },
+        })
+        .execute()
+        .then((response) => {
+          return response.body;
+        })
+        .catch((error) => {
+          throw error;
+        });
+    } catch {
+      throw '';
+    }
+  };
+  getQuote: (ID: string) => Promise<CommercetoolsQuote> = async (ID: string) => {
+    try {
+      return this.getApiForProject()
+        .quotes()
+        .withId({ ID })
+        .get()
         .execute()
         .then((response) => {
           return response.body;
@@ -177,6 +221,39 @@ export class QuoteApi extends BaseApi {
         .catch((error) => {
           throw error;
         });
+    } catch {
+      throw '';
+    }
+  };
+
+  updateQuoteState: (ID: string, quoteState: QuoteState) => Promise<CommercetoolsQuote> = async (
+    ID: string,
+    quoteState: QuoteState,
+  ) => {
+    try {
+      return this.getQuote(ID).then((quote) => {
+        return this.getApiForProject()
+          .quotes()
+          .withId({ ID })
+          .post({
+            body: {
+              actions: [
+                {
+                  action: 'changeQuoteState',
+                  quoteState: quoteState,
+                },
+              ],
+              version: quote.version,
+            },
+          })
+          .execute()
+          .then((response) => {
+            return response.body;
+          })
+          .catch((error) => {
+            throw error;
+          });
+      });
     } catch {
       throw '';
     }

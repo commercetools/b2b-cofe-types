@@ -5,6 +5,7 @@ import { getLocale } from '../utils/Request';
 import { QuoteRequest } from '@Types/quotes/QuoteRequest';
 import { Quote } from '@Types/quotes/Quote';
 import { StagedQuote } from '@Types/quotes/StagedQuote';
+import { CartUpdate } from '@commercetools/platform-sdk';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -127,6 +128,34 @@ export const getMyBusinessUnitQuotesOverview: ActionHook = async (request: Reque
   const response: Response = {
     statusCode: 200,
     body: JSON.stringify(res),
+    sessionData: request.sessionData,
+  };
+
+  return response;
+};
+
+export const updateQuoteState: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const quoteApi = new QuoteApi(actionContext.frontasticContext, getLocale(request));
+
+  const ID = request.query?.['id'];
+  const { state } = JSON.parse(request.body);
+
+  const quote = await quoteApi.updateQuoteState(ID, state);
+
+  if (state === 'Accepted') {
+    const cartApi = new CartApi(actionContext.frontasticContext, getLocale(request));
+
+    const stagedQuote = await quoteApi.getStagedQuote(quote.stagedQuote.id);
+
+    const cart = await cartApi.getById(stagedQuote.quotationCart.id);
+    const commercetoolsCart = await cartApi.setEmail(cart, quote.customer.obj.email);
+
+    await cartApi.order(commercetoolsCart);
+  }
+
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(quote),
     sessionData: request.sessionData,
   };
 
