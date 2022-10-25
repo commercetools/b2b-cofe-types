@@ -1,6 +1,6 @@
 import { Context, createContext, useContext } from 'react';
 import { useUI } from 'helpers/hooks/useUI';
-import { UseUIState } from '../../../../types/hooks/UseUIState';
+import { UseUIState } from '@Types/hooks/UseUIState';
 
 const UIStateContext: Context<UseUIState> = createContext({
   isFlyingCartOpen: false,

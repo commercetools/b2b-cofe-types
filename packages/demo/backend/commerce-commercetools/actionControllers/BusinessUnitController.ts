@@ -4,12 +4,12 @@ import {
   BusinessUnitStatus,
   BusinessUnitType,
   StoreMode,
-} from '../../../types/business-unit/business-unit';
-import { AssociateRole } from '../../../types/associate/Associate';
+} from '@Types/business-unit/BusinessUnit';
+import { AssociateRole } from '@Types/associate/Associate';
 import { BusinessUnitApi } from '../apis/BusinessUnitApi';
 import { getLocale } from '../utils/Request';
 import { AccountRegisterBody } from './AccountController';
-import { Store, StoreKeyReference } from '../../../types/store/store';
+import { Store, StoreKeyReference } from '@Types/store/store';
 import { ChannelApi } from '../apis/ChannelApi';
 import { CustomerApi } from '../apis/CustomerApi';
 

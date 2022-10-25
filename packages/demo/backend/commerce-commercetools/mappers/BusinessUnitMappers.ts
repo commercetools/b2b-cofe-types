@@ -1,4 +1,4 @@
-import { BusinessUnit } from '../../../types/business-unit/business-unit';
+import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 
 export const mapReferencedAssociates = (businessUnit: BusinessUnit): BusinessUnit => {
   return {

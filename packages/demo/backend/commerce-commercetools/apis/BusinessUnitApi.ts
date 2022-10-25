@@ -1,7 +1,7 @@
 import { BaseApi } from './BaseApi';
 import axios from 'axios';
-import { BusinessUnit, BusinessUnitPagedQueryResponse } from '../../../types/business-unit/business-unit';
-import { AssociateRole } from '../../../types/associate/Associate';
+import { BusinessUnit, BusinessUnitPagedQueryResponse } from '@Types/business-unit/BusinessUnit';
+import { AssociateRole } from '@Types/associate/Associate';
 import { mapReferencedAssociates } from '../mappers/BusinessUnitMappers';
 
 const MAX_LIMIT = 50;

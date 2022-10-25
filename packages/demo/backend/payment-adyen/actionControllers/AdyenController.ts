@@ -7,8 +7,8 @@ import { isReadyForCheckout } from '../../commerce-commercetools/utils/Cart';
 import { Guid } from '../utils/Guid';
 import { getLocale } from '../utils/Request';
 import { CartFetcher } from '../utils/CartFetcher';
-import { Account } from '../../../types/account/Account';
-import { Payment, PaymentStatuses } from '../../../types/cart/Payment';
+import { Account } from '@Types/account/Account';
+import { Payment, PaymentStatuses } from '@Types/cart/Payment';
 import { URLSearchParams } from 'url';
 
 export const createSession = async (request: Request, actionContext: ActionContext) => {
@@ -127,7 +127,7 @@ export const notifications = async (request: Request, actionContext: ActionConte
   value=7650&
   live=false&
   eventDate=2022-06-20T07%3A36%3A15.00Z"
-  
+
 
   //const notificationRequestItems = JSON.parse(request.body).notificationItems;
 

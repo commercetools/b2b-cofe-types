@@ -2,9 +2,9 @@ import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { CartApi } from '../apis/CartApi';
 import { QuoteApi } from '../apis/QuoteApi';
 import { getLocale } from '../utils/Request';
-import { QuoteRequest } from '../../../types/quotes/QuoteRequest';
-import { Quote } from '../../../types/quotes/Quote';
-import { StagedQuote } from '../../../types/quotes/StagedQuote';
+import { QuoteRequest } from '@Types/quotes/QuoteRequest';
+import { Quote } from '@Types/quotes/Quote';
+import { StagedQuote } from '@Types/quotes/StagedQuote';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 

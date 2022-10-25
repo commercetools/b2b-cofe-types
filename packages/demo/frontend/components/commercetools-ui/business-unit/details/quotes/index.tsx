@@ -3,7 +3,7 @@ import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import QuoteList from 'components/commercetools-ui/quotes/quote-list';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useAccount, useQuotes } from 'frontastic';
-import { QuoteRequest } from '../../../../../../types/quotes/QuoteRequest';
+import { QuoteRequest } from '@Types/quotes/QuoteRequest';
 
 const Quotes = () => {
   const { account } = useAccount();

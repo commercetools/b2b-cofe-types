@@ -1,5 +1,5 @@
 import { BaseApi } from './BaseApi';
-import { Store } from '../../../types/store/store';
+import { Store } from '@Types/store/store';
 import { StoreDraft } from '@commercetools/platform-sdk';
 
 const convertStoreToBody = (store: Store, locale: string): StoreDraft => {

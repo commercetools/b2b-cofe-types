@@ -1,4 +1,4 @@
-import { BusinessUnit } from '../business-unit/business-unit';
+import { BusinessUnit } from '../business-unit/BusinessUnit';
 import { ChannelResourceIdentifier } from '../channel/channel';
 import { Store } from '../store/store';
 

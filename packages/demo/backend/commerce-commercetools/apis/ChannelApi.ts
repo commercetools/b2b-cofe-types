@@ -1,4 +1,4 @@
-import { BusinessUnit } from '../../../types/business-unit/business-unit';
+import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { BaseApi } from './BaseApi';
 import { BusinessUnitApi } from './BusinessUnitApi';
 import { StoreApi } from './StoreApi';

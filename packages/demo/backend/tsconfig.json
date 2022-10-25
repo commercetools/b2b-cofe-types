@@ -7,7 +7,7 @@
         ],
         "baseUrl": "./",
         "paths": {
-            "@Types/*": ["../types/*"],
+            "@Types/*": ["./types/*"],
         },
         "sourceMap": true,
         "allowJs": true,

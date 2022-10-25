@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { EyeIcon } from '@heroicons/react/solid';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { DateHelpers } from 'helpers/dateHelpers';
-import { LineItem } from '../../../../../types/cart/LineItem';
-import { QuoteRequest } from '../../../../../types/quotes/QuoteRequest';
+import { LineItem } from '@Types/cart/LineItem';
+import { QuoteRequest } from '@Types/quotes/QuoteRequest';
 import QuoteDetails from '../details';
 import styles from './index.module.css';
 

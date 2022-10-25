@@ -3,7 +3,7 @@ import { Transition, Dialog } from '@headlessui/react';
 import { CheckIcon, XIcon } from '@heroicons/react/outline';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useDarkMode } from 'frontastic';
-import { QuoteRequest } from '../../../../../types/quotes/QuoteRequest';
+import { QuoteRequest } from '@Types/quotes/QuoteRequest';
 import { QuoteHistory } from '../history';
 import { QuoteItems } from '../quote-items';
 

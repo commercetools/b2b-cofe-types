@@ -1,5 +1,5 @@
 import { BaseApi } from './BaseApi';
-import { Account } from '../../../types/account/Account';
+import { Account } from '@Types/account/Account';
 
 export class CustomerApi extends BaseApi {
   get: (email: string) => Promise<Account | null> = async (email: string) => {

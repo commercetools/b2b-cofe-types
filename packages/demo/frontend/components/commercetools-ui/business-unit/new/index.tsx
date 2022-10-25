@@ -1,6 +1,6 @@
 import { useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { BusinessUnit as BusinessUnitType } from '@Types/business-unit/business-unit';
+import { BusinessUnit as BusinessUnitType } from '@Types/business-unit/BusinessUnit';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useDarkMode } from 'frontastic';

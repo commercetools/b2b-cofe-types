@@ -4,7 +4,7 @@ import QuoteList from 'components/commercetools-ui/quotes/quote-list';
 import { useAccount } from 'helpers/hooks/useAccount';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useQuotes } from 'frontastic';
-import { QuoteRequest } from '../../../../../../types/quotes/QuoteRequest';
+import { QuoteRequest } from '@Types/quotes/QuoteRequest';
 
 const QuotesHistory: FC = () => {
   const { account } = useAccount();

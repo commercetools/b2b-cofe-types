@@ -7,12 +7,12 @@ import {
   CartReference,
 } from '@commercetools/platform-sdk';
 import { Locale } from 'commerce-commercetools/Locale';
-import { LineItem } from '../../../types/cart/LineItem';
+import { LineItem } from '@Types/cart/LineItem';
 import { CartMapper } from './CartMapper';
-import { QuoteRequest } from '../../../types/quotes/QuoteRequest';
-import { Quote } from '../../../types/quotes/Quote';
-import { StagedQuote } from '../../../types/quotes/StagedQuote';
-import { Cart } from '../../../types/cart/Cart';
+import { QuoteRequest } from '@Types/quotes/QuoteRequest';
+import { Quote } from '@Types/quotes/Quote';
+import { StagedQuote } from '@Types/quotes/StagedQuote';
+import { Cart } from '@Types/cart/Cart';
 
 export const mapCommercetoolsQuoteRequest = (results: CommercetoolsQuoteRequest[], locale: Locale): QuoteRequest[] => {
   return results?.map((quote) => ({

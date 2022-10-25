@@ -5,7 +5,7 @@ import {
   mapCommercetoolsStagedQuote,
 } from '../mappers/QuoteMappers';
 import { BaseApi } from './BaseApi';
-import { QuoteRequest } from '../../../types/quotes/QuoteRequest';
+import { QuoteRequest } from '@Types/quotes/QuoteRequest';
 import { Quote } from '@Types/quotes/Quote';
 import { StagedQuote } from '@Types/quotes/StagedQuote';
 

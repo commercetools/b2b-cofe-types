@@ -1,6 +1,6 @@
 import { BaseApi } from './BaseApi';
 import { WishlistMapper } from '../mappers/WishlistMapper';
-import { Wishlist } from '../../../types/wishlist/Wishlist';
+import { Wishlist } from '@Types/wishlist/Wishlist';
 
 const expandVariants = ['lineItems[*].variant'];
 

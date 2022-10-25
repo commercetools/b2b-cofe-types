@@ -1,5 +1,5 @@
 import * as nodemailer from 'nodemailer';
-import { Account } from '../../../types/account/Account';
+import { Account } from '@Types/account/Account';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 export class EmailApi {

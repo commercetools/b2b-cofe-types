@@ -15,7 +15,7 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@Types/*": ["../types/*"],
+      "@Types/*": ["../backend/types/*"],
     },
     "incremental": true,
     "typeRoots": ["./node_modules/@types", "./node_modules/@headlessui/react/dist/index.d.ts"],

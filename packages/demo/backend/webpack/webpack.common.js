@@ -36,6 +36,9 @@ module.exports = {
   },
   resolve: {
     extensions: ['.json', '.ts', '.js'],
+    alias: {
+        '@Types': path.resolve(__dirname, '../types/'),
+    }
   },
   output: {
     filename: 'bundle.min.js',
