@@ -50,9 +50,7 @@ export default {
       } as DynamicPageSuccessResult;
     }
     // Identify quote page
-    const quotePageMatch = getPath(request)?.match(
-      /^\/(quote-thank-you)/,
-    );
+    const quotePageMatch = getPath(request)?.match(/^\/(quote-thank-you)/);
     if (quotePageMatch) {
       return {
         dynamicPageType: `b2b${quotePageMatch[0]}`,
