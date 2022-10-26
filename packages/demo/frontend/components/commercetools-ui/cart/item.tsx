@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { XIcon } from '@heroicons/react/solid';
 import { LineItem } from '@Types/cart/LineItem';
+import debounce from 'lodash.debounce';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { LoadingIcon } from '../icons/loading';
-
 interface Props {
   lineItem: LineItem;
   goToProductPage: (_url: string) => void;
@@ -13,22 +13,27 @@ interface Props {
 
 const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [count, setCount] = useState(lineItem.count);
 
   const handleRemoveItem = async () => {
     setIsLoading(true);
     await removeItem(lineItem.lineItemId);
     setIsLoading(false);
   };
+  const handleChange = (value) => {
+    setCount(parseInt(value, 10) || 0);
+  };
 
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const count = parseInt(e.target.value, 10) || 1;
-    if (count !== lineItem.count) {
+  const debounced = useRef(
+    debounce(async (value) => {
       setIsLoading(true);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      await editItemQuantity(lineItem.lineItemId, count);
+      await editItemQuantity(lineItem.lineItemId, value);
       setIsLoading(false);
-    }
-  };
+    }, 500),
+  );
+
+  useEffect(() => debounced.current(count), [count]);
 
   return (
     <tr
@@ -56,10 +61,10 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem }: Props
       </td>
       <td>
         <input
-          value={lineItem.count}
+          value={count}
           type="number"
           disabled={isLoading}
-          onChange={handleChange}
+          onChange={(e) => handleChange(e.target.value)}
           className="input input-primary"
         />
       </td>

@@ -141,22 +141,25 @@ export const updateQuoteState: ActionHook = async (request: Request, actionConte
   const { state } = JSON.parse(request.body);
 
   const quote = await quoteApi.updateQuoteState(ID, state);
+  const sessionData = { ...request.sessionData };
 
   if (state === 'Accepted') {
     const cartApi = new CartApi(actionContext.frontasticContext, getLocale(request));
 
     const stagedQuote = await quoteApi.getStagedQuote(quote.stagedQuote.id);
 
-    const cart = await cartApi.getById(stagedQuote.quotationCart.id);
-    const commercetoolsCart = await cartApi.setEmail(cart, quote.customer.obj.email);
+    let cart = await cartApi.getById(stagedQuote.quotationCart.id);
+    cart = await cartApi.setEmail(cart, stagedQuote.customer.obj.email);
+    cart = await cartApi.setLocale(cart, 'en-US');
+    const commercetoolsCart = await cartApi.setCustomerId(cart, stagedQuote.customer.obj.id);
 
-    await cartApi.order(commercetoolsCart);
+    sessionData.cartId = commercetoolsCart.cartId;
   }
 
   const response: Response = {
     statusCode: 200,
     body: JSON.stringify(quote),
-    sessionData: request.sessionData,
+    sessionData,
   };
 
   return response;

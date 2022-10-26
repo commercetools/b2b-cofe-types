@@ -18,6 +18,7 @@ import {
   CartRemoveLineItemAction,
   CartSetCountryAction,
   CartSetCustomerEmailAction,
+  CartSetCustomerIdAction,
   CartUpdate,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/cart';
 import { Address } from '@Types/account/Address';
@@ -273,6 +274,52 @@ export class CartApi extends BaseApi {
     } catch (error) {
       //TODO: better error, get status code etc...
       throw new Error(`setEmail failed. ${error}`);
+    }
+  };
+
+  setCustomerId: (cart: Cart, customerId: string) => Promise<Cart> = async (cart: Cart, customerId: string) => {
+    try {
+      const locale = await this.getCommercetoolsLocal();
+
+      const cartUpdate: CartUpdate = {
+        version: +cart.cartVersion,
+        actions: [
+          {
+            action: 'setCustomerId',
+            customerId,
+          } as CartSetCustomerIdAction,
+        ],
+      };
+
+      const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate, locale);
+
+      return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
+    } catch (error) {
+      //TODO: better error, get status code etc...
+      throw new Error(`setCustomerId failed. ${error}`);
+    }
+  };
+
+  setLocale: (cart: Cart, localeCode: string) => Promise<Cart> = async (cart: Cart, localeCode: string) => {
+    try {
+      const locale = await this.getCommercetoolsLocal();
+
+      const cartUpdate: CartUpdate = {
+        version: +cart.cartVersion,
+        actions: [
+          {
+            action: 'setLocale',
+            locale: localeCode,
+          } as CartSetLocaleAction,
+        ],
+      };
+
+      const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate, locale);
+
+      return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
+    } catch (error) {
+      //TODO: better error, get status code etc...
+      throw new Error(`setLocale failed. ${error}`);
     }
   };
 

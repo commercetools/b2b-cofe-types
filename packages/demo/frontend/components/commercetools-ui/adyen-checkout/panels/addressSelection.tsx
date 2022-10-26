@@ -7,9 +7,14 @@ import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitSta
 
 interface Props {
   updateSelection: (address: object) => void;
+  isNewAddressHidden?: boolean;
 }
 
-const AddressSelection: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = ({ updateSelection, className }) => {
+const AddressSelection: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = ({
+  updateSelection,
+  className,
+  isNewAddressHidden,
+}) => {
   const { businessUnit } = useBusinessUnitStateContext();
   const { formatMessage } = useFormat({ name: 'business-unit' });
   const { account } = useAccount();
@@ -58,7 +63,9 @@ const AddressSelection: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> =
             {mapAddressToString(address)}
           </option>
         ))}
-        <option value={-1}>{formatMessage({ id: 'new-address', defaultMessage: 'Or enter a new address' })}</option>
+        {isNewAddressHidden && (
+          <option value={-1}>{formatMessage({ id: 'new-address', defaultMessage: 'Or enter a new address' })}</option>
+        )}
       </select>
     </div>
   );

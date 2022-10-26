@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useState } from 'react';
+import { useRouter } from 'next/router';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useCart } from 'frontastic';
@@ -6,13 +7,14 @@ import { useCart } from 'frontastic';
 const PoNumber: React.FC = () => {
   const { formatMessage } = useFormat({ name: 'checkout' });
   const { orderCart } = useCart();
+  const router = useRouter();
   const [data, setData] = useState({
     poNumber: '',
     invoiceMemo: '',
     comment: '',
   });
 
-
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setData({
@@ -21,6 +23,20 @@ const PoNumber: React.FC = () => {
     });
   };
 
+  const handleOrder = async () => {
+    setIsLoading(true);
+    await orderCart();
+    setIsLoading(false);
+    router.replace(
+      {
+        pathname: '/thank-you',
+      },
+      undefined,
+      {
+        shallow: false,
+      },
+    );
+  };
 
   return (
     <form>
@@ -63,7 +79,7 @@ const PoNumber: React.FC = () => {
           />
         </label>
       </div>
-      <button className="button button-primary--small mr-4 mt-4" type="button" onClick={orderCart}>
+      <button className="button button-primary--small mr-4 mt-4 flex flex-row" type="button" onClick={handleOrder}>
         {formatMessage({ id: 'place-order', defaultMessage: 'Place order' })}
         {isLoading && <LoadingIcon className="h-6 w-6 animate-spin" />}
       </button>

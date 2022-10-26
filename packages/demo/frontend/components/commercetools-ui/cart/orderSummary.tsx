@@ -1,14 +1,17 @@
 import { MouseEvent, useState } from 'react';
+import { useRouter } from 'next/router';
 import { Cart } from '@Types/cart/Cart';
 import { LineItem } from '@Types/cart/LineItem';
 import { useTranslation, Trans } from 'react-i18next';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { Reference, ReferenceLink } from 'helpers/reference';
+import { useCart } from 'frontastic';
+import { FormData } from '../adyen-checkout';
+import { mapToCartStructure } from '../adyen-checkout/mapFormData';
+import AddressSelection from '../adyen-checkout/panels/addressSelection';
 import DiscountForm from '../discount-form';
 import { LoadingIcon } from '../icons/loading';
-import { useRouter } from 'next/router';
-import { useCart } from 'frontastic';
 
 interface Props {
   readonly cart: Cart;
@@ -40,9 +43,10 @@ const OrderSummary = ({
   const { formatMessage: formatCartMessage } = useFormat({ name: 'cart' });
   const { t } = useTranslation(['checkout']);
   const router = useRouter();
-  const { createQuoteRequestFromCurrentCart, getCart } = useCart();
+  const { createQuoteRequestFromCurrentCart, getCart, updateCart } = useCart();
 
-  const [isCommentDisplayed, setIsCommentDisplayed] = useState(false);
+  const [isQuoteRequestDisplayed, setIsQuoteRequestDisplayed] = useState(false);
+  const [isQuoteRequestErrorDisplayed, setIsQuoteRequestErrorDisplayed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [quoteComment, setQuoteComment] = useState('');
 
@@ -116,12 +120,27 @@ const OrderSummary = ({
     },
   );
 
+  const handleQuoteRequest = () => {
+    if (cart.discountCodes?.length || cart.directDiscounts) {
+      setIsQuoteRequestErrorDisplayed(true);
+    } else {
+      setIsQuoteRequestDisplayed(true);
+    }
+  };
+
   const handleCreateQuote = async () => {
     setIsLoading(true);
     await createQuoteRequestFromCurrentCart(quoteComment);
     setIsLoading(false);
     getCart();
-    router.push('/thank-you');
+    router.push('/quote-thank-you');
+  };
+
+  const handleUpdateAddress = async (data: FormData) => {
+    setIsLoading(true);
+    const updatedData = mapToCartStructure(data, true);
+    await updateCart(updatedData);
+    setIsLoading(false);
   };
 
   return (
@@ -184,7 +203,7 @@ const OrderSummary = ({
           </div>
         )}
       </dl>
-      {isCommentDisplayed && (
+      {isQuoteRequestDisplayed && (
         <div>
           <label className="text-sm leading-tight text-neutral-700" htmlFor="comment">
             <span>{formatCartMessage({ id: 'comment', defaultMessage: 'Comment' })}</span>
@@ -197,20 +216,29 @@ const OrderSummary = ({
               value={quoteComment}
             />
           </label>
+          <AddressSelection updateSelection={handleUpdateAddress} isNewAddressHidden={true} />
         </div>
       )}
       {showDiscountsForm && <DiscountForm cart={cart} className="py-10" />}
       <div className="flex flex-col items-center">
         <>
-          {!isCommentDisplayed && showSubmitButton && (
+          {!isQuoteRequestDisplayed && showSubmitButton && (
             <>
               <button type="submit" onClick={onSubmit} className={submitButtonClassName}>
                 {submitButtonLabel || formatCartMessage({ id: 'checkout', defaultMessage: 'Checkout' })}
               </button>
-              {currentStep === 'cart' && (
-                <button className="mt-4" type="button" onClick={() => setIsCommentDisplayed(true)}>
+              {currentStep === 'cart' && !isQuoteRequestErrorDisplayed && (
+                <button className="mt-4" type="button" onClick={handleQuoteRequest}>
                   {formatCartMessage({ id: 'create-quote-question', defaultMessage: 'Or ask for a quote' })}
                 </button>
+              )}
+              {currentStep === 'cart' && isQuoteRequestErrorDisplayed && (
+                <span className="mt-4 text-red-400">
+                  {formatCartMessage({
+                    id: 'quote-error',
+                    defaultMessage: 'You cannot ask for a quote on a cart with a discount',
+                  })}
+                </span>
               )}
 
               {submitButtonLabel ===
@@ -221,7 +249,7 @@ const OrderSummary = ({
               )}
             </>
           )}
-          {isCommentDisplayed && showSubmitButton && (
+          {isQuoteRequestDisplayed && showSubmitButton && (
             <button
               disabled={isLoading}
               className="button button-primary flex flex-row"

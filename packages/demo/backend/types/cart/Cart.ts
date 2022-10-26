@@ -20,6 +20,7 @@ export interface Cart {
   sum?: Money;
   payments?: Payment[];
   discountCodes?: Discount[];
+  directDiscounts?: number | undefined;
   taxed?: Tax;
 
   // TODO: import the logic from Cart.php

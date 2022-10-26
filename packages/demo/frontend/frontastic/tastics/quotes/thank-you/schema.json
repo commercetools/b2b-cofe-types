@@ -1,0 +1,7 @@
+{
+  "tasticType": "b2b/quote/thank-you",
+  "name": "B2B quote request thank you",
+  "icon": "done",
+  "category": "Quote",
+  "schema": []
+}

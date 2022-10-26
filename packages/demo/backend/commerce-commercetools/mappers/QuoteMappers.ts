@@ -45,8 +45,8 @@ export const mapCustomerReferences = (customer: CustomerReference): CustomerRefe
   };
 };
 
-export const mapQuotationCartReference = (cartReference: CartReference, locale: Locale): Cart => {
-  return CartMapper.commercetoolsCartToCart(cartReference.obj, locale);
+export const mapQuotationCartReference = (cartReference: CartReference, locale: Locale): Cart | CartReference => {
+  return cartReference.obj ? CartMapper.commercetoolsCartToCart(cartReference.obj, locale) : cartReference;
 };
 
 export const mapCommercetoolsLineitems = (lineitems: CommercetoolsLineItem[], locale: Locale): LineItem[] => {

@@ -32,6 +32,7 @@ import ContentfulBlogTastic from './contentful-blog';
 import { BusinessUnit } from './business-unit';
 import { BusinessUnitTree } from './business-unit-tree';
 import { StorePickerTastic } from './store-picker';
+import QuoteThankYouTastic from './quotes/thank-you';
 
 export const tastics = {
   // Doc Examples
@@ -45,6 +46,7 @@ export const tastics = {
   'b2b/business-unit': BusinessUnit,
   'b2b/business-unit-tree': BusinessUnitTree,
   'b2b/store-picker': StorePickerTastic,
+  'b2b/quote/thank-you': QuoteThankYouTastic,
   'commercetools/ui/checkout': Checkout,
   'commercetools/ui/thank-you': ThankYou,
   'commercetools/ui/cart': Cart,

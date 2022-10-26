@@ -31,6 +31,7 @@ export default {
         pageMatchingPayload: {},
       } as DynamicPageSuccessResult;
     }
+    // Identify businessUnit page
     const b2bPageMatch = getPath(request)?.match(/^\/(business-unit)/);
     if (b2bPageMatch) {
       let organization = request.sessionData?.organization;
@@ -46,6 +47,17 @@ export default {
         pageMatchingPayload: {
           organization: request.sessionData?.organization,
         },
+      } as DynamicPageSuccessResult;
+    }
+    // Identify quote page
+    const quotePageMatch = getPath(request)?.match(
+      /^\/(quote-thank-you)/,
+    );
+    if (quotePageMatch) {
+      return {
+        dynamicPageType: `b2b${quotePageMatch[0]}`,
+        dataSourcePayload: {},
+        pageMatchingPayload: {},
       } as DynamicPageSuccessResult;
     }
 
