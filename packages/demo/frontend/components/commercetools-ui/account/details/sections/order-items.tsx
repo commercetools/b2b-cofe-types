@@ -3,6 +3,7 @@ import NextLink from 'next/link';
 import { LineItem } from '@Types/cart/LineItem';
 import { useFormat } from 'helpers/hooks/useFormat';
 import Image from 'frontastic/lib/image';
+import { CurrencyHelpers } from 'helpers/currencyHelpers';
 
 interface Props {
   lineItems: LineItem[];
@@ -21,25 +22,31 @@ export const OrderItems: React.FC<Props> = ({ lineItems }) => {
       </caption>
       <thead className="sr-only text-left text-sm text-gray-800 sm:not-sr-only">
         <tr>
-          <th scope="col" className="py-3 pr-8 font-normal dark:text-light-100 sm:w-2/5 lg:w-1/3">
+          <th scope="col" className="py-1 pr-8 font-normal dark:text-light-100 sm:w-2/5 lg:w-1/3">
             {formatProductMessage({
               id: 'product',
               defaultMessage: 'Product',
             })}
           </th>
-          <th scope="col" className="hidden w-1/5 py-3 pr-8 font-normal dark:text-light-100 sm:table-cell">
+          <th scope="col" className="hidden w-1/5 py-1 pr-8 font-normal dark:text-light-100 sm:table-cell">
             {formatProductMessage({
               id: 'price',
               defaultMessage: 'Price',
             })}
           </th>
-          <th scope="col" className="hidden py-3 pr-8 font-normal dark:text-light-100 sm:table-cell">
+          <th scope="col" className="hidden py-1 pr-8 font-normal dark:text-light-100 sm:table-cell">
             {formatProductMessage({
-              id: 'size',
-              defaultMessage: 'Size',
+              id: 'quantity',
+              defaultMessage: 'Quantity',
             })}
           </th>
-          <th scope="col" className="w-0 py-3 text-right font-normal dark:text-light-100">
+          <th scope="col" className="hidden w-1/5 py-1 pr-8 font-normal dark:text-light-100 sm:table-cell">
+            {formatProductMessage({
+              id: 'total-price',
+              defaultMessage: 'Totla price',
+            })}
+          </th>
+          <th scope="col" className="w-0 py-1 text-right font-normal dark:text-light-100">
             {formatProductMessage({
               id: 'product.info',
               defaultMessage: 'Product information',
@@ -50,7 +57,7 @@ export const OrderItems: React.FC<Props> = ({ lineItems }) => {
       <tbody className="divide-y divide-gray-200 border-b border-gray-200 text-sm sm:border-t">
         {lineItems.map((product) => (
           <tr key={product.lineItemId}>
-            <td className="py-6 pr-8">
+            <td className="py-2 pr-8">
               <div className="flex items-center">
                 <Image
                   src={product.variant.images[0]}
@@ -58,20 +65,21 @@ export const OrderItems: React.FC<Props> = ({ lineItems }) => {
                   className="mr-6 h-16 w-16 rounded object-cover object-center"
                 />
                 <div>
-                  <div className="font-medium text-gray-900 dark:text-light-100">{product.name}</div>
+                  <div className="font-medium text-gray-900 dark:text-light-100 text-ellipsis-150">{product.name}</div>
                   <div className="mt-1 dark:text-light-100 sm:hidden">
-                    {(product.price.centAmount / 100).toFixed(2)}
-                    {product.price.currencyCode}
+                    {CurrencyHelpers.formatForCurrency(product.price)}
                   </div>
                 </div>
               </div>
             </td>
-            <td className="hidden py-6 pr-8 dark:text-light-100 sm:table-cell">
-              {(product.price.centAmount / 100).toFixed(2)}
-              {product.price.currencyCode}
+            <td className="hidden py-2 pr-8 dark:text-light-100 sm:table-cell">
+              {CurrencyHelpers.formatForCurrency(product.price)}
             </td>
-            <td className="hidden py-6 pr-8 dark:text-light-100 sm:table-cell">{product.variant.attributes.size}</td>
-            <td className="whitespace-nowrap py-6 text-right font-medium dark:text-light-100">
+            <td className="hidden py-2 pr-8 dark:text-light-100 sm:table-cell">{product.count}</td>
+            <td className="hidden py-2 pr-8 dark:text-light-100 sm:table-cell">
+              {CurrencyHelpers.formatForCurrency(product.totalPrice)}
+            </td>
+            <td className="whitespace-nowrap py-2 text-right font-medium dark:text-light-100">
               <NextLink href={product._url || ''}>
                 <a className="text-accent-400">
                   {formatProductMessage({

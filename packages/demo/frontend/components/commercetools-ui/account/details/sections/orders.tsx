@@ -67,7 +67,7 @@ const OrdersHistory: FC<Props> = ({ orders }) => {
                             defaultMessage: 'Order Number',
                           })}
                         </dt>
-                        <dd className="sm:mt-1">{order.orderId}</dd>
+                        <dd className="sm:mt-1 text-ellipsis-150">{order.orderId}</dd>
                       </div>
                       <div className="flex justify-between pt-6 font-medium text-gray-900 sm:block sm:pt-0">
                         <dt>

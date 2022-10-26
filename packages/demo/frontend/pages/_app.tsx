@@ -12,6 +12,7 @@ import '../styles/themes/theme1.css';
 import '../styles/themes/theme2.css';
 import '../styles/themes/theme3.css';
 import '../styles/components/index.scss';
+import '../styles/helpers/index.scss';
 import { BusinessUnitProvider } from 'frontastic/provider/BusinessUnitState';
 
 function FrontasticStarter({ Component, pageProps }: AppProps) {
