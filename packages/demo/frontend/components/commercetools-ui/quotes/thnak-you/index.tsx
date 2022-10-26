@@ -3,11 +3,27 @@ import { useRouter } from 'next/router';
 import { useFormat } from 'helpers/hooks/useFormat';
 import Image from 'frontastic/lib/image';
 
-const QuoteThankYou = () => {
+export interface QuoteThankYouProps {
+  content?: string;
+  title?: string;
+}
+
+const QuoteThankYou: React.FC<QuoteThankYouProps> = ({ content, title }) => {
   //i18n messages
   const { formatMessage: formatCheckoutMessage } = useFormat({ name: 'quote' });
 
   const router = useRouter();
+
+  const titleText =
+    title || formatCheckoutMessage({ id: 'quote.thanks', defaultMessage: 'Thanks for requesting a quote' });
+
+  const text =
+    content ||
+    formatCheckoutMessage({
+      id: 'quote.appreciate',
+      defaultMessage:
+        ' We appreciate it, we’re currently processing it. So hang tight and we’ll send you confirmation very soon!',
+    });
 
   return (
     <main className="relative lg:min-h-full">
@@ -23,15 +39,9 @@ const QuoteThankYou = () => {
         <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:py-32 lg:px-8 xl:gap-x-24">
           <div className="lg:col-start-2">
             <p className="mt-2 text-4xl font-extrabold tracking-tight text-gray-900 dark:text-light-100 sm:text-5xl">
-              {formatCheckoutMessage({ id: 'quote.thanks', defaultMessage: 'Thanks for asking for a quote' })}
+              {titleText}
             </p>
-            <p className="mt-2 text-base text-gray-500 dark:text-light-100">
-              {formatCheckoutMessage({
-                id: 'quote.appreciate',
-                defaultMessage:
-                  ' We appreciate it, we’re currently processing it. So hang tight and we’ll send you confirmation very soon!',
-              })}
-            </p>
+            <p className="mt-2 text-base text-gray-500 dark:text-light-100">{text}</p>
 
             <div className="mt-16 border-t border-gray-200 py-6 text-right">
               <p

@@ -229,7 +229,7 @@ const OrderSummary = ({
               </button>
               {currentStep === 'cart' && !isQuoteRequestErrorDisplayed && (
                 <button className="mt-4" type="button" onClick={handleQuoteRequest}>
-                  {formatCartMessage({ id: 'create-quote-question', defaultMessage: 'Or ask for a quote' })}
+                  {formatCartMessage({ id: 'create-quote-question', defaultMessage: 'Request quote' })}
                 </button>
               )}
               {currentStep === 'cart' && isQuoteRequestErrorDisplayed && (

@@ -1,9 +1,9 @@
 import React from 'react';
 import NextLink from 'next/link';
 import { LineItem } from '@Types/cart/LineItem';
+import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useFormat } from 'helpers/hooks/useFormat';
 import Image from 'frontastic/lib/image';
-import { CurrencyHelpers } from 'helpers/currencyHelpers';
 
 interface Props {
   lineItems: LineItem[];
@@ -65,7 +65,7 @@ export const OrderItems: React.FC<Props> = ({ lineItems }) => {
                   className="mr-6 h-16 w-16 rounded object-cover object-center"
                 />
                 <div>
-                  <div className="font-medium text-gray-900 dark:text-light-100 text-ellipsis-150">{product.name}</div>
+                  <div className="text-ellipsis-150 font-medium text-gray-900 dark:text-light-100">{product.name}</div>
                   <div className="mt-1 dark:text-light-100 sm:hidden">
                     {CurrencyHelpers.formatForCurrency(product.price)}
                   </div>
