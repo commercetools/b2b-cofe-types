@@ -26,35 +26,6 @@ export const useBusinessUnit = (): UseBusinessUnit => {
       id: bu.key,
       label: bu.name,
       parentId: bu.parentUnit ? bu.parentUnit.key : null,
-      items: businessUnit.isRootAdmin
-        ? [
-            {
-              id: `add__${bu.key}`,
-              type: 'add',
-              label: 'Add Branch',
-              parentId: bu.key,
-            },
-            {
-              id: `address__${bu.key}`,
-              type: 'address',
-              label: 'Add Address',
-              parentId: bu.key,
-            },
-            {
-              id: `user__${bu.key}`,
-              type: 'user',
-              label: 'Add User',
-              parentId: bu.key,
-            },
-          ]
-        : [
-            {
-              id: `user__${bu.key}`,
-              type: 'user',
-              label: 'Add User',
-              parentId: bu.key,
-            },
-          ],
     }));
   };
 
@@ -88,6 +59,14 @@ export const useBusinessUnit = (): UseBusinessUnit => {
       `/action/business-unit/update`,
       { method: 'POST' },
       { actions: [{ action: 'changeName', name }], key },
+    );
+  };
+
+  const updateContactEmail = async (key: string, contactEmail: string): Promise<any> => {
+    return fetchApiHub(
+      `/action/business-unit/update`,
+      { method: 'POST' },
+      { actions: [{ action: 'setContactEmail', contactEmail }], key },
     );
   };
 
@@ -126,5 +105,6 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     setMyBusinessUnit,
     setMyStore,
     updateName,
+    updateContactEmail,
   };
 };

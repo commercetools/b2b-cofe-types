@@ -5,4 +5,7 @@
     &-checkbox {
         @apply h-6 w-6 rounded border-gray-300 text-white focus:ring-accent-400 text-accent-400;
     }
+    &:read-only {
+        @apply bg-gray-300;
+    }
 }
