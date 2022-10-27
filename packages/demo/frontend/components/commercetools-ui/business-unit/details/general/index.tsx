@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { BusinessUnit } from '@commercetools/platform-sdk';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/router';
+import { BusinessUnit, Store } from '@commercetools/platform-sdk';
+import sectionStories from 'components/commercetools-ui/account/details/sections/StorybookRender/section.stories';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { useFormat } from 'helpers/hooks/useFormat';
+import { useStores } from 'frontastic';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 
 type Props = {
@@ -18,8 +21,11 @@ const BusinessUnitGeneral: React.FC<Props> = ({ businessUnit }) => {
     stores: [],
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [stores, setStores] = useState([]);
+  const [isStoreLoading, setIsStoreLoading] = useState(false);
 
   const { updateName, updateContactEmail } = useBusinessUnitStateContext();
+  const { getStoresByKey } = useStores();
 
   const updateCompanyName = async () => {
     setIsLoading(true);
@@ -48,6 +54,15 @@ const BusinessUnitGeneral: React.FC<Props> = ({ businessUnit }) => {
       unitType: businessUnit?.unitType,
       stores: businessUnit?.stores,
     });
+  }, [businessUnit]);
+
+  useEffect(() => {
+    (async () => {
+      setIsStoreLoading(true);
+      const stores = await getStoresByKey(businessUnit.stores?.map((store) => `"${store.key}"`));
+      setStores(stores);
+      setIsStoreLoading(false);
+    })();
   }, [businessUnit]);
 
   if (!businessUnit) {
@@ -117,6 +132,22 @@ const BusinessUnitGeneral: React.FC<Props> = ({ businessUnit }) => {
             {formatMessage({ id: 'type', defaultMessage: 'Unit type' })}
           </label>
           <input id="type" type="text" value={data.unitType} readOnly={true} className="input input-primary ml-2" />
+        </div>
+        <div className="w-full">
+          <h3 className="text-bold text-lg">Stores:</h3>
+          {isStoreLoading && <LoadingIcon className="mt-0.5 h-4 w-4 animate-spin" />}
+          {!isStoreLoading && (
+            <>
+              {!businessUnit?.stores?.length && <span>No store is assigned yet</span>}
+              {!!stores.length && (
+                <ol className="list-decimal pl-6">
+                  {stores.map((store) => (
+                    <li key={store.id}>{store.name}</li>
+                  ))}
+                </ol>
+              )}
+            </>
+          )}
         </div>
       </div>
     </>

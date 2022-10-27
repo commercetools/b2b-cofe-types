@@ -18,11 +18,13 @@ import {
 } from '../../actions/cart';
 import { query } from '../../actions/product';
 import { getMyQuoteRequests, getMyBusinessUserQuoteRequests, updateQuoteState } from '../../actions/quotes';
+import { getStoresByKey } from '../../actions/stores';
 import { getWishlist, addToWishlist, removeLineItem, updateLineItem } from '../../actions/wishlist';
 import { UseAdyen } from './UseAdyen';
 import { UseCart } from './UseCart';
 import { UseProducts } from './UseProducts';
 import { UseQuotes } from './UseQuotes';
+import { UseStores } from './UseStores';
 import { UseWishlist } from './UseWishlist';
 
 export interface FrontasticState {
@@ -31,6 +33,7 @@ export interface FrontasticState {
   useAdyen: UseAdyen;
   useProducts: UseProducts;
   useQuotes: UseQuotes;
+  useStores: UseStores;
 }
 
 export const getFrontasticState = (): FrontasticState => {
@@ -69,6 +72,9 @@ export const getFrontasticState = (): FrontasticState => {
       getMyQuoteRequests,
       getMyBusinessUserQuoteRequests,
       updateQuoteState,
+    },
+    useStores: {
+      getStoresByKey,
     },
   };
 };

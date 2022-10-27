@@ -5,3 +5,6 @@ import { RegisterAccount } from '../../../helpers/hooks/useAccount';
 export const createStore = async (account: RegisterAccount, parentBusinessUnit?: string): Promise<Store> => {
   return await fetchApiHub('/action/store/create', { method: 'POST' }, { account, parentBusinessUnit });
 };
+export const getStoresByKey = async (keys: string[]): Promise<Store[]> => {
+  return await fetchApiHub(`/action/store/query?where=key in (${keys.join(', ')})`, { method: 'GET' });
+};

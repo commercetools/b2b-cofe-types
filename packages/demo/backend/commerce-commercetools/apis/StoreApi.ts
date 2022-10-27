@@ -1,6 +1,7 @@
 import { BaseApi } from './BaseApi';
 import { Store } from '@Types/store/store';
 import { StoreDraft } from '@commercetools/platform-sdk';
+import { mapCommercetoolsStoreToStore } from '../mappers/StoreMappers';
 
 const convertStoreToBody = (store: Store, locale: string): StoreDraft => {
   return {
@@ -52,6 +53,8 @@ export class StoreApi extends BaseApi {
   };
 
   query: (where: string) => Promise<any> = async (where: string): Promise<any> => {
+    const locale = await this.getCommercetoolsLocal();
+
     try {
       return this.getApiForProject()
         .stores()
@@ -62,7 +65,7 @@ export class StoreApi extends BaseApi {
         })
         .execute()
         .then((response) => {
-          return response.body;
+          return mapCommercetoolsStoreToStore(response.body, locale.language);
         });
     } catch (e) {
       console.log(e);
