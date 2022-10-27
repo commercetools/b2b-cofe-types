@@ -43,7 +43,9 @@ const BusinessUnitDetails = () => {
                     <div className="w-2/3">
                       {isLoading && <LoadingIcon className="h-4 w-4 animate-spin" />}
                       {/* @ts-ignore */}
-                      {!isLoading && <BusinessUnitPanels businessUnit={selectedBusinessUnit} />}
+                      {!isLoading && !!selectedBusinessUnit && (
+                        <BusinessUnitPanels businessUnit={selectedBusinessUnit} />
+                      )}
                     </div>
                   </div>
                 </div>
