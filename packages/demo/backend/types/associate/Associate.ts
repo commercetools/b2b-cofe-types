@@ -6,6 +6,6 @@ export enum AssociateRole {
 }
 
 export interface Associate {
-  roles: AssociateRole[];
+  roles: AssociateRole[] | string[];
   customer: CustomerReference;
 }

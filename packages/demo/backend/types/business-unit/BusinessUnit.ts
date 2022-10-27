@@ -25,10 +25,10 @@ export interface BusinessUnitResourceIdentifier {
 
 export interface BusinessUnit {
   key: string;
-  status: BusinessUnitStatus;
+  status: BusinessUnitStatus | string;
   stores?: StoreKeyReference[];
-  storeMode: StoreMode;
-  unitType: BusinessUnitType;
+  storeMode: StoreMode | string;
+  unitType: BusinessUnitType | string;
   name: string;
   contactEmail?: string;
   addresses?: Address[];

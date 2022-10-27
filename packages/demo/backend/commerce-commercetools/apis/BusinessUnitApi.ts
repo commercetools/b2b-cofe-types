@@ -1,5 +1,4 @@
 import { BaseApi } from './BaseApi';
-import axios from 'axios';
 import { BusinessUnit, BusinessUnitPagedQueryResponse } from '@Types/business-unit/BusinessUnit';
 import { AssociateRole } from '@Types/associate/Associate';
 import { mapReferencedAssociates } from '../mappers/BusinessUnitMappers';
@@ -7,31 +6,17 @@ import { mapReferencedAssociates } from '../mappers/BusinessUnitMappers';
 const MAX_LIMIT = 50;
 
 export class BusinessUnitApi extends BaseApi {
-  getAccessToken = async (): Promise<string> => {
-    const response = await axios.post(
-      `https://auth.us-central1.gcp.commercetools.com/oauth/token?grant_type=client_credentials&scope=manage_project:${this.projectKey}`,
-      null,
-      {
-        headers: {
-          Authorization: 'Basic cHlXeFhiU0lCZDF3OGNzMFZIMFJWQWN2OjdYLWlJTFE4OGtWZF9fZkpMT0dSN3NxT1Z4cXlGelky',
-        },
-      },
-    );
-    return response.data.access_token;
-  };
-
   getAll: () => Promise<BusinessUnit[]> = async (): Promise<BusinessUnit[]> => {
     try {
-      const accessToken = await this.getAccessToken();
-      const response = await axios.get(
-        `https://api.us-central1.gcp.commercetools.com/${this.projectKey}/business-units?limit=${MAX_LIMIT}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
+      return this.getApiForProject()
+        .businessUnits()
+        .get({
+          queryArgs: {
+            limit: MAX_LIMIT,
           },
-        },
-      );
-      return response.data;
+        })
+        .execute()
+        .then((res) => res.body.results);
     } catch (e) {
       throw e;
     }
@@ -39,17 +24,13 @@ export class BusinessUnitApi extends BaseApi {
 
   create: (data: any) => Promise<any> = async (data: any) => {
     try {
-      const accessToken = await this.getAccessToken();
-      const response = await axios.post(
-        `https://api.us-central1.gcp.commercetools.com/${this.projectKey}/business-units`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-      return response.data;
+      return this.getApiForProject()
+        .businessUnits()
+        .post({
+          body: data,
+        })
+        .execute()
+        .then((res) => res.body);
     } catch (e) {
       throw e;
     }
@@ -57,22 +38,19 @@ export class BusinessUnitApi extends BaseApi {
 
   update: (key: string, actions: any[]) => Promise<any> = async (key: string, actions: any[]) => {
     try {
-      const accessToken = await this.getAccessToken();
-      const response = await this.get(key).then((res) => {
-        return axios.post(
-          `https://api.us-central1.gcp.commercetools.com/${this.projectKey}/business-units/key=${key}`,
-          {
-            version: res.version,
-            actions,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
+      return this.get(key).then((res) => {
+        return this.getApiForProject()
+          .businessUnits()
+          .withKey({ key })
+          .post({
+            body: {
+              version: res.version,
+              actions,
             },
-          },
-        );
+          })
+          .execute()
+          .then((res) => res.body);
       });
-      return response.data;
     } catch (e) {
       console.log(e);
 
@@ -85,20 +63,17 @@ export class BusinessUnitApi extends BaseApi {
     expand?: string,
   ) => {
     try {
-      const accessToken = await this.getAccessToken();
-      const whereClause = where ? `?where=${encodeURIComponent(where)}` : '';
-      const expandClause = expand ? `${whereClause ? '&' : '?'}expand=${encodeURIComponent(expand)}` : '';
-      const limitClause = whereClause || expandClause ? `&limit=${MAX_LIMIT}` : `?limit=${MAX_LIMIT}`;
-
-      const response = await axios.get(
-        `https://api.us-central1.gcp.commercetools.com/${this.projectKey}/business-units${whereClause}${expandClause}${limitClause}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
+      return this.getApiForProject()
+        .businessUnits()
+        .get({
+          queryArgs: {
+            where,
+            expand,
+            limit: MAX_LIMIT,
           },
-        },
-      );
-      return response.data;
+        })
+        .execute()
+        .then((res) => res.body);
     } catch (e) {
       throw e;
     }
@@ -135,17 +110,12 @@ export class BusinessUnitApi extends BaseApi {
 
   get: (key: string) => Promise<BusinessUnit> = async (key: string) => {
     try {
-      const accessToken = await this.getAccessToken();
-      const response = await axios.get(
-        `https://api.us-central1.gcp.commercetools.com/${this.projectKey}/business-units/key=${key}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-
-      return response.data;
+        return this.getApiForProject()
+        .businessUnits()
+        .withKey({ key })
+        .get()
+        .execute()
+        .then(res=>res.body)
     } catch (e) {
       throw e;
     }
