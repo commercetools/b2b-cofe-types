@@ -4,6 +4,8 @@ import { UseBusinessUnit } from '../Frontastic/UseBusinessUnit';
 
 const BusinessUnitStateContext: Context<UseBusinessUnit> = createContext({
   addAddress: () => null,
+  editAddress: () => null,
+  deleteAddress: () => null,
   getUser: () => null,
   addUser: () => null,
   businessUnit: null,
@@ -18,6 +20,8 @@ const BusinessUnitStateContext: Context<UseBusinessUnit> = createContext({
 export const BusinessUnitProvider = ({ children }) => {
   const {
     addAddress,
+    editAddress,
+    deleteAddress,
     businessUnit,
     createBusinessUnitAndStore,
     getMyOrganization,
@@ -33,6 +37,8 @@ export const BusinessUnitProvider = ({ children }) => {
     <BusinessUnitStateContext.Provider
       value={{
         addAddress,
+        editAddress,
+        deleteAddress,
         businessUnit,
         createBusinessUnitAndStore,
         getMyOrganization,

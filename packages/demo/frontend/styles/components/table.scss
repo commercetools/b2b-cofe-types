@@ -1,11 +1,12 @@
-.business-unit-address {
-    &__header {
+.table-primary {
+    & thead {
+        @apply bg-gray-600 text-white;
         & td {
             @apply p-1;
         }
     }
 
-    &__body {
+    & tbody {
         & tr:nth-child(2n) {
             @apply bg-gray-100;
         }

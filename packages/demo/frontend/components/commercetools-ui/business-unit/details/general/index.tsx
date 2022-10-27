@@ -1,7 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/router';
-import { BusinessUnit, Store } from '@commercetools/platform-sdk';
-import sectionStories from 'components/commercetools-ui/account/details/sections/StorybookRender/section.stories';
+import { BusinessUnit } from '@commercetools/platform-sdk';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useStores } from 'frontastic';
@@ -70,7 +68,18 @@ const BusinessUnitGeneral: React.FC<Props> = ({ businessUnit }) => {
   }
   return (
     <>
-      <div className="business-unit-general flex flex-row flex-wrap py-4">
+      <div className="my-10">
+        <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-light-100">
+          {formatMessage({ id: 'business-unit.general', defaultMessage: 'Business unit general settings' })}
+        </h3>
+        <p className="max-w-2xl text-sm text-gray-500">
+          {formatMessage({
+            id: 'business-unit.general.desc',
+            defaultMessage: `View or modify settings for ${businessUnit.name}`,
+          })}
+        </p>
+      </div>
+      <div className="business-unit-general flex flex-row flex-wrap">
         <div className="basis-1/2">
           <label htmlFor="name">{formatMessage({ id: 'name', defaultMessage: 'Name' })}</label>
           <div className="flex flex-row">

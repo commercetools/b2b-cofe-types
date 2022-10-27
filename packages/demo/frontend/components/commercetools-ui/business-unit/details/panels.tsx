@@ -3,7 +3,6 @@ import { BusinessUnit } from '@commercetools/platform-sdk';
 import AddressesSection from 'components/commercetools-ui/business-unit/details/addresses';
 import GeneralSection from 'components/commercetools-ui/business-unit/details/general';
 import QuotesSection from 'components/commercetools-ui/business-unit/details/quotes';
-import StoresSection from 'components/commercetools-ui/business-unit/details/stores';
 import UsersSection from 'components/commercetools-ui/business-unit/details/users';
 import { useFormat } from 'helpers/hooks/useFormat';
 import useHash from 'helpers/hooks/useHash';
@@ -19,7 +18,6 @@ export const BusinessUnitPanels: React.FC<{ businessUnit: BusinessUnit }> = ({ b
   const tabs = [
     { name: formatAccountMessage({ id: 'general', defaultMessage: 'General' }), href: '#' },
     { name: formatAccountMessage({ id: 'addresses', defaultMessage: 'Addresses' }), href: '#addresses' },
-    { name: formatAccountMessage({ id: 'stores', defaultMessage: 'Stores' }), href: '#stores' },
     { name: formatAccountMessage({ id: 'users', defaultMessage: 'Associates' }), href: '#users' },
     { name: formatAccountMessage({ id: 'quotes', defaultMessage: 'Quotes' }), href: '#quotes' },
     { name: formatAccountMessage({ id: 'quotes', defaultMessage: 'Orders' }), href: '#orders' },
@@ -28,7 +26,6 @@ export const BusinessUnitPanels: React.FC<{ businessUnit: BusinessUnit }> = ({ b
   const mapping = {
     '#': GeneralSection,
     '#addresses': AddressesSection,
-    '#stores': StoresSection,
     '#users': UsersSection,
     '#quotes': QuotesSection,
     '#orders': QuotesSection,

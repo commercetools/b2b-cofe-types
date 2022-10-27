@@ -70,11 +70,27 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     );
   };
 
-  const addAddress = async (key: string, address: Omit<Address, 'addressId'>): Promise<Address> => {
+  const addAddress = async (key: string, address: Omit<Address, 'addressId'>): Promise<BusinessUnit> => {
     return fetchApiHub(
       `/action/business-unit/update`,
       { method: 'POST' },
       { actions: [{ action: 'addAddress', address }], key },
+    );
+  };
+
+  const editAddress = async (key: string, addressId: string, address: Address): Promise<BusinessUnit> => {
+    return fetchApiHub(
+      `/action/business-unit/update`,
+      { method: 'POST' },
+      { actions: [{ action: 'changeAddress', addressId, address }], key },
+    );
+  };
+
+  const deleteAddress = async (key: string, addressId: string): Promise<BusinessUnit> => {
+    return fetchApiHub(
+      `/action/business-unit/update`,
+      { method: 'POST' },
+      { actions: [{ action: 'removeAddress', addressId }], key },
     );
   };
 
@@ -99,6 +115,8 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     addUser,
     getUser,
     addAddress,
+    deleteAddress,
+    editAddress,
     businessUnit,
     createBusinessUnitAndStore,
     getMyOrganization,

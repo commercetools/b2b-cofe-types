@@ -27,17 +27,17 @@ const QuoteList: React.FC<Props> = ({ quoteRequestList }) => {
 
   return (
     <>
-      <table className="quote-request-table">
+      <table className="table-primary table-fixed border">
         <thead>
           <tr>
-            <th className="quote-request-table__header-date">Creation date</th>
-            <th className="quote-request-table__header-buyer">Buyer</th>
-            <th className="quote-request-table__header-bu">Company/Division</th>
-            <th className="quote-request-table__header-store">Account</th>
-            <th className="quote-request-table__header-count">Items count</th>
-            <th className="quote-request-table__header-comment">Comment</th>
-            <th className="quote-request-table__header-price">Price</th>
-            <th className="quote-request-table__header-status">Status</th>
+            <th>Date</th>
+            <th>Buyer</th>
+            <th>Company/Division</th>
+            <th>Account</th>
+            <th>count</th>
+            <th>Comment</th>
+            <th>Price</th>
+            <th>Status</th>
             <th></th>
           </tr>
         </thead>

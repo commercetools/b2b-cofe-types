@@ -46,7 +46,7 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ open, onClose, defaultVal
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog className={`${mode} fixed inset-0 z-10 overflow-y-auto`} onClose={onClose}>
+      <Dialog className={`${mode} default fixed inset-0 z-10 overflow-y-auto`} onClose={onClose}>
         <>
           <div className="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-left sm:block sm:p-0">
             <Transition.Child
@@ -112,7 +112,7 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ open, onClose, defaultVal
                               autoComplete="given-name"
                               className="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-accent-400 focus:ring-accent-400"
                               onChange={handleChange}
-                              defaultValue={defaultValues.firstName}
+                              defaultValue={defaultValues?.firstName}
                             />
                           </div>
                         </div>
@@ -132,7 +132,7 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ open, onClose, defaultVal
                               autoComplete="family-name"
                               className="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-accent-400 focus:ring-accent-400"
                               onChange={handleChange}
-                              defaultValue={defaultValues.lastName}
+                              defaultValue={defaultValues?.lastName}
                             />
                           </div>
                         </div>
@@ -151,7 +151,7 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ open, onClose, defaultVal
                               id="street-number"
                               className="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-accent-400 focus:ring-accent-400"
                               onChange={handleChange}
-                              defaultValue={defaultValues.streetNumber}
+                              defaultValue={defaultValues?.streetNumber}
                             />
                           </div>
                         </div>
@@ -171,7 +171,7 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ open, onClose, defaultVal
                               autoComplete="address-line1"
                               className="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-accent-400 focus:ring-accent-400"
                               onChange={handleChange}
-                              defaultValue={defaultValues.streetName}
+                              defaultValue={defaultValues?.streetName}
                             />
                           </div>
                         </div>
@@ -191,7 +191,7 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ open, onClose, defaultVal
                               autoComplete="tel"
                               className="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-accent-400 focus:ring-accent-400"
                               onChange={handleChange}
-                              defaultValue={defaultValues.phone}
+                              defaultValue={defaultValues?.phone}
                             />
                           </div>
                         </div>
@@ -211,7 +211,7 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ open, onClose, defaultVal
                               autoComplete="postal-code"
                               className="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-accent-400 focus:ring-accent-400"
                               onChange={handleChange}
-                              defaultValue={defaultValues.postalCode}
+                              defaultValue={defaultValues?.postalCode}
                             />
                           </div>
                         </div>
@@ -228,11 +228,11 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ open, onClose, defaultVal
                               autoComplete="country"
                               className="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-accent-400 focus:ring-accent-400"
                               onChange={handleChange}
-                              defaultValue={defaultValues.city}
+                              defaultValue={defaultValues?.city}
                             />
                           </div>
                         </div>
-                        {!defaultValues.isDefaultShippingAddress && (
+                        {!defaultValues?.isDefaultShippingAddress && (
                           <div>
                             <legend className="sr-only">
                               {formatAccountMessage({
@@ -249,7 +249,7 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ open, onClose, defaultVal
                                   type="checkbox"
                                   className="h-6 w-6 rounded border-gray-300 text-white focus:ring-accent-400"
                                   onChange={handleCheckboxChange}
-                                  defaultChecked={defaultValues.isDefaultShippingAddress}
+                                  defaultChecked={defaultValues?.isDefaultShippingAddress}
                                 />
                               </div>
                               <div className="ml-3 text-base">
@@ -263,7 +263,7 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ open, onClose, defaultVal
                             </div>
                           </div>
                         )}
-                        {!defaultValues.isDefaultBillingAddress && (
+                        {!defaultValues?.isDefaultBillingAddress && (
                           <div>
                             <legend className="sr-only">
                               {formatAccountMessage({
@@ -280,7 +280,7 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ open, onClose, defaultVal
                                   type="checkbox"
                                   className="h-6 w-6 rounded border-gray-300 text-white focus:ring-accent-400"
                                   onChange={handleCheckboxChange}
-                                  defaultChecked={defaultValues.isDefaultBillingAddress}
+                                  defaultChecked={defaultValues?.isDefaultBillingAddress}
                                 />
                               </div>
                               <div className="ml-3 text-base">
