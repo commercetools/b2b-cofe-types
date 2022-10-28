@@ -110,12 +110,12 @@ export class BusinessUnitApi extends BaseApi {
 
   get: (key: string) => Promise<BusinessUnit> = async (key: string) => {
     try {
-        return this.getApiForProject()
+      return this.getApiForProject()
         .businessUnits()
         .withKey({ key })
         .get()
         .execute()
-        .then(res=>res.body)
+        .then((res) => res.body);
     } catch (e) {
       throw e;
     }
