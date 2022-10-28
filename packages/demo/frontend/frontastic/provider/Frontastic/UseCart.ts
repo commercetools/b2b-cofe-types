@@ -1,4 +1,4 @@
-import { QuoteRequest } from '@commercetools/platform-sdk';
+import { QuoteRequest } from '@Types/quotes/QuoteRequest';
 import { Cart } from '@Types/cart/Cart';
 import { Discount } from '@Types/cart/Discount';
 import { Order } from '@Types/cart/Order';

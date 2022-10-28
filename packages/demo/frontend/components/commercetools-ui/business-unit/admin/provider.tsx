@@ -1,6 +1,6 @@
 import { Context, createContext, useContext, useEffect, useState } from 'react';
-import { BusinessUnit } from '@commercetools/platform-sdk';
 import { TreeNodeList } from '@naisutech/react-tree';
+import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 
 const BusinessUnitDetailsStateContext: Context<{
