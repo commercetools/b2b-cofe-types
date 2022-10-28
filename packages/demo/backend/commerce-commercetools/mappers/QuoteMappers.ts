@@ -22,7 +22,7 @@ export const mapCommercetoolsQuoteRequest = (results: CommercetoolsQuoteRequest[
   }));
 };
 
-export const mapCommercetoolsQuote = (results: CommercetoolsQuote[], locale: Locale): Quote[] => {
+export const mapCommercetoolsQuote = (results: CommercetoolsQuote[], locale: Locale): any[] => {
   return results?.map((quote) => ({
     ...quote,
     customer: mapCustomerReferences(quote.customer),
@@ -30,7 +30,7 @@ export const mapCommercetoolsQuote = (results: CommercetoolsQuote[], locale: Loc
   }));
 };
 
-export const mapCommercetoolsStagedQuote = (results: CommercetoolsStagedQuote[], locale: Locale): StagedQuote[] => {
+export const mapCommercetoolsStagedQuote = (results: CommercetoolsStagedQuote[], locale: Locale): any[] => {
   return results.map((stagedQuote) => ({
     ...stagedQuote,
     quotationCart: mapQuotationCartReference(stagedQuote.quotationCart, locale),

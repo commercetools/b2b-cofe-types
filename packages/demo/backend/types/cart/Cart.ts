@@ -7,6 +7,12 @@ import { Tax } from './Tax';
 import { ShippingInfo } from './ShippingInfo';
 import { Money } from '../product/Money';
 
+export interface CartReference {
+  id: string;
+  typeId: 'cart';
+  obj?: Cart;
+}
+
 export interface Cart {
   cartId: string;
   cartVersion?: string;

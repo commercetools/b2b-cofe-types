@@ -1,10 +1,10 @@
 import { useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import { Account } from '@Types/account/Account';
 import { Address } from '@Types/account/Address';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useDarkMode } from 'frontastic';
-import { Account } from '@Types/account/Account';
 
 export interface UpdateAddressProps {
   open?: boolean;
