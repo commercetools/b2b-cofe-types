@@ -1,15 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { BusinessUnit } from '@commercetools/platform-sdk';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useStores } from 'frontastic';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
+import { useBusinessUnitDetailsStateContext } from '../../../provider';
 
-type Props = {
-  businessUnit: BusinessUnit;
-};
+const BusinessUnitGeneral: React.FC = () => {
+  const { selectedBusinessUnit: businessUnit } = useBusinessUnitDetailsStateContext();
 
-const BusinessUnitGeneral: React.FC<Props> = ({ businessUnit }) => {
   const { formatMessage } = useFormat({ name: 'business-unit' });
   const [data, setData] = useState({
     name: '',

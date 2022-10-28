@@ -1,6 +1,6 @@
 import React from 'react';
-import BusinessUnitDetails from 'components/commercetools-ui/business-unit/details';
+import BusinessUnitAdmin from 'components/commercetools-ui/business-unit/admin';
 
 export const BusinessUnit = () => {
-  return <BusinessUnitDetails />;
+  return <BusinessUnitAdmin />;
 };

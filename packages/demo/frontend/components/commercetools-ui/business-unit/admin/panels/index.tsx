@@ -1,9 +1,8 @@
 import React from 'react';
-import { BusinessUnit } from '@commercetools/platform-sdk';
-import AddressesSection from 'components/commercetools-ui/business-unit/details/addresses';
-import GeneralSection from 'components/commercetools-ui/business-unit/details/general';
-import QuotesSection from 'components/commercetools-ui/business-unit/details/quotes';
-import UsersSection from 'components/commercetools-ui/business-unit/details/users';
+import AddressesSection from 'components/commercetools-ui/business-unit/admin/panels/tabs/addresses';
+import GeneralSection from 'components/commercetools-ui/business-unit/admin/panels/tabs/general';
+import QuotesSection from 'components/commercetools-ui/business-unit/admin/panels/tabs/quotes';
+import UsersSection from 'components/commercetools-ui/business-unit/admin/panels/tabs/users';
 import { useFormat } from 'helpers/hooks/useFormat';
 import useHash from 'helpers/hooks/useHash';
 
@@ -11,7 +10,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-export const BusinessUnitPanels: React.FC<{ businessUnit: BusinessUnit }> = ({ businessUnit }) => {
+export const BusinessUnitPanels: React.FC = () => {
   const { formatMessage: formatAccountMessage } = useFormat({ name: 'account' });
   const hash = useHash();
 
@@ -80,7 +79,7 @@ export const BusinessUnitPanels: React.FC<{ businessUnit: BusinessUnit }> = ({ b
             </nav>
           </div>
         </div>
-        {Content && <Content businessUnit={businessUnit} />}
+        {Content && <Content />}
       </div>
     </div>
   );

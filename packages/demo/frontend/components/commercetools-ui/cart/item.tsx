@@ -33,7 +33,7 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem }: Props
     }, 500),
   );
 
-  useEffect(() => debounced.current(count), [count]);
+  //   useEffect(() => debounced.current(count), [count]);
 
   return (
     <tr

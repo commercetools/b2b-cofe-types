@@ -1,22 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ChevronDoubleRightIcon, ChevronDoubleDownIcon } from '@heroicons/react/solid';
-import { ReactTree, TreeNodeList } from '@naisutech/react-tree';
-import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
+import { ReactTree } from '@naisutech/react-tree';
+import { useBusinessUnitDetailsStateContext } from '../provider';
 const BusinessUnitTree = ({ onChange }) => {
-  const { businessUnit, getMyOrganization } = useBusinessUnitStateContext();
-  const [tree, setTree] = useState<TreeNodeList>(null);
-
-  useEffect(() => {
-    if (businessUnit?.key) {
-      getOrganizationTree();
-    }
-  }, [businessUnit]);
-
-  const getOrganizationTree = async () => {
-    const res = await getMyOrganization();
-    setTree(res);
-  };
+  const { businessUnitTree } = useBusinessUnitDetailsStateContext();
 
   const handleRenderNodes = ({ node, type }) => {
     if (type === 'node') {
@@ -34,14 +22,14 @@ const BusinessUnitTree = ({ onChange }) => {
     }
   };
 
-  if (!tree) {
+  if (!businessUnitTree) {
     return null;
   }
 
   return (
     <div>
       {/* @ts-ignore */}
-      <ReactTree nodes={tree} RenderIcon={handleIconRenderer} RenderNode={handleRenderNodes} />
+      <ReactTree nodes={businessUnitTree} RenderIcon={handleIconRenderer} RenderNode={handleRenderNodes} />
     </div>
   );
 };

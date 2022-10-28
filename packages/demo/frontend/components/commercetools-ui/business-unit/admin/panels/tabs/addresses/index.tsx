@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
 import { PencilAltIcon, XIcon } from '@heroicons/react/solid';
 import { Address } from '@Types/account/Address';
-import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import CreateAddress from 'components/commercetools-ui/account/details/modals/createAddress';
 import UpdateAddress from 'components/commercetools-ui/account/details/modals/updateAddress';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
+import { useBusinessUnitDetailsStateContext } from '../../../provider';
 
-type Props = {
-  businessUnit: BusinessUnit;
-};
-const Addresses: React.FC<Props> = ({ businessUnit }) => {
+const Addresses: React.FC = () => {
   const { formatMessage } = useFormat({ name: 'business-unit' });
   const { addAddress, editAddress, deleteAddress } = useBusinessUnitStateContext();
+  const { reloadTree, selectedBusinessUnit: businessUnit } = useBusinessUnitDetailsStateContext();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -21,9 +19,11 @@ const Addresses: React.FC<Props> = ({ businessUnit }) => {
 
   const addBusnessUnitAddress = async (address) => {
     await addAddress(businessUnit.key, address);
+    reloadTree();
   };
   const editBusnessUnitAddress = async (address) => {
     await editAddress(businessUnit.key, address.id, address);
+    reloadTree();
   };
   const deleteBusnessUnitAddress = async (address) => {
     await deleteAddress(businessUnit.key, address.id);
@@ -78,7 +78,7 @@ const Addresses: React.FC<Props> = ({ businessUnit }) => {
           <tbody>
             {!!businessUnit.addresses.length &&
               businessUnit.addresses.map((address) => (
-                <tr key={address.addressId}>
+                <tr key={address.id}>
                   <td>{`${address.firstName} ${address.lastName}`}</td>
                   <td>{address.country}</td>
                   <td>{`${address.streetNumber} ${address.streetName}`}</td>
