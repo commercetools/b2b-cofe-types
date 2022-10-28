@@ -6,6 +6,7 @@ import UpdateAddress from 'components/commercetools-ui/account/details/modals/up
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 import { useBusinessUnitDetailsStateContext } from '../../../provider';
+import DeleteAddress from './modals/DeleteAddress';
 
 const Addresses: React.FC = () => {
   const { formatMessage } = useFormat({ name: 'business-unit' });
@@ -21,12 +22,13 @@ const Addresses: React.FC = () => {
     await addAddress(businessUnit.key, address);
     reloadTree();
   };
-  const editBusnessUnitAddress = async (address) => {
+  const editBusnessUnitAddress = async (address): Promise<void> => {
     await editAddress(businessUnit.key, address.id, address);
     reloadTree();
   };
   const deleteBusnessUnitAddress = async (address) => {
     await deleteAddress(businessUnit.key, address.id);
+    reloadTree();
   };
 
   const handleOpenDelete = (address: Address) => {
@@ -116,6 +118,14 @@ const Addresses: React.FC = () => {
             defaultValues={selectedAddress}
             updateAddress={editBusnessUnitAddress}
             onClose={handleCloseEdit}
+          />
+        )}
+        {isDeleteModalOpen && (
+          <DeleteAddress
+            open={true}
+            deleteAddress={deleteBusnessUnitAddress}
+            address={selectedAddress}
+            onClose={handleCloseDelete}
           />
         )}
       </div>

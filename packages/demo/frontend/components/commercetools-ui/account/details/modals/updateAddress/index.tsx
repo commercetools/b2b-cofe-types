@@ -1,13 +1,15 @@
 import { useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Address } from '@Types/account/Address';
+import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useDarkMode } from 'frontastic';
+import { Account } from '@Types/account/Account';
 
 export interface UpdateAddressProps {
   open?: boolean;
   onClose?: () => void;
-  updateAddress: (address: Address) => void;
+  updateAddress: (address: Address) => Promise<void | Account>;
   addressId?: string;
   defaultValues: Partial<Address>;
 }
@@ -22,6 +24,7 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ open, onClose, defaultVal
 
   //updated address data
   const [data, setData] = useState(defaultValues as Address);
+  const [isLoading, setIsLoading] = useState(false);
 
   //input change handler
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,10 +37,12 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ open, onClose, defaultVal
   };
 
   //submission handler
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      updateAddress(data);
+      setIsLoading(true);
+      await updateAddress(data);
+      setIsLoading(false);
     } catch (err) {
     } finally {
       onClose();
@@ -91,7 +96,6 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ open, onClose, defaultVal
                           id: 'address.update.desc',
                           defaultMessage: 'Update your associated address here',
                         })}
-                        ;
                       </p>
                     </div>
                     <div className="mt-12">
@@ -315,7 +319,8 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ open, onClose, defaultVal
                             type="submit"
                             className="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-accent-400 py-3 px-6 text-base font-medium text-white shadow-sm transition-colors duration-200 ease-out hover:bg-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2"
                           >
-                            {formatMessage({ id: 'save', defaultMessage: 'Save' })}
+                            {!isLoading && formatMessage({ id: 'save', defaultMessage: 'Save' })}
+                            {isLoading && <LoadingIcon className="h-6 w-6 animate-spin" />}
                           </button>
                         </div>
                       </form>
