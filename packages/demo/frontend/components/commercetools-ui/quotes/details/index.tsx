@@ -105,7 +105,7 @@ const QuoteDetails: React.FC<Props> = ({ open, onClose, data }) => {
               <div className="absolute inset-0" onClick={handleClose}>
                 {/* eslint-disable */}
                 <div
-                  className="absolute top-1/2 left-1/2 h-[90vh] w-[90%] max-w-[800px] -translate-x-1/2 -translate-y-1/2 overflow-auto bg-white py-16 px-4 dark:bg-primary-200 sm:px-6 lg:py-24 lg:px-8"
+                  className="absolute top-1/2 left-1/2 h-[90vh] w-[90%] max-w-[1200px] -translate-x-1/2 -translate-y-1/2 overflow-auto bg-white py-16 px-4 dark:bg-primary-200 sm:px-6 lg:py-24 lg:px-8"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {/* eslint-enable */}

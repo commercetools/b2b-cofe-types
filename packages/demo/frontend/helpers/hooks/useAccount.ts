@@ -70,6 +70,12 @@ export const useAccount = (): UseAccount => {
     await mutate('/action/account/getAccount', res);
   };
 
+  const create = async (account: RegisterAccount): Promise<Account> => {
+    const host = typeof window !== 'undefined' ? window.location.origin : '';
+    const acc = { ...account, host };
+    return fetchApiHub('/action/account/register', { method: 'POST' }, acc);
+  };
+
   const register = async (account: RegisterAccount): Promise<Account> => {
     const host = typeof window !== 'undefined' ? window.location.origin : '';
     const acc = { ...account, host };
@@ -170,6 +176,7 @@ export const useAccount = (): UseAccount => {
     login,
     logout,
     register,
+    create,
     removeAddress,
     requestPasswordReset,
     resendVerificationEmail,

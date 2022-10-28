@@ -31,12 +31,8 @@ export const BusinessUnitDetailsProvider = ({ children }) => {
     const res = await getMyOrganization();
     setTree(res);
     if (selectedBusinessUnit) {
-      console.log(selectedBusinessUnit);
-
       const updatedSelectedBusinessUnit = res.find((bu) => bu.key === selectedBusinessUnit.key);
       if (updatedSelectedBusinessUnit) {
-        console.log(updatedSelectedBusinessUnit);
-
         setSelectedBusinessUnit(updatedSelectedBusinessUnit);
       }
     }

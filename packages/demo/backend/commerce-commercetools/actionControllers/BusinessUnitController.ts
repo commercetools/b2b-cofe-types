@@ -140,6 +140,57 @@ export const addAssociate: ActionHook = async (request: Request, actionContext: 
   return response;
 };
 
+export const removeAssociate: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
+
+  const { id } = JSON.parse(request.body);
+
+  const businessUnit = await businessUnitApi.update(request.query['key'], [
+    {
+      action: 'removeAssociate',
+      customer: {
+        typeId: 'customer',
+        id,
+      },
+    },
+  ]);
+
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(businessUnit),
+    sessionData: request.sessionData,
+  };
+
+  return response;
+};
+
+export const updateAssociate: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
+
+  const { id, roles } = JSON.parse(request.body);
+
+  const businessUnit = await businessUnitApi.update(request.query['key'], [
+    {
+      action: 'changeAssociate',
+      associate: {
+        customer: {
+          typeId: 'customer',
+          id,
+        },
+        roles: roles,
+      },
+    },
+  ]);
+
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(businessUnit),
+    sessionData: request.sessionData,
+  };
+
+  return response;
+};
+
 export const update: ActionHook = async (request: Request, actionContext: ActionContext) => {
   const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
   const { key, actions } = JSON.parse(request.body);

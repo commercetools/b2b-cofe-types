@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { Address } from '@Types/account/Address';
-import { useAccount } from 'helpers/hooks/useAccount';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { mapAddressToString } from 'helpers/utils/addressUtil';
+import { useAccount } from 'frontastic';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 
 interface Props {

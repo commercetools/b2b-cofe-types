@@ -2,6 +2,7 @@ import { BaseApi } from './BaseApi';
 import { BusinessUnit, BusinessUnitPagedQueryResponse } from '@Types/business-unit/BusinessUnit';
 import { AssociateRole } from '@Types/associate/Associate';
 import { mapReferencedAssociates } from '../mappers/BusinessUnitMappers';
+import { BusinessUnit as CommercetoolsBusinessUnit } from '@commercetools/platform-sdk';
 
 const MAX_LIMIT = 50;
 
@@ -97,7 +98,7 @@ export class BusinessUnitApi extends BaseApi {
       const response = await this.query(`associates(customer(id="${accountId}"))`, 'associates[*].customer');
 
       if (response.results.length) {
-        const businessUnit = mapReferencedAssociates(response.results[0]);
+        const businessUnit = mapReferencedAssociates(response.results[0] as CommercetoolsBusinessUnit);
         businessUnit.isAdmin = this.isUserAdminInBusinessUnit(businessUnit, accountId);
         businessUnit.isRootAdmin = this.isUserRootAdminInBusinessUnit(businessUnit, accountId);
         return businessUnit;
@@ -125,6 +126,6 @@ export class BusinessUnitApi extends BaseApi {
     const thisNode = await this.get(key);
     const { results } = await this.query(`topLevelUnit(key="${thisNode.topLevelUnit.key}")`, 'associates[*].customer');
 
-    return results.map((bu) => mapReferencedAssociates(bu));
+    return results.map((bu) => mapReferencedAssociates(bu as CommercetoolsBusinessUnit));
   };
 }
