@@ -88,69 +88,73 @@ const Header: React.FC<HeaderProps> = ({
                 </div>
               </ReferenceLink>
 
-              <div className="flex items-center lg:hidden">
-                <button
-                  type="button"
-                  className="-ml-2 rounded-md bg-none p-2 text-primary-400 dark:text-light-100"
-                  onClick={() => setOpen(!open)}
-                >
-                  <span className="sr-only">Open menu</span>
-                  <MenuIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-              </div>
+              {!!account && (
+                <div className="flex items-center lg:hidden">
+                  <button
+                    type="button"
+                    className="-ml-2 rounded-md bg-none p-2 text-primary-400 dark:text-light-100"
+                    onClick={() => setOpen(!open)}
+                  >
+                    <span className="sr-only">Open menu</span>
+                    <MenuIcon className="h-6 w-6" aria-hidden="true" />
+                  </button>
+                </div>
+              )}
 
               {/* Mega menus */}
-              <Popover.Group className="hidden lg:block lg:flex-1 lg:self-stretch">
-                <div className="flex h-full space-x-8">
-                  {headerNavigation.categories.map((category, categoryIdx) => (
-                    <Popover key={category.name} className="flex">
-                      {({ open }) => (
-                        <>
-                          <div className="relative flex">
-                            <Popover.Button
-                              className={classNames(
-                                open
-                                  ? 'border-indigo-600 text-indigo-600'
-                                  : 'border-transparent text-gray-700 hover:text-gray-800',
-                                'relative z-10 -mb-px flex items-center border-b-2 pt-px text-sm font-medium transition-colors duration-200 ease-out',
-                              )}
+              {!!account && (
+                <Popover.Group className="hidden lg:block lg:flex-1 lg:self-stretch">
+                  <div className="flex h-full space-x-8">
+                    {headerNavigation.categories.map((category, categoryIdx) => (
+                      <Popover key={category.name} className="flex">
+                        {({ open }) => (
+                          <>
+                            <div className="relative flex">
+                              <Popover.Button
+                                className={classNames(
+                                  open
+                                    ? 'border-indigo-600 text-indigo-600'
+                                    : 'border-transparent text-gray-700 hover:text-gray-800',
+                                  'relative z-10 -mb-px flex items-center border-b-2 pt-px text-sm font-medium transition-colors duration-200 ease-out',
+                                )}
+                              >
+                                <Typography>{category.name}</Typography>
+                              </Popover.Button>
+                            </div>
+
+                            <Transition
+                              as={Fragment}
+                              enter="transition ease-out duration-200"
+                              enterFrom="opacity-0"
+                              enterTo="opacity-100"
+                              leave="transition ease-in duration-150"
+                              leaveFrom="opacity-100"
+                              leaveTo="opacity-0"
                             >
-                              <Typography>{category.name}</Typography>
-                            </Popover.Button>
-                          </div>
+                              <Popover.Panel className="absolute inset-x-0 top-full z-10 text-gray-500 sm:text-sm">
+                                {/* Presentational element used to render the bottom shadow, if we put the shadow on the actual panel it pokes out the top, so we use this shorter element to hide the top of the shadow */}
+                                <div className="absolute inset-0 top-1/2 bg-white shadow" aria-hidden="true" />
 
-                          <Transition
-                            as={Fragment}
-                            enter="transition ease-out duration-200"
-                            enterFrom="opacity-0"
-                            enterTo="opacity-100"
-                            leave="transition ease-in duration-150"
-                            leaveFrom="opacity-100"
-                            leaveTo="opacity-0"
-                          >
-                            <Popover.Panel className="absolute inset-x-0 top-full z-10 text-gray-500 sm:text-sm">
-                              {/* Presentational element used to render the bottom shadow, if we put the shadow on the actual panel it pokes out the top, so we use this shorter element to hide the top of the shadow */}
-                              <div className="absolute inset-0 top-1/2 bg-white shadow" aria-hidden="true" />
+                                <MegaMenuContent category={category} categoryIdx={categoryIdx} />
+                              </Popover.Panel>
+                            </Transition>
+                          </>
+                        )}
+                      </Popover>
+                    ))}
 
-                              <MegaMenuContent category={category} categoryIdx={categoryIdx} />
-                            </Popover.Panel>
-                          </Transition>
-                        </>
-                      )}
-                    </Popover>
-                  ))}
-
-                  {links.map((link, id) => (
-                    <ReferenceLink
-                      key={id}
-                      target={link.reference}
-                      className="flex items-center text-base font-medium text-primary-400 hover:text-primary-500 dark:text-light-100"
-                    >
-                      <Typography>{link.name}</Typography>
-                    </ReferenceLink>
-                  ))}
-                </div>
-              </Popover.Group>
+                    {links.map((link, id) => (
+                      <ReferenceLink
+                        key={id}
+                        target={link.reference}
+                        className="flex items-center text-base font-medium text-primary-400 hover:text-primary-500 dark:text-light-100"
+                      >
+                        <Typography>{link.name}</Typography>
+                      </ReferenceLink>
+                    ))}
+                  </div>
+                </Popover.Group>
+              )}
 
               <div className="flex flex-col items-center justify-end">
                 <div className="flex grow items-center pt-2">
@@ -158,31 +162,37 @@ const Header: React.FC<HeaderProps> = ({
                   <SearchButton />
 
                   <span className="mx-4 h-6 w-px bg-gray-200 lg:mx-4" aria-hidden="true" />
-                  <WishListButton wishlistItemCount={wishlistItemCount} wishlistLink={wishlistLink} />
-                  <FlyingCartButton />
+                  {!!account && (
+                    <>
+                      <WishListButton wishlistItemCount={wishlistItemCount} wishlistLink={wishlistLink} />
+                      <FlyingCartButton />
+                    </>
+                  )}
                   <AccountButton
                     account={account}
                     accountLink={accountLink}
                     organization={organization}
                     businessUnitLink={businessUnitLink}
                   />
-                  <CartButton cartItemCount={cartItemCount} cartLink={cartLink} />
+                  {!!account && <CartButton cartItemCount={cartItemCount} cartLink={cartLink} />}
                 </div>
-                <div className="flex w-full grow items-center py-2">
-                  <span>
-                    {account?.firstName
-                      ? formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) + account?.firstName
-                      : account?.lastName
-                      ? formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) + account?.lastName
-                      : formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) +
-                        formatAccountMessage({ id: 'user', defaultMessage: 'User ' })}
-                  </span>
-                  <span className="mx-4 h-8 w-px bg-gray-200 lg:mx-4" aria-hidden="true" />
-                  <div className="flex items-center">
-                    <span>Store:&nbsp;</span>
-                    <StorePicker organization={organization} />
+                {!!account && (
+                  <div className="flex w-full grow items-center py-2">
+                    <span>
+                      {account?.firstName
+                        ? formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) + account?.firstName
+                        : account?.lastName
+                        ? formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) + account?.lastName
+                        : formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) +
+                          formatAccountMessage({ id: 'user', defaultMessage: 'User ' })}
+                    </span>
+                    <span className="mx-4 h-8 w-px bg-gray-200 lg:mx-4" aria-hidden="true" />
+                    <div className="flex items-center">
+                      <span>Store:&nbsp;</span>
+                      <StorePicker organization={organization} />
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
