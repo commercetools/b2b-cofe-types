@@ -124,15 +124,15 @@ const BusinessUnitGeneral: React.FC = () => {
             )}
           </div>
         </div>
-        <div className="basis-1/2">
-          <label htmlFor="status">{formatMessage({ id: 'status', defaultMessage: 'Status' })}</label>
+        <div className="flex-flex-row basis-1/2 items-center pt-6">
           <input
             id="status"
             type="checkbox"
             checked={data.status === 'Active'}
             readOnly={true}
-            className="ml-2 border-2"
+            className="input input-checkbox mr-4"
           />
+          <label htmlFor="status">{formatMessage({ id: 'status', defaultMessage: 'Status' })}</label>
         </div>
         <div className="basis-1/2">
           <label htmlFor="type" className="ml-2">
