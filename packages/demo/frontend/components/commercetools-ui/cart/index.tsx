@@ -27,7 +27,6 @@ const Cart = ({
   cart,
   editItemQuantity,
   removeItem,
-  shippingMethods,
   pageTitle,
   emptyStateImage,
   emptyStateTitle,
@@ -36,6 +35,7 @@ const Cart = ({
   emptyStateCTALink,
 }: Props) => {
   const [loading, setLoading] = useState<boolean>(true);
+  const [isQuoteRequestDisabled, setIsQuoteRequestDisabled] = useState(false);
 
   //i18n messages
   const { formatMessage: formatCartMessage } = useFormat({ name: 'cart' });
@@ -52,6 +52,12 @@ const Cart = ({
   useEffect(() => {
     if (cart?.lineItems) {
       setLoading(false);
+    }
+  }, [cart]);
+
+  useEffect(() => {
+    if (cart?.origin === 'Quote') {
+      setIsQuoteRequestDisabled(true);
     }
   }, [cart]);
 
@@ -92,9 +98,16 @@ const Cart = ({
             editItemQuantity={editItemQuantity}
             goToProductPage={goToProductPage}
             removeItem={(lineItemId: string) => removeItem(lineItemId)}
+            isModificationForbidden={isQuoteRequestDisabled}
             className="mb-8 lg:col-span-12"
           />
-          <OrderSummary cart={cart} onSubmit={onCheckout} showDiscountsForm={false} currentStep="cart" />
+          <OrderSummary
+            cart={cart}
+            onSubmit={onCheckout}
+            showDiscountsForm={false}
+            currentStep="cart"
+            isQuoteRequestDisabled={isQuoteRequestDisabled}
+          />
         </form>
       )}
     </main>

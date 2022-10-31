@@ -9,6 +9,7 @@ interface Props {
   readonly editItemQuantity: (lineItemId: string, newQuantity: number) => void;
   readonly goToProductPage: (_url: string) => void;
   readonly removeItem: (lineItemId: string) => void;
+  isModificationForbidden?: boolean;
 }
 
 const ItemList: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = ({
@@ -17,6 +18,7 @@ const ItemList: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = ({
   goToProductPage,
   removeItem,
   className,
+  isModificationForbidden,
 }) => {
   const { formatMessage: formatCartMessage } = useFormat({ name: 'cart' });
 
@@ -58,6 +60,7 @@ const ItemList: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = ({
               editItemQuantity={editItemQuantity}
               goToProductPage={goToProductPage}
               removeItem={removeItem}
+              isModificationForbidden={isModificationForbidden}
             />
           ))}
           <AddToCartItem goToProductPage={goToProductPage} />

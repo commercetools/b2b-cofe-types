@@ -47,6 +47,7 @@ export class CartMapper {
       discountCodes: CartMapper.commercetoolsDiscountCodesInfoToDiscountCodes(commercetoolsCart.discountCodes, locale),
       directDiscounts: commercetoolsCart.directDiscounts?.length,
       taxed: CartMapper.commercetoolsTaxedPriceToTaxed(commercetoolsCart.taxedPrice, locale),
+      origin: commercetoolsCart.origin,
     };
   };
 

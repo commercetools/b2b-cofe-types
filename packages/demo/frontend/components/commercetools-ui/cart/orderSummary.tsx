@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Cart } from '@Types/cart/Cart';
 import { LineItem } from '@Types/cart/LineItem';
@@ -7,9 +7,6 @@ import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { Reference, ReferenceLink } from 'helpers/reference';
 import { useCart } from 'frontastic';
-import { FormData } from '../adyen-checkout';
-import { mapToCartStructure } from '../adyen-checkout/mapFormData';
-import AddressSelection from '../adyen-checkout/panels/addressSelection';
 import DiscountForm from '../discount-form';
 import { LoadingIcon } from '../icons/loading';
 
@@ -21,7 +18,7 @@ interface Props {
   readonly showSubmitButton?: boolean;
   readonly showDiscountsForm?: boolean;
   currentStep?: string;
-
+  isQuoteRequestDisabled?: boolean;
   termsLink?: Reference;
   cancellationLink?: Reference;
   privacyLink?: Reference;
@@ -38,6 +35,7 @@ const OrderSummary = ({
   cancellationLink,
   privacyLink,
   currentStep,
+  isQuoteRequestDisabled,
 }: Props) => {
   //i18n messages
   const { formatMessage: formatCartMessage } = useFormat({ name: 'cart' });
@@ -46,7 +44,6 @@ const OrderSummary = ({
   const { createQuoteRequestFromCurrentCart, getCart, updateCart } = useCart();
 
   const [isQuoteRequestDisplayed, setIsQuoteRequestDisplayed] = useState(false);
-  const [isQuoteRequestErrorDisplayed, setIsQuoteRequestErrorDisplayed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [quoteComment, setQuoteComment] = useState('');
 
@@ -121,11 +118,8 @@ const OrderSummary = ({
   );
 
   const handleQuoteRequest = () => {
-    if (cart.discountCodes?.length || cart.directDiscounts) {
-      setIsQuoteRequestErrorDisplayed(true);
-    } else {
-      setIsQuoteRequestDisplayed(true);
-    }
+    setIsQuoteRequestDisplayed(true);
+    handleUpdateAddress();
   };
 
   const handleCreateQuote = async () => {
@@ -136,10 +130,16 @@ const OrderSummary = ({
     router.push('/quote-thank-you');
   };
 
-  const handleUpdateAddress = async (data: FormData) => {
+  const handleUpdateAddress = async () => {
     setIsLoading(true);
-    const updatedData = mapToCartStructure(data, true);
-    await updateCart(updatedData);
+    await updateCart({
+      shipping: {
+        country: 'US',
+      },
+      billing: {
+        country: 'US',
+      },
+    });
     setIsLoading(false);
   };
 
@@ -216,10 +216,9 @@ const OrderSummary = ({
               value={quoteComment}
             />
           </label>
-          <AddressSelection updateSelection={handleUpdateAddress} isNewAddressHidden={true} />
         </div>
       )}
-      {showDiscountsForm && <DiscountForm cart={cart} className="py-10" />}
+      {showDiscountsForm && !isQuoteRequestDisabled && <DiscountForm cart={cart} className="py-10" />}
       <div className="flex flex-col items-center">
         <>
           {!isQuoteRequestDisplayed && showSubmitButton && (
@@ -227,18 +226,18 @@ const OrderSummary = ({
               <button type="submit" onClick={onSubmit} className={submitButtonClassName}>
                 {submitButtonLabel || formatCartMessage({ id: 'checkout', defaultMessage: 'Checkout' })}
               </button>
-              {currentStep === 'cart' && !isQuoteRequestErrorDisplayed && (
+              {currentStep === 'cart' && !isQuoteRequestDisabled && (
                 <button className="mt-4" type="button" onClick={handleQuoteRequest}>
                   {formatCartMessage({ id: 'create-quote-question', defaultMessage: 'Request quote' })}
                 </button>
               )}
-              {currentStep === 'cart' && isQuoteRequestErrorDisplayed && (
-                <span className="mt-4 text-red-400">
+              {currentStep === 'cart' && isQuoteRequestDisabled && (
+                <button className="button -button-secondary mt-4 text-red-400" type="button" disabled={true}>
                   {formatCartMessage({
                     id: 'quote-error',
-                    defaultMessage: 'You cannot ask for a quote on a cart with a discount',
+                    defaultMessage: 'You cannot request for a quote on a cart created from a quote',
                   })}
-                </span>
+                </button>
               )}
 
               {submitButtonLabel ===

@@ -58,7 +58,7 @@ const QuoteDetails: React.FC<Props> = ({ open, onClose, data }) => {
       await getCart();
       router.replace(
         {
-          pathname: '/cart',
+          pathname: '/checkout',
         },
         undefined,
         {
@@ -196,7 +196,7 @@ const QuoteDetails: React.FC<Props> = ({ open, onClose, data }) => {
                           Quote accepted!
                         </h2>
                         <div className="mt-12">
-                          <span className="text-sm">Please continue on your cart to place the order</span>
+                          <span className="text-sm">Please close this window and continue to checkout</span>
                         </div>
                       </div>
                     </div>

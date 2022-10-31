@@ -9,11 +9,13 @@ interface Props {
   goToProductPage: (_url: string) => void;
   editItemQuantity: (lineItemId: string, newQuantity: number) => void;
   removeItem: (lineItemId: string) => void;
+  isModificationForbidden?: boolean;
 }
 
-const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem }: Props) => {
+const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem, isModificationForbidden }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [count, setCount] = useState(lineItem.count);
+  const isMountedRef = useRef(false);
 
   const handleRemoveItem = async () => {
     setIsLoading(true);
@@ -24,16 +26,22 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem }: Props
     setCount(parseInt(value, 10) || 0);
   };
 
-  const debounced = useRef(
+  const debounced = useCallback(
     debounce(async (value) => {
       setIsLoading(true);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       await editItemQuantity(lineItem.lineItemId, value);
       setIsLoading(false);
     }, 500),
+    [],
   );
 
-  //   useEffect(() => debounced.current(count), [count]);
+  useEffect(() => {
+    if (isMountedRef.current) {
+      debounced(count);
+    }
+    isMountedRef.current = true;
+  }, [count]);
 
   return (
     <tr
@@ -42,7 +50,7 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem }: Props
       }`}
     >
       <td>
-        <button type="button" className="button mt-1" onClick={handleRemoveItem}>
+        <button type="button" className="button mt-1" onClick={handleRemoveItem} disabled={isModificationForbidden}>
           <XIcon className="h-4 w-4 text-gray-400"></XIcon>
         </button>
       </td>
@@ -64,6 +72,7 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem }: Props
           value={count}
           type="number"
           disabled={isLoading}
+          readOnly={isModificationForbidden}
           onChange={(e) => handleChange(e.target.value)}
           className="input input-primary"
         />

@@ -36,6 +36,7 @@ const AdyenCheckout = ({ termsLink, cancellationLink, privacyLink }) => {
   const [billingIsSameAsShipping, setBillingIsSameAsShipping] = useState<boolean>(true);
   const [currentShippingMethod, setCurrentShippingMethod] = useState<ShippingMethod>();
   const [dataIsValid, setDataIsValid] = useState<boolean>(false);
+  const [isQuoteRequest, setIsQuoteRequest] = useState(false);
   const [data, setData] = useState<FormData>({
     firstName: '',
     lastName: '',
@@ -146,6 +147,11 @@ const AdyenCheckout = ({ termsLink, cancellationLink, privacyLink }) => {
       component: <Checkout />,
     },
   ];
+  useEffect(() => {
+    if (cartList?.origin === 'Quote') {
+      setIsQuoteRequest(true);
+    }
+  }, [cartList]);
 
   useEffect(() => {
     setDataIsValid(requiredDataIsValid(data, billingIsSameAsShipping));
@@ -204,7 +210,7 @@ const AdyenCheckout = ({ termsLink, cancellationLink, privacyLink }) => {
           cart={cartList}
           submitButtonLabel={submitButtonLabel[currentStepIndex]}
           disableSubmitButton={disableSubmitButton}
-          showDiscountsForm={currentStepIndex < 2}
+          showDiscountsForm={!isQuoteRequest && currentStepIndex < 2}
           showSubmitButton={currentStepIndex < 2}
           onSubmit={gotToNextStep}
           termsLink={termsLink}

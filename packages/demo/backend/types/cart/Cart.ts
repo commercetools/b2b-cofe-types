@@ -28,6 +28,7 @@ export interface Cart {
   discountCodes?: Discount[];
   directDiscounts?: number | undefined;
   taxed?: Tax;
+  origin?: string;
 
   // TODO: import the logic from Cart.php
 }
