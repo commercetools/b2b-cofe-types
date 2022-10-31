@@ -17,7 +17,7 @@ import {
   createQuoteRequestFromCurrentCart,
 } from '../../actions/cart';
 import { query } from '../../actions/product';
-import { getMyQuoteRequests, getMyBusinessUserQuoteRequests, updateQuoteState } from '../../actions/quotes';
+import { getMyQuoteRequests, getBusinessUserQuoteRequests, updateQuoteState } from '../../actions/quotes';
 import { getStoresByKey } from '../../actions/stores';
 import { getWishlist, addToWishlist, removeLineItem, updateLineItem } from '../../actions/wishlist';
 import { UseAdyen } from './UseAdyen';
@@ -70,7 +70,7 @@ export const getFrontasticState = (): FrontasticState => {
     },
     useQuotes: {
       getMyQuoteRequests,
-      getMyBusinessUserQuoteRequests,
+      getBusinessUserQuoteRequests,
       updateQuoteState,
     },
     useStores: {

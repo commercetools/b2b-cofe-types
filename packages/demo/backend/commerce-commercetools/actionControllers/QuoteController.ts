@@ -111,17 +111,18 @@ export const getMyQuotesOverview: ActionHook = async (request: Request, actionCo
   return response;
 };
 
-export const getMyBusinessUnitQuotesOverview: ActionHook = async (request: Request, actionContext: ActionContext) => {
+export const getBusinessUnitQuotesOverview: ActionHook = async (request: Request, actionContext: ActionContext) => {
   const quoteApi = new QuoteApi(actionContext.frontasticContext, getLocale(request));
 
-  const key = request.sessionData?.organization?.businessUnit?.key;
-  if (!key) {
-    throw new Error('No active business unit');
+  const keys = request.query['keys'];
+
+  if (!keys) {
+    throw new Error('No business unit');
   }
 
-  const quoteRequests = await quoteApi.getQuoteRequestsByBusinessUnit(key);
-  const stagedQuotes = await quoteApi.getStagedQuotesByBusinessUnit(key);
-  const quotes = await quoteApi.getQuotesByBusinessUnit(key);
+  const quoteRequests = await quoteApi.getQuoteRequestsByBusinessUnit(keys);
+  const stagedQuotes = await quoteApi.getStagedQuotesByBusinessUnit(keys);
+  const quotes = await quoteApi.getQuotesByBusinessUnit(keys);
 
   const res = mergeQuotesOverview(quoteRequests, stagedQuotes, quotes);
 

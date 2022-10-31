@@ -4,27 +4,28 @@ import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import QuoteList from 'components/commercetools-ui/quotes/quote-list';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useAccount, useQuotes } from 'frontastic';
+import { useBusinessUnitDetailsStateContext } from '../../../provider';
 
 const Quotes = () => {
-  const { account } = useAccount();
-  const { getMyBusinessUserQuoteRequests } = useQuotes();
+  const { selectedBusinessUnit: businessUnit } = useBusinessUnitDetailsStateContext();
+  const { getBusinessUserQuoteRequests } = useQuotes();
   const { formatMessage: formatAccountMessage } = useFormat({ name: 'account' });
 
   const [isLoading, setIsLoading] = useState(false);
   const [quoteList, setQuoteList] = useState<QuoteRequest[]>([]);
 
   useEffect(() => {
-    if (account?.accountId) {
+    if (businessUnit) {
       (async () => {
         setIsLoading(true);
-        const results = await getMyBusinessUserQuoteRequests();
+        const results = await getBusinessUserQuoteRequests([businessUnit.key]);
         setQuoteList(results);
         setIsLoading(false);
       })();
     }
-  }, [account?.accountId]);
+  }, [businessUnit]);
 
-  if (!account?.accountId) {
+  if (!businessUnit) {
     return null;
   }
 

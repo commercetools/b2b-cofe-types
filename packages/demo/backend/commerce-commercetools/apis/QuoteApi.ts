@@ -150,8 +150,8 @@ export class QuoteApi extends BaseApi {
     }
   };
 
-  getQuoteRequestsByBusinessUnit: (businessUnitKey: string) => Promise<QuoteRequest[]> = async (
-    businessUnitKey: string,
+  getQuoteRequestsByBusinessUnit: (businessUnitKeys: string) => Promise<QuoteRequest[]> = async (
+    businessUnitKeys: string,
   ) => {
     const locale = await this.getCommercetoolsLocal();
     try {
@@ -159,7 +159,7 @@ export class QuoteApi extends BaseApi {
         .quoteRequests()
         .get({
           queryArgs: {
-            where: `businessUnit(key="${businessUnitKey}")`,
+            where: `businessUnit(key in (${businessUnitKeys}))`,
             expand: 'customer',
             limit: 50,
           },
@@ -176,8 +176,8 @@ export class QuoteApi extends BaseApi {
     }
   };
 
-  getStagedQuotesByBusinessUnit: (businessUnitKey: string) => Promise<StagedQuote[]> = async (
-    businessUnitKey: string,
+  getStagedQuotesByBusinessUnit: (businessUnitKeys: string) => Promise<StagedQuote[]> = async (
+    businessUnitKeys: string,
   ) => {
     const locale = await this.getCommercetoolsLocal();
     try {
@@ -185,7 +185,7 @@ export class QuoteApi extends BaseApi {
         .stagedQuotes()
         .get({
           queryArgs: {
-            where: `businessUnit(key="${businessUnitKey}")`,
+            where: `businessUnit(key in (${businessUnitKeys}))`,
             expand: ['customer', 'quotationCart'],
             limit: 50,
           },
@@ -202,14 +202,14 @@ export class QuoteApi extends BaseApi {
     }
   };
 
-  getQuotesByBusinessUnit: (businessUnitKey: string) => Promise<Quote[]> = async (businessUnitKey: string) => {
+  getQuotesByBusinessUnit: (businessUnitKeys: string) => Promise<Quote[]> = async (businessUnitKeys: string) => {
     const locale = await this.getCommercetoolsLocal();
     try {
       return this.getApiForProject()
         .quotes()
         .get({
           queryArgs: {
-            where: `businessUnit(key="${businessUnitKey}")`,
+            where: `businessUnit(key in (${businessUnitKeys}))`,
             expand: 'customer',
             limit: 50,
           },

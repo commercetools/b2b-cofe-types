@@ -6,8 +6,13 @@ export const getMyQuoteRequests = async (): Promise<QuoteRequest[]> => {
   return await fetchApiHub('/action/quote/getMyQuotesOverview', { method: 'GET' });
 };
 
-export const getMyBusinessUserQuoteRequests = async (): Promise<QuoteRequest[]> => {
-  return await fetchApiHub('/action/quote/getMyBusinessUnitQuotesOverview', { method: 'GET' });
+export const getBusinessUserQuoteRequests = async (keys: string[]): Promise<QuoteRequest[]> => {
+  return await fetchApiHub(
+    `/action/quote/getBusinessUnitQuotesOverview?keys=${keys?.map((key) => `"${key}"`).join(', ')}`,
+    {
+      method: 'GET',
+    },
+  );
 };
 
 export const updateQuoteState = async (id: string, state: string): Promise<Quote> => {
