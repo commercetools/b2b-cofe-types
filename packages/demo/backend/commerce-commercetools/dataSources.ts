@@ -81,7 +81,7 @@ export default {
       context.frontasticContext,
       context.request ? getLocale(context.request) : null,
     );
-    const tree = await businessUnitApi.getTree(context.request.sessionData?.organization.businessUnit.key);
+    const tree = await businessUnitApi.getTree(context.request.sessionData?.account?.accountId);
     return {
       dataSourcePayload: {
         tree,

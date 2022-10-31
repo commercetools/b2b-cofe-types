@@ -18,7 +18,7 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     if (!businessUnit) {
       return null;
     }
-    const result = await fetchApiHub(`/action/business-unit/getMyOrganization?key=${businessUnit.key}`, {
+    const result = await fetchApiHub(`/action/business-unit/getMyOrganization`, {
       method: 'GET',
     });
     return result.map((bu) => ({

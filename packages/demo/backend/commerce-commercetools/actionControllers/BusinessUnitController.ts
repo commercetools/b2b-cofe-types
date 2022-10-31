@@ -19,18 +19,6 @@ export interface BusinessUnitRequestBody {
   };
 }
 
-export const get: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
-  const businessUnits = await businessUnitApi.getAll();
-  const response: Response = {
-    statusCode: 200,
-    body: JSON.stringify(businessUnits),
-    sessionData: request.sessionData,
-  };
-
-  return response;
-};
-
 export const getMe: ActionHook = async (request: Request, actionContext: ActionContext) => {
   let organization = request.sessionData?.organization;
   let businessUnit = organization?.businessUnit;
@@ -77,7 +65,7 @@ export const setMe: ActionHook = async (request: Request, actionContext: ActionC
 export const getMyOrganization: ActionHook = async (request: Request, actionContext: ActionContext) => {
   const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
 
-  const allOrganization = await businessUnitApi.getTree(request.query['key']);
+  const allOrganization = await businessUnitApi.getTree(request.sessionData?.account?.accountId);
 
   const response: Response = {
     statusCode: 200,

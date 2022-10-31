@@ -92,13 +92,42 @@ export class BusinessUnitApi extends BaseApi {
     return false;
   };
 
+  getHighestNodesWithAssociation: (
+    businessUnits: BusinessUnit[],
+    accountId: string,
+    filterAdmin?: boolean,
+  ) => BusinessUnit[] = (businessUnits: BusinessUnit[], accountId: string, filterAdmin?: boolean) => {
+    if (!businessUnits.length) {
+      return [];
+    }
+
+    const rootNode = businessUnits.find((bu) => !bu.parentUnit);
+    if (rootNode) {
+      return [rootNode];
+    }
+
+    const justParents = businessUnits
+      // filter out the ones that their parent is also in the list
+      .filter((bu) => {
+        return businessUnits.findIndex((sbu) => sbu.key === bu.parentUnit?.key) === -1;
+      });
+
+    return filterAdmin
+      ? justParents.filter((bu) => this.isUserAdminInBusinessUnit(bu, accountId))
+      : justParents
+          // sort by Admin first
+          .sort((a, b) =>
+            this.isUserAdminInBusinessUnit(a, accountId) ? -1 : this.isUserAdminInBusinessUnit(b, accountId) ? 1 : 0,
+          );
+  };
+
   getMe: (accountId: string) => Promise<any> = async (accountId: string) => {
     try {
-      // TODO: find the highest BU in the tree which I am associate
       const response = await this.query(`associates(customer(id="${accountId}"))`, 'associates[*].customer');
+      const highestNodes = this.getHighestNodesWithAssociation(response.results, accountId);
 
-      if (response.results.length) {
-        const businessUnit = mapReferencedAssociates(response.results[0] as CommercetoolsBusinessUnit);
+      if (highestNodes.length) {
+        const businessUnit = mapReferencedAssociates(highestNodes[0] as CommercetoolsBusinessUnit);
         businessUnit.isAdmin = this.isUserAdminInBusinessUnit(businessUnit, accountId);
         businessUnit.isRootAdmin = this.isUserRootAdminInBusinessUnit(businessUnit, accountId);
         return businessUnit;
@@ -122,10 +151,35 @@ export class BusinessUnitApi extends BaseApi {
     }
   };
 
-  getTree: (key: string) => Promise<BusinessUnit[]> = async (key: string) => {
-    const thisNode = await this.get(key);
-    const { results } = await this.query(`topLevelUnit(key="${thisNode.topLevelUnit.key}")`, 'associates[*].customer');
+  getTree: (accoundId: string) => Promise<BusinessUnit[]> = async (accountId: string) => {
+    let tree: BusinessUnit[] = [];
+    if (accountId) {
+      const response = await this.query(`associates(customer(id="${accountId}"))`, 'associates[*].customer');
+      tree = this.getHighestNodesWithAssociation(response.results, accountId, true).map((bu) => ({
+        ...bu,
+        parentUnit: null,
+      }));
 
-    return results.map((bu) => mapReferencedAssociates(bu as CommercetoolsBusinessUnit));
+      if (tree.length) {
+        // get the whole organization nodes
+        const { results } = await this.query(
+          `topLevelUnit(key="${tree[0].topLevelUnit.key}")`,
+          'associates[*].customer',
+        );
+        const tempParents = [...tree];
+
+        while (tempParents.length) {
+          const [item] = tempParents.splice(0, 1);
+          const children = results.filter((bu) => bu.parentUnit?.key === item.key);
+          if (children.length) {
+            children.forEach((child) => {
+              tempParents.push(child);
+              tree.push(child);
+            });
+          }
+        }
+      }
+    }
+    return tree.map((bu) => mapReferencedAssociates(bu as CommercetoolsBusinessUnit));
   };
 }
