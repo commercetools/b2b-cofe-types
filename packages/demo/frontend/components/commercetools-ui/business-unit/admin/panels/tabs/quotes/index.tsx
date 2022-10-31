@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { QuoteRequest } from '@Types/quotes/QuoteRequest';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import QuoteList from 'components/commercetools-ui/quotes/quote-list';
 import { useFormat } from 'helpers/hooks/useFormat';
-import { useAccount, useQuotes } from 'frontastic';
+import { useQuotes } from 'frontastic';
 import { useBusinessUnitDetailsStateContext } from '../../../provider';
 
 const Quotes = () => {
-  const { selectedBusinessUnit: businessUnit } = useBusinessUnitDetailsStateContext();
+  const { selectedBusinessUnit: businessUnit, businessUnitTree } = useBusinessUnitDetailsStateContext();
   const { getBusinessUserQuoteRequests } = useQuotes();
   const { formatMessage: formatAccountMessage } = useFormat({ name: 'account' });
 
   const [isLoading, setIsLoading] = useState(false);
   const [quoteList, setQuoteList] = useState<QuoteRequest[]>([]);
+  const [showAllChildQuotes, setShowAllChildQuotes] = useState(false);
 
   useEffect(() => {
     if (businessUnit) {
@@ -24,6 +26,41 @@ const Quotes = () => {
       })();
     }
   }, [businessUnit]);
+
+  const getAllChildKeys = (businessUnit: BusinessUnit, businessUnitTree: BusinessUnit[]): string[] => {
+    let tree = [businessUnit];
+
+    let tempParents = [businessUnit];
+    while (tempParents.length) {
+      const [current] = tempParents.splice(0, 1);
+      const list = businessUnitTree.filter((bu) => bu.parentUnit?.key === current.key);
+      if (list.length) {
+        tree = tree.concat(list);
+        tempParents = tempParents.concat(list);
+      }
+    }
+    return tree.map((bu) => bu.key);
+  };
+
+  useEffect(() => {
+    if (businessUnit) {
+      if (showAllChildQuotes) {
+        (async () => {
+          setIsLoading(true);
+          const results = await getBusinessUserQuoteRequests(getAllChildKeys(businessUnit, businessUnitTree as any));
+          setQuoteList(results);
+          setIsLoading(false);
+        })();
+      } else {
+        (async () => {
+          setIsLoading(true);
+          const results = await getBusinessUserQuoteRequests([businessUnit.key]);
+          setQuoteList(results);
+          setIsLoading(false);
+        })();
+      }
+    }
+  }, [showAllChildQuotes]);
 
   if (!businessUnit) {
     return null;
@@ -47,6 +84,18 @@ const Quotes = () => {
         {isLoading && <LoadingIcon className="h-8 w-8 text-gray-500" />}
         {!isLoading && !quoteList?.length && <div>No quotes yet!</div>}
         {!isLoading && !!quoteList?.length && <QuoteList quoteRequestList={quoteList} />}
+      </div>
+      <div className="flex flex-row items-center">
+        <input
+          type="checkbox"
+          id="all-quotes"
+          checked={showAllChildQuotes}
+          onChange={(e) => setShowAllChildQuotes(e.target.checked)}
+          className="input input-checkbox mr-4"
+        />
+        <label htmlFor="all-quotes" className="block text-sm font-medium text-gray-700 dark:text-light-100">
+          Show all quotes from divisions?
+        </label>
       </div>
     </div>
   );
