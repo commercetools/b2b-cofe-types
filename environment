@@ -21,7 +21,7 @@ smtp_sender=no-reply@frontastic.cloud
 # Default HTTP client timeout in seconds
 http_client_timeout=1
 
-version=2022.10.31.20.08
+version=2022.11.01.19.24
 is_frontastic_nextjs=1
 
-version=2022.10.31.20.08
+version=2022.11.01.19.24
