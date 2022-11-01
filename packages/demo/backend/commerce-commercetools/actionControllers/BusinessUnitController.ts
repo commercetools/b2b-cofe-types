@@ -8,6 +8,7 @@ import { Store, StoreKeyReference } from '@Types/store/store';
 import { ChannelApi } from '../apis/ChannelApi';
 import { CustomerApi } from '../apis/CustomerApi';
 import { WithError } from '@Types/general/WithError';
+import { CartApi } from '../apis/CartApi';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -71,6 +72,25 @@ export const getMyOrganization: ActionHook = async (request: Request, actionCont
   const response: Response = {
     statusCode: 200,
     body: JSON.stringify(allOrganization),
+    sessionData: request.sessionData,
+  };
+
+  return response;
+};
+
+export const getBusinessUnitOrders: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const cartApi = new CartApi(actionContext.frontasticContext, getLocale(request));
+
+  const keys = request?.query?.['keys'];
+  if (!keys) {
+    throw new Error('No keys');
+  }
+
+  const orders = await cartApi.getBusinessUnitOrders(keys);
+
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(orders),
     sessionData: request.sessionData,
   };
 

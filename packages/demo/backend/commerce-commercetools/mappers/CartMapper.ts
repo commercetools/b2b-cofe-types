@@ -142,6 +142,8 @@ export class CartMapper {
       shippingAddress: CartMapper.commercetoolsAddressToAddress(commercetoolsOrder.shippingAddress),
       billingAddress: CartMapper.commercetoolsAddressToAddress(commercetoolsOrder.billingAddress),
       sum: ProductMapper.commercetoolsMoneyToMoney(commercetoolsOrder.totalPrice),
+      businessUnit: commercetoolsOrder.businessUnit?.key,
+      createdAt: commercetoolsOrder.createdAt,
       //sum: commercetoolsOrder.totalPrice.centAmount,
       // payments:
       // discountCodes:

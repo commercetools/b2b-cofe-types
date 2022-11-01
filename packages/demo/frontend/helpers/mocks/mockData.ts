@@ -311,14 +311,14 @@ export const orders: Order[] = [
     orderId: 'ord-101',
     orderVersion: '25',
     orderState: 'ORDER STATE',
-    createdAt: new Date(),
+    createdAt: new Date().toISOString(),
     ...cart,
   },
   {
     orderId: 'ord-102',
     orderVersion: '26',
     orderState: 'ORDER STATE',
-    createdAt: new Date(),
+    createdAt: new Date().toISOString(),
     ...cart,
   },
 ];

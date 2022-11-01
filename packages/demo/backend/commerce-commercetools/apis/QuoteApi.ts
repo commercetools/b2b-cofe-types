@@ -46,6 +46,7 @@ export class QuoteApi extends BaseApi {
         .get({
           queryArgs: {
             expand: 'customer',
+            sort: 'createdAt desc',
           },
         })
         .execute()
@@ -87,6 +88,7 @@ export class QuoteApi extends BaseApi {
           queryArgs: {
             where: `customer(id="${customerId}")`,
             expand: 'customer',
+            sort: 'createdAt desc',
             limit: 50,
           },
         })
@@ -111,6 +113,7 @@ export class QuoteApi extends BaseApi {
           queryArgs: {
             where: `customer(id="${customerId}")`,
             expand: ['customer', 'quotationCart'],
+            sort: 'createdAt desc',
             limit: 50,
           },
         })
@@ -135,6 +138,7 @@ export class QuoteApi extends BaseApi {
           queryArgs: {
             where: `customer(id="${customerId}")`,
             expand: 'customer',
+            sort: 'createdAt desc',
             limit: 50,
           },
         })
@@ -161,6 +165,7 @@ export class QuoteApi extends BaseApi {
           queryArgs: {
             where: `businessUnit(key in (${businessUnitKeys}))`,
             expand: 'customer',
+            sort: 'createdAt desc',
             limit: 50,
           },
         })
@@ -187,6 +192,7 @@ export class QuoteApi extends BaseApi {
           queryArgs: {
             where: `businessUnit(key in (${businessUnitKeys}))`,
             expand: ['customer', 'quotationCart'],
+            sort: 'createdAt desc',
             limit: 50,
           },
         })
@@ -211,6 +217,7 @@ export class QuoteApi extends BaseApi {
           queryArgs: {
             where: `businessUnit(key in (${businessUnitKeys}))`,
             expand: 'customer',
+            sort: 'createdAt desc',
             limit: 50,
           },
         })

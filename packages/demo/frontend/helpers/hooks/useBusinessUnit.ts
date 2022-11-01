@@ -7,6 +7,7 @@ import { useAccount, useCart } from 'frontastic';
 import { fetchApiHub } from 'frontastic/lib/fetch-api-hub';
 import { UseBusinessUnit } from 'frontastic/provider/Frontastic/UseBusinessUnit';
 import { createStore } from '../../frontastic/actions/stores';
+import { Order } from '@Types/cart/Order';
 
 export const useBusinessUnit = (): UseBusinessUnit => {
   const [businessUnit, setBusinessUnit] = useState(null);
@@ -126,6 +127,15 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     return fetchApiHub(`/action/customer/getById?id=${id}`, { method: 'GET' });
   };
 
+  const getBusinessUnitOrders = async (keys: string[]): Promise<Order[]> => {
+    return await fetchApiHub(
+      `/action/business-unit/getBusinessUnitOrders?keys=${keys?.map((key) => `"${key}"`).join(', ')}`,
+      {
+        method: 'GET',
+      },
+    );
+  };
+
   useEffect(() => {
     if (account?.accountId) {
       (async () => {
@@ -152,5 +162,6 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     setMyStore,
     updateName,
     updateContactEmail,
+    getBusinessUnitOrders,
   };
 };

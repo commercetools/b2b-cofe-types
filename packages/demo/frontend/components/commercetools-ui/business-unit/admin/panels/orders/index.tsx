@@ -1,27 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
-import { QuoteRequest } from '@Types/quotes/QuoteRequest';
+import { Order } from '@Types/cart/Order';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import QuoteList from 'components/commercetools-ui/quotes/quote-list';
+import { useBusinessUnit } from 'helpers/hooks/useBusinessUnit';
 import { useFormat } from 'helpers/hooks/useFormat';
-import { useQuotes } from 'frontastic';
 import { useBusinessUnitDetailsStateContext } from '../../provider';
+import OrderList from './order-list';
 
-const QuotesPanel = () => {
+const OrdersPanel = () => {
   const { selectedBusinessUnit: businessUnit, businessUnitTree } = useBusinessUnitDetailsStateContext();
-  const { getBusinessUserQuoteRequests } = useQuotes();
+  const { getBusinessUnitOrders } = useBusinessUnit();
   const { formatMessage: formatAccountMessage } = useFormat({ name: 'account' });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [quoteList, setQuoteList] = useState<QuoteRequest[]>([]);
-  const [showAllChildQuotes, setShowAllChildQuotes] = useState(false);
+  const [orderList, setOrderList] = useState<Order[]>([]);
+  const [showAllChildOrders, setShowAllChildOrders] = useState(false);
 
   useEffect(() => {
     if (businessUnit) {
       (async () => {
         setIsLoading(true);
-        const results = await getBusinessUserQuoteRequests([businessUnit.key]);
-        setQuoteList(results);
+        const results = await getBusinessUnitOrders([businessUnit.key]);
+        setOrderList(results);
         setIsLoading(false);
       })();
     }
@@ -44,23 +45,23 @@ const QuotesPanel = () => {
 
   useEffect(() => {
     if (businessUnit) {
-      if (showAllChildQuotes) {
+      if (showAllChildOrders) {
         (async () => {
           setIsLoading(true);
-          const results = await getBusinessUserQuoteRequests(getAllChildKeys(businessUnit, businessUnitTree as any));
-          setQuoteList(results);
+          const results = await getBusinessUnitOrders(getAllChildKeys(businessUnit, businessUnitTree as any));
+          setOrderList(results);
           setIsLoading(false);
         })();
       } else {
         (async () => {
           setIsLoading(true);
-          const results = await getBusinessUserQuoteRequests([businessUnit.key]);
-          setQuoteList(results);
+          const results = await getBusinessUnitOrders([businessUnit.key]);
+          setOrderList(results);
           setIsLoading(false);
         })();
       }
     }
-  }, [showAllChildQuotes]);
+  }, [showAllChildOrders]);
 
   if (!businessUnit) {
     return null;
@@ -70,35 +71,35 @@ const QuotesPanel = () => {
     <div className="mt-10">
       <div className="space-y-1">
         <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-light-100">
-          {formatAccountMessage({ id: 'quotes.history', defaultMessage: 'Quotes' })}
+          {formatAccountMessage({ id: 'orders.history', defaultMessage: 'Orders' })}
         </h3>
         <p className="max-w-2xl text-sm text-gray-500">
           {formatAccountMessage({
-            id: 'quotes.desc',
-            defaultMessage: 'Check the status of quote-requests, accept or decline quotes.',
+            id: 'orders.desc',
+            defaultMessage: 'Check the status of orders.',
           })}
         </p>
       </div>
       <div className="divide-y divide-gray-200"></div>
       <div className="flex items-stretch justify-center py-10">
         {isLoading && <LoadingIcon className="h-8 w-8 text-gray-500" />}
-        {!isLoading && !quoteList?.length && <div>No quotes yet!</div>}
-        {!isLoading && !!quoteList?.length && <QuoteList quoteRequestList={quoteList} />}
+        {!isLoading && !orderList?.length && <div>No quotes yet!</div>}
+        {!isLoading && !!orderList?.length && <OrderList orders={orderList} />}
       </div>
       <div className="flex flex-row items-center">
         <input
           type="checkbox"
           id="all-quotes"
-          checked={showAllChildQuotes}
-          onChange={(e) => setShowAllChildQuotes(e.target.checked)}
+          checked={showAllChildOrders}
+          onChange={(e) => setShowAllChildOrders(e.target.checked)}
           className="input input-checkbox mr-4"
         />
         <label htmlFor="all-quotes" className="block text-sm font-medium text-gray-700 dark:text-light-100">
-          Show all quotes from divisions?
+          Show all orders from divisions?
         </label>
       </div>
     </div>
   );
 };
 
-export default QuotesPanel;
+export default OrdersPanel;

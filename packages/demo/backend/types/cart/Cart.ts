@@ -29,6 +29,6 @@ export interface Cart {
   directDiscounts?: number | undefined;
   taxed?: Tax;
   origin?: string;
-
+  businessUnit?: string;
   // TODO: import the logic from Cart.php
 }

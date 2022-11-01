@@ -1,6 +1,7 @@
 import { Account } from '@Types/account/Account';
 import { Address } from '@Types/account/Address';
 import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
+import { Order } from '@Types/cart/Order';
 import { ChannelResourceIdentifier } from '@Types/channel/channel';
 
 export interface UseBusinessUnit {
@@ -20,4 +21,5 @@ export interface UseBusinessUnit {
   setMyBusinessUnit: (businessUnitKey: string) => void;
   removeBusinessUnit: (businessUnitKey: string) => Promise<BusinessUnit>;
   setMyStore: (storeKey: string) => Promise<ChannelResourceIdentifier>;
+  getBusinessUnitOrders: (keys: string[]) => Promise<Order[]>;
 }

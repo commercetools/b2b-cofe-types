@@ -2,6 +2,7 @@ import React from 'react';
 import AddressesSection from 'components/commercetools-ui/business-unit/admin/panels/addresses';
 import BusinessUnitSection from 'components/commercetools-ui/business-unit/admin/panels/business-unit';
 import GeneralSection from 'components/commercetools-ui/business-unit/admin/panels/general';
+import OrderSection from 'components/commercetools-ui/business-unit/admin/panels/orders';
 import QuotesSection from 'components/commercetools-ui/business-unit/admin/panels/quotes';
 import UsersSection from 'components/commercetools-ui/business-unit/admin/panels/users';
 import { useFormat } from 'helpers/hooks/useFormat';
@@ -30,7 +31,7 @@ export const BusinessUnitPanels: React.FC = () => {
     '#users': UsersSection,
     '#business-unit': BusinessUnitSection,
     '#quotes': QuotesSection,
-    '#orders': QuotesSection,
+    '#orders': OrderSection,
   };
 
   //tabs change (mobile only)
