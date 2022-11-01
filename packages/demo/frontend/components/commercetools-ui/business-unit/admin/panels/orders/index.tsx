@@ -83,7 +83,7 @@ const OrdersPanel = () => {
       <div className="divide-y divide-gray-200"></div>
       <div className="flex items-stretch justify-center py-10">
         {isLoading && <LoadingIcon className="h-8 w-8 text-gray-500" />}
-        {!isLoading && !orderList?.length && <div>No quotes yet!</div>}
+        {!isLoading && !orderList?.length && <div>No orders yet!</div>}
         {!isLoading && !!orderList?.length && <OrderList orders={orderList} />}
       </div>
       <div className="flex flex-row items-center">
