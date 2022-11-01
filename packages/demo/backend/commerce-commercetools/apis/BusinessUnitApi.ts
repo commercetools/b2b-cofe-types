@@ -37,6 +37,25 @@ export class BusinessUnitApi extends BaseApi {
     }
   };
 
+  delete: (key: string) => Promise<any> = async (key: string) => {
+    try {
+      return this.get(key).then((bu) => {
+        return this.getApiForProject()
+          .businessUnits()
+          .withKey({ key })
+          .delete({
+            queryArgs: {
+              version: bu.version,
+            },
+          })
+          .execute()
+          .then((res) => res.body);
+      });
+    } catch (e) {
+      throw e;
+    }
+  };
+
   update: (key: string, actions: any[]) => Promise<any> = async (key: string, actions: any[]) => {
     try {
       return this.get(key).then((res) => {

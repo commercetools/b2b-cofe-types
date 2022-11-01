@@ -136,7 +136,7 @@ export const handleApiHubResponse = (fetchApiHubPromise: Promise<Response | Resp
     })
     .then((response) => {
       if (response.error) {
-        throw new Error(response.errorCode);
+        throw new Error(response.error);
       }
 
       return response;

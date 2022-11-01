@@ -1,5 +1,6 @@
 import React from 'react';
 import AddressesSection from 'components/commercetools-ui/business-unit/admin/panels/addresses';
+import BusinessUnitSection from 'components/commercetools-ui/business-unit/admin/panels/business-unit';
 import GeneralSection from 'components/commercetools-ui/business-unit/admin/panels/general';
 import QuotesSection from 'components/commercetools-ui/business-unit/admin/panels/quotes';
 import UsersSection from 'components/commercetools-ui/business-unit/admin/panels/users';
@@ -18,6 +19,7 @@ export const BusinessUnitPanels: React.FC = () => {
     { name: formatAccountMessage({ id: 'general', defaultMessage: 'General' }), href: '#' },
     { name: formatAccountMessage({ id: 'addresses', defaultMessage: 'Addresses' }), href: '#addresses' },
     { name: formatAccountMessage({ id: 'users', defaultMessage: 'Associates' }), href: '#users' },
+    { name: formatAccountMessage({ id: 'business-unit', defaultMessage: 'Business unit' }), href: '#business-unit' },
     { name: formatAccountMessage({ id: 'quotes', defaultMessage: 'Quotes' }), href: '#quotes' },
     { name: formatAccountMessage({ id: 'quotes', defaultMessage: 'Orders' }), href: '#orders' },
   ];
@@ -26,6 +28,7 @@ export const BusinessUnitPanels: React.FC = () => {
     '#': GeneralSection,
     '#addresses': AddressesSection,
     '#users': UsersSection,
+    '#business-unit': BusinessUnitSection,
     '#quotes': QuotesSection,
     '#orders': QuotesSection,
   };

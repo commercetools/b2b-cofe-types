@@ -119,7 +119,7 @@ async function mapRequestToStore(request: Request, actionContext: ActionContext,
 
     if (businessUnit?.stores) {
       const storeKeys = businessUnit?.stores.map((store) => `"${store.key}"`).join(' ,');
-      const { results } = await storeApi.query(`key in (${storeKeys})`);
+      const results = await storeApi.query(`key in (${storeKeys})`);
 
       if (results.length) {
         distributionChannels = await getParentDistChannels(results);

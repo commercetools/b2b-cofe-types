@@ -7,6 +7,7 @@ import { AccountRegisterBody } from './AccountController';
 import { Store, StoreKeyReference } from '@Types/store/store';
 import { ChannelApi } from '../apis/ChannelApi';
 import { CustomerApi } from '../apis/CustomerApi';
+import { WithError } from '@Types/general/WithError';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -196,6 +197,32 @@ export const update: ActionHook = async (request: Request, actionContext: Action
       },
     },
   };
+
+  return response;
+};
+
+export const remove: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
+  const key = request.query?.['key'];
+
+  let response: WithError<Response>;
+
+  try {
+    const businessUnit = await businessUnitApi.delete(key);
+    response = {
+      statusCode: 200,
+      body: JSON.stringify(businessUnit),
+      sessionData: request.sessionData,
+    };
+  } catch (e) {
+    response = {
+      statusCode: 400,
+      sessionData: request.sessionData,
+      // @ts-ignore
+      error: e?.body?.message,
+      errorCode: 500,
+    };
+  }
 
   return response;
 };

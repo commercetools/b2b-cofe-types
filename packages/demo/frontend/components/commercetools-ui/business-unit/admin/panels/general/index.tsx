@@ -5,8 +5,8 @@ import { useStores } from 'frontastic';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 import { useBusinessUnitDetailsStateContext } from '../../provider';
 
-const BusinessUnitGeneral: React.FC = () => {
-  const { selectedBusinessUnit: businessUnit } = useBusinessUnitDetailsStateContext();
+const GeneralPanel: React.FC = () => {
+  const { selectedBusinessUnit: businessUnit, getStoreKeys } = useBusinessUnitDetailsStateContext();
 
   const { formatMessage } = useFormat({ name: 'business-unit' });
   const [data, setData] = useState({
@@ -55,7 +55,7 @@ const BusinessUnitGeneral: React.FC = () => {
   useEffect(() => {
     (async () => {
       setIsStoreLoading(true);
-      const stores = await getStoresByKey(businessUnit.stores?.map((store) => `"${store.key}"`));
+      const stores = await getStoresByKey(getStoreKeys().map((store) => `"${store}"`));
       setStores(stores);
       setIsStoreLoading(false);
     })();
@@ -145,7 +145,12 @@ const BusinessUnitGeneral: React.FC = () => {
           {isStoreLoading && <LoadingIcon className="mt-0.5 h-4 w-4 animate-spin" />}
           {!isStoreLoading && (
             <>
-              {!businessUnit?.stores?.length && <span>No store is assigned yet</span>}
+              {!businessUnit?.stores?.length && businessUnit.storeMode !== 'FromParent' && (
+                <span>No store is assigned yet</span>
+              )}
+              {!businessUnit?.stores?.length && businessUnit.storeMode === 'FromParent' && (
+                <span>(Inherited from parent)</span>
+              )}
               {!!stores.length && (
                 <ol className="list-decimal pl-6">
                   {stores.map((store) => (
@@ -161,4 +166,4 @@ const BusinessUnitGeneral: React.FC = () => {
   );
 };
 
-export default BusinessUnitGeneral;
+export default GeneralPanel;

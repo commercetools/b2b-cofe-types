@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Account } from '@Types/account/Account';
 import { Address } from '@Types/account/Address';
-import { AssociateRole } from '@Types/associate/Associate';
 import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { ChannelResourceIdentifier } from '@Types/channel/channel';
 import { useAccount, useCart } from 'frontastic';
@@ -39,6 +38,14 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     );
   };
 
+  const createBusinessUnit = async (account, customer, parentBusinessUnit: string = null): Promise<any> => {
+    return await fetchApiHub(
+      '/action/business-unit/create',
+      { method: 'POST' },
+      { account, customer, store: null, parentBusinessUnit },
+    );
+  };
+
   const getMyBusinessUnit = async () => {
     const result = await fetchApiHub('/action/business-unit/getMe', { method: 'GET' });
     return result;
@@ -52,6 +59,15 @@ export const useBusinessUnit = (): UseBusinessUnit => {
 
   const setMyStore = async (storeKey: string): Promise<ChannelResourceIdentifier> => {
     return fetchApiHub('/action/store/setMe', { method: 'POST' }, { key: storeKey });
+  };
+
+  const removeBusinessUnit = async (key: string): Promise<BusinessUnit> => {
+    try {
+      const res = await fetchApiHub(`/action/business-unit/remove?key=${key}`, { method: 'POST' });
+      return res;
+    } catch (e) {
+      throw new Error(e.message);
+    }
   };
 
   const updateName = async (key: string, name: string): Promise<any> => {
@@ -128,9 +144,11 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     deleteAddress,
     editAddress,
     businessUnit,
+    createBusinessUnit,
     createBusinessUnitAndStore,
     getMyOrganization,
     setMyBusinessUnit,
+    removeBusinessUnit,
     setMyStore,
     updateName,
     updateContactEmail,

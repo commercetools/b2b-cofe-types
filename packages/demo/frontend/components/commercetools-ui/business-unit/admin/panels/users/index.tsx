@@ -9,7 +9,7 @@ import CreateUser from './modals/create-user';
 import DeleteUser from './modals/delete-user';
 import UpdateUser from './modals/update-user';
 
-const Users = () => {
+const UsersPanel = () => {
   const { formatMessage } = useFormat({ name: 'account' });
   const { selectedBusinessUnit: businessUnit, reloadTree } = useBusinessUnitDetailsStateContext();
   const { addUser, removeUser, updateUser } = useBusinessUnitStateContext();
@@ -131,4 +131,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default UsersPanel;

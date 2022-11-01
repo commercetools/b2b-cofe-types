@@ -8,7 +8,7 @@ import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitSta
 import { useBusinessUnitDetailsStateContext } from '../../provider';
 import DeleteAddress from './modals/DeleteAddress';
 
-const Addresses: React.FC = () => {
+const AddressesPanel: React.FC = () => {
   const { formatMessage } = useFormat({ name: 'business-unit' });
   const { addAddress, editAddress, deleteAddress } = useBusinessUnitStateContext();
   const { reloadTree, selectedBusinessUnit: businessUnit } = useBusinessUnitDetailsStateContext();
@@ -133,4 +133,4 @@ const Addresses: React.FC = () => {
   );
 };
 
-export default Addresses;
+export default AddressesPanel;

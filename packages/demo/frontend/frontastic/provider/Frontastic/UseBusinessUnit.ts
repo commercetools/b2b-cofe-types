@@ -5,6 +5,7 @@ import { ChannelResourceIdentifier } from '@Types/channel/channel';
 
 export interface UseBusinessUnit {
   businessUnit: BusinessUnit;
+  createBusinessUnit: (account, customer, parentBusinessUnit?: string) => Promise<any>;
   createBusinessUnitAndStore: (account, customer, parentBusinessUnit?: string) => Promise<any>;
   getMyOrganization: () => Promise<any>;
   updateName: (key: string, name: string) => Promise<any>;
@@ -17,5 +18,6 @@ export interface UseBusinessUnit {
   removeUser: (key: string, id: string) => Promise<BusinessUnit>;
   getUser: (id: string) => Promise<Account>;
   setMyBusinessUnit: (businessUnitKey: string) => void;
+  removeBusinessUnit: (businessUnitKey: string) => Promise<BusinessUnit>;
   setMyStore: (storeKey: string) => Promise<ChannelResourceIdentifier>;
 }

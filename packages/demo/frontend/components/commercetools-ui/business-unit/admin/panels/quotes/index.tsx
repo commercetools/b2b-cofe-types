@@ -7,7 +7,7 @@ import { useFormat } from 'helpers/hooks/useFormat';
 import { useQuotes } from 'frontastic';
 import { useBusinessUnitDetailsStateContext } from '../../provider';
 
-const Quotes = () => {
+const QuotesPanel = () => {
   const { selectedBusinessUnit: businessUnit, businessUnitTree } = useBusinessUnitDetailsStateContext();
   const { getBusinessUserQuoteRequests } = useQuotes();
   const { formatMessage: formatAccountMessage } = useFormat({ name: 'account' });
@@ -101,4 +101,4 @@ const Quotes = () => {
   );
 };
 
-export default Quotes;
+export default QuotesPanel;
