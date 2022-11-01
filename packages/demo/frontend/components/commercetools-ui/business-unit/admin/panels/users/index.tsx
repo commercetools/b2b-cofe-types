@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { PencilAltIcon, XIcon } from '@heroicons/react/solid';
 import { Associate } from '@Types/associate/Associate';
-import AddUser from 'components/commercetools-ui/business-unit/admin/panels/tabs/users/modals/add-user';
+import AddUser from 'components/commercetools-ui/business-unit/admin/panels/users/modals/add-user';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
-import { useBusinessUnitDetailsStateContext } from '../../../provider';
+import { useBusinessUnitDetailsStateContext } from '../../provider';
 import CreateUser from './modals/create-user';
 import DeleteUser from './modals/delete-user';
 import UpdateUser from './modals/update-user';

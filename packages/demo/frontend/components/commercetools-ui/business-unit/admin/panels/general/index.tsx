@@ -3,7 +3,7 @@ import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useStores } from 'frontastic';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
-import { useBusinessUnitDetailsStateContext } from '../../../provider';
+import { useBusinessUnitDetailsStateContext } from '../../provider';
 
 const BusinessUnitGeneral: React.FC = () => {
   const { selectedBusinessUnit: businessUnit } = useBusinessUnitDetailsStateContext();

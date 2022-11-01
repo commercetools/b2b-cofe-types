@@ -1,8 +1,8 @@
 import React from 'react';
-import AddressesSection from 'components/commercetools-ui/business-unit/admin/panels/tabs/addresses';
-import GeneralSection from 'components/commercetools-ui/business-unit/admin/panels/tabs/general';
-import QuotesSection from 'components/commercetools-ui/business-unit/admin/panels/tabs/quotes';
-import UsersSection from 'components/commercetools-ui/business-unit/admin/panels/tabs/users';
+import AddressesSection from 'components/commercetools-ui/business-unit/admin/panels/addresses';
+import GeneralSection from 'components/commercetools-ui/business-unit/admin/panels/general';
+import QuotesSection from 'components/commercetools-ui/business-unit/admin/panels/quotes';
+import UsersSection from 'components/commercetools-ui/business-unit/admin/panels/users';
 import { useFormat } from 'helpers/hooks/useFormat';
 import useHash from 'helpers/hooks/useHash';
 

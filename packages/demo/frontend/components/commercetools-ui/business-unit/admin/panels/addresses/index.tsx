@@ -5,7 +5,7 @@ import CreateAddress from 'components/commercetools-ui/account/details/modals/cr
 import UpdateAddress from 'components/commercetools-ui/account/details/modals/updateAddress';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
-import { useBusinessUnitDetailsStateContext } from '../../../provider';
+import { useBusinessUnitDetailsStateContext } from '../../provider';
 import DeleteAddress from './modals/DeleteAddress';
 
 const Addresses: React.FC = () => {

@@ -5,7 +5,7 @@ import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import QuoteList from 'components/commercetools-ui/quotes/quote-list';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useQuotes } from 'frontastic';
-import { useBusinessUnitDetailsStateContext } from '../../../provider';
+import { useBusinessUnitDetailsStateContext } from '../../provider';
 
 const Quotes = () => {
   const { selectedBusinessUnit: businessUnit, businessUnitTree } = useBusinessUnitDetailsStateContext();
