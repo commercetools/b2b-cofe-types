@@ -53,22 +53,24 @@ const Dashboard: React.FC<Props> = ({ organization }) => {
     <div className="">
       {isLoading && <LoadingIcon className="h-8 w-8 animate-spin" />}
       {!isLoading && (
-        <GridLayout
-          autoSize
-          preventCollision
-          useCSSTransforms
-          isDroppable
-          resizeHandles={[]}
-          compactType={null}
-          width={1000}
-          onDrop={onDrop}
-          onDragStop={onLayoutChange}
-          onResizeStop={onLayoutChange}
-        >
-          {widgets.map((x) => (
-            <DashboardWidget key={x.id} widget={x} data-grid={x.layout} />
-          ))}
-        </GridLayout>
+        <>
+          <GridLayout
+            autoSize
+            preventCollision
+            useCSSTransforms
+            isDroppable
+            resizeHandles={[]}
+            compactType={null}
+            width={1000}
+            onDrop={onDrop}
+            onDragStop={onLayoutChange}
+            onResizeStop={onLayoutChange}
+          >
+            {widgets.map((x) => (
+              <DashboardWidget key={x.id} widget={x} data-grid={x.layout} />
+            ))}
+          </GridLayout>
+        </>
       )}
     </div>
   );

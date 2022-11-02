@@ -1,8 +1,8 @@
-import { useAccount } from 'frontastic';
+import { fetchApiHub, useAccount } from 'frontastic';
 import { Context, createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Widget } from '@Types/widget/Widget';
 import debounce from 'lodash.debounce';
-
+import { DashboardCustomObject } from '@Types/dashboard/Dashboard';
 // eslint-disable-next-line @typescript-eslint/ban-types
 const DashboardStateContext: Context<{
   widgets: Widget[];
@@ -19,42 +19,28 @@ export const DashboardProvider = ({ children }) => {
   const [widgets, setWidgets] = useState<Widget[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const getMyDashboard = async (): Promise<DashboardCustomObject> => {
+    return await fetchApiHub(`/action/dashboard/getMyDashboard`, { method: 'GET' });
+  };
+
+  const updateDashboard = async (widgets: Widget[]): Promise<DashboardCustomObject> => {
+    return await fetchApiHub(`/action/dashboard/updateDashboard`, { method: 'POST' }, { widgets });
+  };
+
   useEffect(() => {
-    if (account) {
-      setIsLoading(true);
-      setTimeout(() => {
-        setWidgets([
-          {
-            id: 'DeliveryStatus',
-            layout: {
-              i: 'DeliveryStatus',
-              x: 0,
-              y: 0,
-              w: 3,
-              h: 1,
-              isDraggable: true,
-            },
-          },
-          {
-            id: 'DeliverySchedule',
-            layout: {
-              i: 'DeliveryStatus',
-              x: 5,
-              y: 2,
-              w: 3,
-              h: 1,
-              isDraggable: true,
-            },
-          },
-        ]);
+    (async () => {
+      if (account) {
+        setIsLoading(true);
+        const dashboard = await getMyDashboard();
+        setWidgets(dashboard.value?.widgets || []);
         setIsLoading(false);
-      }, 1000);
-    }
+      }
+    })();
   }, [account]);
 
   const debounced = useCallback(
     debounce(async (widgets) => {
-      console.log(widgets);
+      updateDashboard(widgets);
     }, 4000),
     [],
   );

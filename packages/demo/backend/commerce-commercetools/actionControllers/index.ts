@@ -7,6 +7,7 @@ import * as StoreActions from './StoreController';
 import * as BusinessUnitActions from './BusinessUnitController';
 import * as CustomerActions from './CustomerController';
 import * as QuoteActions from './QuoteController';
+import * as DashboardActions from './DashboardController';
 
 export const actions = {
   account: AccountActions,
@@ -18,4 +19,5 @@ export const actions = {
   store: StoreActions,
   quote: QuoteActions,
   'business-unit': BusinessUnitActions,
+  dashboard: DashboardActions
 };
