@@ -7,6 +7,7 @@ import GridLayout from 'react-grid-layout';
 import { Widget, WidgetLayout } from '@Types/widget/Widget';
 import { DashboardWidget } from './widget';
 import 'react-grid-layout/css/styles.css';
+import WidgetList from './widget-list';
 
 interface Props {
   organization: Organization;
@@ -50,10 +51,11 @@ const Dashboard: React.FC<Props> = ({ organization }) => {
   );
 
   return (
-    <div className="">
+    <div className="relative">
       {isLoading && <LoadingIcon className="h-8 w-8 animate-spin" />}
       {!isLoading && (
         <>
+          <WidgetList />
           <GridLayout
             autoSize
             preventCollision
