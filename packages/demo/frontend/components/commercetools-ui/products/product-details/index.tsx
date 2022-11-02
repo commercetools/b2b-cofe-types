@@ -231,7 +231,7 @@ export default function ProductDetail({ product, onAddToCart, onAddToWishlist, v
                   {!loading && !added && (
                     <>
                       {variant.isOnStock
-                        ? formatProductMessage({ id: 'bag.add', defaultMessage: 'Add to bag' })
+                        ? formatProductMessage({ id: 'cart.add', defaultMessage: 'Add to Cart' })
                         : formatProductMessage({ id: 'outOfStock', defaultMessage: 'Out of stock' })}
                     </>
                   )}
