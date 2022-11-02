@@ -99,6 +99,9 @@ export class ProductApi extends BaseApi {
         Object.keys(productQuery.sortAttributes).map((field, directionIndex) => {
           sortAttributes.push(`${field} ${Object.values(productQuery.sortAttributes)[directionIndex]}`);
         });
+      } else {
+        // default sort
+        sortAttributes.push(`variants.attributes.salesRank asc`);
       }
 
       const methodArgs = {
