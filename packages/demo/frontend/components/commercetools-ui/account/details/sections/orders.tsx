@@ -54,7 +54,7 @@ const OrdersHistory: FC<Props> = ({ orders }) => {
             </h2>
             <div className="space-y-20">
               {accountOrdersState?.map((order) => (
-                <div key={order.orderId}>
+                <div key={order.orderId} id={order.orderId}>
                   <h3 className="sr-only">
                     Order placed on <time dateTime={order.email}>{order.email}</time>
                   </h3>
