@@ -21,9 +21,16 @@ export default {
     context: DynamicPageContext,
   ): Promise<DynamicPageSuccessResult | DynamicPageRedirectResult | null> => {
     // Identify static page
+    console.log("getPath(request)");
+    console.log(getPath(request));
+
     const staticPageMatch = getPath(request)?.match(
       /^\/(cart|checkout|wishlist|account|login|register|reset-password|thank-you)/,
     );
+    console.log("staticPageMatch");
+    console.log(staticPageMatch);
+
+
     if (staticPageMatch) {
       return {
         dynamicPageType: `frontastic${staticPageMatch[0]}`,
@@ -32,7 +39,7 @@ export default {
       } as DynamicPageSuccessResult;
     }
     // Identify businessUnit page
-    const b2bPageMatch = getPath(request)?.match(/^\/(business-unit)/);
+    const b2bPageMatch = getPath(request)?.match(/^\/(business-unit|dashboard)/);
     if (b2bPageMatch) {
       let organization = request.sessionData?.organization;
       if (!organization.businessUnit && request.sessionData?.account?.accountId) {
