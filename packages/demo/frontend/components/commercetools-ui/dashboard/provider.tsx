@@ -16,7 +16,7 @@ const DashboardStateContext: Context<{
 
 export const DashboardProvider = ({ children }) => {
   const { account } = useAccount();
-  const [widgets, setWidgets] = useState<Widget[]>([]);
+  const [widgets, setWidgets] = useState<Widget[]>();
   const [isLoading, setIsLoading] = useState(false);
 
   const getMyDashboard = async (): Promise<DashboardCustomObject> => {
@@ -32,7 +32,9 @@ export const DashboardProvider = ({ children }) => {
       if (account) {
         setIsLoading(true);
         const dashboard = await getMyDashboard();
-        setWidgets(dashboard.value?.widgets || []);
+        if (dashboard.value?.widgets) {
+          setWidgets(dashboard.value?.widgets);
+        }
         setIsLoading(false);
       }
     })();

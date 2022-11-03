@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Organization } from '@Types/organization/organization';
 import { Widget, WidgetLayout } from '@Types/widget/Widget';
 import GridLayout from 'react-grid-layout';
-import { useAccount } from 'helpers/hooks/useAccount';
 import { LoadingIcon } from '../icons/loading';
 import { useDashboardStateContext } from './provider';
 import { DashboardWidget } from './widgets';
@@ -25,7 +24,7 @@ const Dashboard: React.FC<Props> = ({ organization }) => {
 
       const droppableWidget = JSON.parse(raw) as Widget;
 
-      const newWidgetArr = [...widgets];
+      const newWidgetArr = widgets ? [...widgets] : [];
 
       droppableWidget.layout.x = item.x;
       droppableWidget.layout.y = item.y;
@@ -39,7 +38,7 @@ const Dashboard: React.FC<Props> = ({ organization }) => {
 
   const onLayoutChange = useCallback(
     (_, oldItem, newItem) => {
-      const newWidgetArr = [...widgets];
+      const newWidgetArr = widgets ? [...widgets] : [];
       newWidgetArr.forEach((x) => {
         if (x.id === oldItem.i) {
           x.layout = newItem;
@@ -51,8 +50,8 @@ const Dashboard: React.FC<Props> = ({ organization }) => {
   );
 
   return (
-    <div className="relative">
-      {isLoading && <LoadingIcon className="h-8 w-8 animate-spin" />}
+    <div className={`relative ${!widgets?.length ? 'h-40' : ''}`}>
+      {isLoading && <LoadingIcon className="my-0 mx-auto h-8 w-8 animate-spin" />}
       {!isLoading && (
         <>
           <WidgetList />
@@ -67,8 +66,9 @@ const Dashboard: React.FC<Props> = ({ organization }) => {
             onDrop={onDrop}
             onDragStop={onLayoutChange}
             onResizeStop={onLayoutChange}
+            style={!widgets?.length ? { height: '160px' } : {}}
           >
-            {widgets.map((x) => (
+            {widgets?.map((x) => (
               <DashboardWidget key={x.id} widget={x} data-grid={x.layout} />
             ))}
           </GridLayout>

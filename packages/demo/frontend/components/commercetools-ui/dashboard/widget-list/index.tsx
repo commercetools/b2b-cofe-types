@@ -1,9 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Popover, Transition } from '@headlessui/react';
-import { PlusIcon, MinusIcon, CogIcon, ChevronDownIcon } from '@heroicons/react/solid';
+import { PlusIcon, CogIcon, ChevronDownIcon } from '@heroicons/react/solid';
 import { useDashboardStateContext } from '../provider';
 import { WIDGETS } from '../widgets';
-import styles from './index.module.css';
 
 const WidgetList = () => {
   const [availableWidgets, setAvailableWidgets] = useState([]);
@@ -11,7 +10,7 @@ const WidgetList = () => {
   const { widgets } = useDashboardStateContext();
 
   useEffect(() => {
-    setAvailableWidgets(WIDGETS.filter((W) => !widgets.some((w) => W.id === w.id)));
+    setAvailableWidgets(WIDGETS.filter((W) => !widgets?.some((w) => W.id === w.id)));
   }, [widgets]);
 
   return (
@@ -24,12 +23,9 @@ const WidgetList = () => {
                 ${open ? '' : 'text-opacity-90'}
                 group inline-flex items-center rounded-md bg-accent-700 px-3 py-2 text-base font-medium text-white hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
             >
-              <span>Widgets</span>
-              <ChevronDownIcon
-                className={`${open ? '' : 'text-opacity-70'}
-                  ml-2 h-5 w-5 text-orange-300 transition duration-150 ease-in-out group-hover:text-opacity-80`}
-                aria-hidden="true"
-              />
+              <span>
+                <PlusIcon className="h-4 w-4" />
+              </span>
             </Popover.Button>
             <Transition
               as={Fragment}

@@ -1,7 +1,0 @@
-.menu {
-    position: absolute;
-    width: 250px;
-    left: -250px;
-    background-color: white;
-    @apply drop-shadow-md p-2;
-}
