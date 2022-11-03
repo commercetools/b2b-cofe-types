@@ -22,7 +22,7 @@ const RouteGuard: React.FC<{ children }> = ({ children }): ReactElement => {
         });
       }
       setIsLoading(false);
-    }, 400),
+    }, 1000),
   );
 
   useEffect(() => debounced.current(loggedIn), [loggedIn]);
