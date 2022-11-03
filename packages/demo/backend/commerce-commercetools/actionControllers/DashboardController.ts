@@ -24,18 +24,16 @@ export const getMyDashboard: ActionHook = async (request: Request, actionContext
     dashboard = await dashboardApi.get(getDashboardKey(accountId), DASHBOARD_CONTAINER);
   } catch (e) {
     dashboard = await dashboardApi.create({
-        container: DASHBOARD_CONTAINER,
-        key: getDashboardKey(accountId),
-        value: {
-          customer: {
-            id: accountId,
-            typeId: 'customer',
-          },
-          widgets: [],
+      container: DASHBOARD_CONTAINER,
+      key: getDashboardKey(accountId),
+      value: {
+        customer: {
+          id: accountId,
+          typeId: 'customer',
         },
-      });
-
-
+        widgets: [],
+      },
+    });
   }
   const response: Response = {
     statusCode: 200,

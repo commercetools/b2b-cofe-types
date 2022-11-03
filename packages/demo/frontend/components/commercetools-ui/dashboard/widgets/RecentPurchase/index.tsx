@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { CurrencyDollarIcon } from '@heroicons/react/solid';
-import { useAccount, useCart } from 'frontastic';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
+import { useAccount, useCart } from 'frontastic';
 
 const RecentPurchaseWidget = () => {
   const { orderHistory } = useCart();
@@ -31,7 +31,7 @@ const RecentPurchaseWidget = () => {
   return (
     <div className="h-full w-full bg-white px-4 drop-shadow-md">
       <div className="mb-2 flex flex-row items-center border-b-2 py-2 text-sm font-bold">
-        <CurrencyDollarIcon className="h-4 w-4 mr-2"></CurrencyDollarIcon>
+        <CurrencyDollarIcon className="mr-2 h-4 w-4"></CurrencyDollarIcon>
         <p>Recent Purchase</p>
       </div>
       {isLoading && <LoadingIcon className="my-0 mx-auto h-6 w-6 animate-spin" />}
@@ -53,7 +53,7 @@ const RecentPurchaseWidget = () => {
             <XAxis dataKey="date" />
             <YAxis tickFormatter={(value) => CurrencyHelpers.formatForCurrency(value)} />
             <Tooltip formatter={(value: string) => CurrencyHelpers.formatForCurrency(value)} />
-            <Bar dataKey="price" fill="#8884d8" />
+            <Bar dataKey="price" fill="#5975cd" />
           </BarChart>
         </ResponsiveContainer>
       )}

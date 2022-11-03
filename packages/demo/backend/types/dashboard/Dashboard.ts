@@ -8,7 +8,7 @@ export interface DashboardCustomObject extends DashboardCustomObjectDraft {
 }
 
 export interface DashboardCustomObjectDraft {
-    version?: number;
+  version?: number;
   container: string;
   key: string;
   value: {

@@ -1,5 +1,5 @@
-import { Organization } from '@Types/organization/organization';
 import React from 'react';
+import { Organization } from '@Types/organization/organization';
 import Dashboard from './dashboard';
 import { DashboardProvider } from './provider';
 

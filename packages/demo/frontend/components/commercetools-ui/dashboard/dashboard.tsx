@@ -1,10 +1,10 @@
-import { Organization } from '@Types/organization/organization';
-import { useAccount } from 'helpers/hooks/useAccount';
 import React, { useCallback, useEffect, useState } from 'react';
+import { Organization } from '@Types/organization/organization';
+import { Widget, WidgetLayout } from '@Types/widget/Widget';
+import GridLayout from 'react-grid-layout';
+import { useAccount } from 'helpers/hooks/useAccount';
 import { LoadingIcon } from '../icons/loading';
 import { useDashboardStateContext } from './provider';
-import GridLayout from 'react-grid-layout';
-import { Widget, WidgetLayout } from '@Types/widget/Widget';
 import { DashboardWidget } from './widgets';
 import 'react-grid-layout/css/styles.css';
 import WidgetList from './widget-list';

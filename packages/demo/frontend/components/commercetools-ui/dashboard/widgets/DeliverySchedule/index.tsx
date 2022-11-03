@@ -20,7 +20,7 @@ const DeliveryScheduleWidget = () => {
   };
   return (
     <div className="flex h-full flex-col bg-white px-4 drop-shadow-md">
-      <div className="flex items-center border-b-2 py-2 text-sm  font-bold">
+      <div className="flex items-center border-b-2 py-4 text-sm  font-bold">
         <CalendarIcon className="mr-2 h-4 w-4" />
         <p>Delivery Schedule</p>
       </div>

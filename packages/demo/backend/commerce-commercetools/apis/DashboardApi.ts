@@ -2,8 +2,9 @@ import { BaseApi } from './BaseApi';
 import { DashboardCustomObjectDraft, DashboardCustomObject } from '../../types/dashboard/Dashboard';
 
 export class DashboardApi extends BaseApi {
-  create: (dashboard: DashboardCustomObjectDraft) => Promise<DashboardCustomObject> = async (dashboard: DashboardCustomObjectDraft) => {
-
+  create: (dashboard: DashboardCustomObjectDraft) => Promise<DashboardCustomObject> = async (
+    dashboard: DashboardCustomObjectDraft,
+  ) => {
     try {
       return this.getApiForProject()
         .customObjects()
@@ -25,7 +26,7 @@ export class DashboardApi extends BaseApi {
     try {
       return this.getApiForProject()
         .customObjects()
-        .withContainerAndKey( { container, key })
+        .withContainerAndKey({ container, key })
         .get()
         .execute()
         .then((response) => {

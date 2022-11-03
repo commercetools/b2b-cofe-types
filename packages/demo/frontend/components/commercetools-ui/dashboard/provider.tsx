@@ -1,8 +1,8 @@
-import { fetchApiHub, useAccount } from 'frontastic';
 import { Context, createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { DashboardCustomObject } from '@Types/dashboard/Dashboard';
 import { Widget } from '@Types/widget/Widget';
 import debounce from 'lodash.debounce';
-import { DashboardCustomObject } from '@Types/dashboard/Dashboard';
+import { fetchApiHub, useAccount } from 'frontastic';
 // eslint-disable-next-line @typescript-eslint/ban-types
 const DashboardStateContext: Context<{
   widgets: Widget[];

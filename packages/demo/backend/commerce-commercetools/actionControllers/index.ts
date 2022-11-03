@@ -19,5 +19,5 @@ export const actions = {
   store: StoreActions,
   quote: QuoteActions,
   'business-unit': BusinessUnitActions,
-  dashboard: DashboardActions
+  dashboard: DashboardActions,
 };

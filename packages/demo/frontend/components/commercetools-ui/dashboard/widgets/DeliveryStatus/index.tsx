@@ -1,9 +1,9 @@
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { TruckIcon } from '@heroicons/react/outline';
 import { Order } from '@Types/cart/Order';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { useCart } from 'frontastic';
-import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
-import { TruckIcon } from '@heroicons/react/outline';
 
 const DeliveryStatusWidget = () => {
   const { orderHistory } = useCart();
@@ -35,7 +35,7 @@ const DeliveryStatusWidget = () => {
       )}
       {!isLoading && !!lastOrder && (
         <div className="flex flex-col px-4">
-          <div className="flex flex-row justify-between border-b-2 py-2">
+          <div className="flex flex-row justify-between border-b-2 py-4">
             <p className="flex items-center text-sm font-bold">
               <TruckIcon className="h-4 w-4" />
               Last Order
@@ -44,7 +44,7 @@ const DeliveryStatusWidget = () => {
               <Link href={`/account#orders`}>View order</Link>
             </p>
           </div>
-          <div className="mt-4 flex flex-row">
+          <div className="mt-2 flex flex-row">
             <div className="flex-1 border-r-2 text-sm font-bold">
               <div className="py-1">Status</div>
               <div className="py-1">Ordered at</div>

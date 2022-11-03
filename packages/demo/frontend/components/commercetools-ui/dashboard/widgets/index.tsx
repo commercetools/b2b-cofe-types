@@ -1,6 +1,6 @@
-import { Widget } from '@Types/widget/Widget';
 import React, { Suspense, useState } from 'react';
 import { TrashIcon } from '@heroicons/react/solid';
+import { Widget } from '@Types/widget/Widget';
 import { useDashboardStateContext } from '../provider';
 export const WIDGETS = [
   {
@@ -20,6 +20,12 @@ export const WIDGETS = [
     component: () => import(`./RecentPurchase`),
     id: 'RecentPurchase',
     layout: { i: 'RecentPurchase', x: 0, y: 0, w: 6, h: 2 },
+  },
+  {
+    name: 'Average Order',
+    component: () => import(`./AverageOrder`),
+    id: 'AverageOrder',
+    layout: { i: 'AverageOrder', x: 0, y: 0, w: 3, h: 1 },
   },
 ];
 

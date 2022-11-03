@@ -21,15 +21,9 @@ export default {
     context: DynamicPageContext,
   ): Promise<DynamicPageSuccessResult | DynamicPageRedirectResult | null> => {
     // Identify static page
-    console.log("getPath(request)");
-    console.log(getPath(request));
-
     const staticPageMatch = getPath(request)?.match(
       /^\/(cart|checkout|wishlist|account|login|register|reset-password|thank-you)/,
     );
-    console.log("staticPageMatch");
-    console.log(staticPageMatch);
-
 
     if (staticPageMatch) {
       return {
