@@ -5,7 +5,7 @@ import { LoadingIcon } from '../icons/loading';
 import { useDashboardStateContext } from './provider';
 import GridLayout from 'react-grid-layout';
 import { Widget, WidgetLayout } from '@Types/widget/Widget';
-import { DashboardWidget } from './widget';
+import { DashboardWidget } from './widgets';
 import 'react-grid-layout/css/styles.css';
 import WidgetList from './widget-list';
 

@@ -25,7 +25,7 @@ const DeliveryStatusWidget = () => {
     <div className="h-full border-l-4 border-red-400 bg-white drop-shadow-md">
       {isLoading && !lastOrder && (
         <div>
-          <LoadingIcon className="h-4 w-4 animate-spin" />
+          <LoadingIcon className="my-0 mx-auto h-4 w-4 animate-spin" />
         </div>
       )}
       {!isLoading && !lastOrder && (

@@ -2,18 +2,33 @@ import { Widget } from '@Types/widget/Widget';
 import React, { Suspense, useState } from 'react';
 import { TrashIcon } from '@heroicons/react/solid';
 import { useDashboardStateContext } from '../provider';
-const loadWidget = (widget) => {
-  // Due to StackBlitz limitaion, I was not able to make it work dynamically
-  // But this switch case can be easily replaced with following dynamic code
-  // return React.lazy(() => import(`../widget/${widget.id}.tsx`));
-  switch (widget.id) {
-    case 'DeliverySchedule':
-      return () => import(`../widgets/DeliverySchedule`);
-    case 'DeliveryStatus':
-      return () => import(`../widgets/DeliveryStatus`);
-    default:
-      return null;
+export const WIDGETS = [
+  {
+    name: 'Delivery Schedule',
+    component: () => import(`./DeliverySchedule`),
+    id: 'DeliverySchedule',
+    layout: { i: 'DeliverySchedule', x: 0, y: 0, w: 3, h: 1 },
+  },
+  {
+    name: 'Delivery Status',
+    component: () => import(`./DeliveryStatus`),
+    id: 'DeliveryStatus',
+    layout: { i: 'DeliveryStatus', x: 0, y: 0, w: 3, h: 1 },
+  },
+  {
+    name: 'Recent Purchase',
+    component: () => import(`./RecentPurchase`),
+    id: 'RecentPurchase',
+    layout: { i: 'RecentPurchase', x: 0, y: 0, w: 6, h: 2 },
+  },
+];
+
+const loadWidget = (widgetId) => {
+  const [widget] = WIDGETS.filter((wid) => wid.id === widgetId);
+  if (widget) {
+    return widget.component;
   }
+  return null;
 };
 
 interface Props {
@@ -23,7 +38,7 @@ interface Props {
 // eslint-disable-next-line react/display-name
 export const DashboardWidget = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
   const { widget } = props;
-  const [WidgetComponent] = useState<any>(React.lazy(loadWidget(widget)));
+  const [WidgetComponent] = useState<any>(React.lazy(loadWidget(widget.id)));
   const { setWidgets, widgets } = useDashboardStateContext();
 
   const handleRemoveWidget = () => {

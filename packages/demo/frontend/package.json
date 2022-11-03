@@ -46,6 +46,7 @@
     "react-markdown": "^8.0.3",
     "react-multi-select-component": "^4.3.4",
     "react-two-thumb-input-range": "^1.0.7",
+    "recharts": "^2.1.16",
     "resize-observer-polyfill": "^1.5.1",
     "sass": "^1.49.9",
     "storybook-addon-next-router": "^4.0.0",
