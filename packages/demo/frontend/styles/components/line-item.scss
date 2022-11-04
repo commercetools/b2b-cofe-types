@@ -4,9 +4,6 @@
         @apply cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap font-medium text-gray-700 hover:text-gray-800 dark:text-light-100;
         max-width: 200px;
     }
-    & > td {
-        @apply p-1;
-    }
     &__aq {
         width: 30px;
     }

@@ -15,6 +15,7 @@ import {
   removeDiscountCode,
   getProjectSettings,
   createQuoteRequestFromCurrentCart,
+  splitLineItem
 } from '../../actions/cart';
 import { query } from '../../actions/product';
 import { getMyQuoteRequests, getBusinessUserQuoteRequests, updateQuoteState } from '../../actions/quotes';
@@ -57,6 +58,7 @@ export const getFrontasticState = (): FrontasticState => {
       redeemDiscountCode,
       removeDiscountCode,
       createQuoteRequestFromCurrentCart,
+      splitLineItem,
     },
     useWishlist: {
       ...getWishlist(),

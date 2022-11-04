@@ -10,6 +10,7 @@ import { CartApi } from '../apis/CartApi';
 import { getLocale } from '../utils/Request';
 import { Discount } from '@Types/cart/Discount';
 import { EmailApi } from '../apis/EmailApi';
+import { AddressDraft } from '@commercetools/platform-sdk';
 
 type ControllerResponse = Response & {
   error?: string;
@@ -415,6 +416,48 @@ export const removeDiscount: ActionHook = async (request: Request, actionContext
   const response: Response = {
     statusCode: 200,
     body: JSON.stringify(cart),
+    sessionData: {
+      ...request.sessionData,
+      cartId: cart.cartId,
+    },
+  };
+
+  return response;
+};
+
+export const splitLineItem: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const cartApi = new CartApi(actionContext.frontasticContext, getLocale(request));
+  const cart = await CartFetcher.fetchCart(request, actionContext);
+
+  const body: {
+    lineItemId?: string;
+    data: { address: AddressDraft; quantity: number }[];
+  } = JSON.parse(request.body);
+
+  const cartItemsShippingAddresses = cart.itemShippingAddresses || [];
+  const remainingAddresses = body.data
+    .map((item) => item.address)
+    // @ts-ignore
+    .filter((addressSplit) => cartItemsShippingAddresses.findIndex((address: Address) => address.key === addressSplit.id) === -1);
+
+
+  if (remainingAddresses.length) {
+    for await (const address of remainingAddresses) {
+      await cartApi.addItemShippingAddress(cart, address);
+    }
+  }
+
+  const target = body.data.map((item) => ({ addressKey: item.address.id, quantity: item.quantity }));
+
+  const cartData = await cartApi.updateLineItemShippingDetails(
+    cart.cartId,
+    body.lineItemId,
+    target,
+  );
+
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(cartData),
     sessionData: {
       ...request.sessionData,
       cartId: cart.cartId,

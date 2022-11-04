@@ -31,7 +31,6 @@ const ItemList: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = ({
       <table className="cart-table w-full table-auto">
         <thead className="cart-table__header">
           <tr>
-            <th className="cart-table__header-action"></th>
             <th className="cart-table__header-sku">
               {formatCartMessage({ id: 'product-sku', defaultMessage: 'SKU' })}
             </th>
@@ -50,6 +49,7 @@ const ItemList: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = ({
             <th className="cart-table__header-total-price">
               {formatCartMessage({ id: 'product-total-price', defaultMessage: 'Total Price' })}
             </th>
+            <th className="cart-table__header-action"></th>
           </tr>
         </thead>
         <tbody>

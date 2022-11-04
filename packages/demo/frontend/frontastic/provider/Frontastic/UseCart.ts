@@ -6,6 +6,7 @@ import { ShippingMethod } from '@Types/cart/ShippingMethod';
 import { Variant } from '@Types/product/Variant';
 import { CartDetails } from 'frontastic/actions/cart';
 import { ProjectSettings } from '@Types/ProjectSettings';
+import { Address } from '@Types/account/Address';
 
 export interface UseCart {
   data?: Cart;
@@ -23,4 +24,5 @@ export interface UseCart {
   orderHistory?: () => Promise<Order[]>;
   getProjectSettings?: () => Promise<ProjectSettings>;
   createQuoteRequestFromCurrentCart?: (comment: string) => Promise<QuoteRequest>;
+  splitLineItem?: (lineItemId: string, data: { address: Address; quantity: number }[]) => Promise<any>;
 }

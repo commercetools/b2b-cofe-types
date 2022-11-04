@@ -1,5 +1,6 @@
 import { Cart } from '@Types/cart/Cart';
 import {
+  AddressDraft,
   CartAddPaymentAction,
   CartDraft,
   CartRemoveDiscountCodeAction,
@@ -879,6 +880,63 @@ export class CartApi extends BaseApi {
         },
       })
       .execute();
+  };
+
+  addItemShippingAddress: (originalCart: Cart, address: AddressDraft) => Promise<any> = async (
+    originalCart: Cart,
+    address: AddressDraft,
+  ) => {
+    return this.getById(originalCart.cartId).then((cart) => {
+      return this.getApiForProject()
+        .carts()
+        .withId({
+          ID: cart.cartId,
+        })
+        .post({
+          body: {
+            version: +cart.cartVersion,
+            actions: [
+              {
+                action: 'addItemShippingAddress',
+                address: {
+                  ...address,
+                  key: address.id,
+                },
+              },
+            ],
+          },
+        })
+        .execute();
+    });
+  };
+
+  updateLineItemShippingDetails: (
+    cartId: string,
+    lineItemId: string,
+    targets: { addressKey: string; quantity: number }[],
+  ) => Promise<any> = async (cartId: string, lineItemId: string, targets: { addressKey: string; quantity: number }[]) => {
+    return this.getById(cartId).then((cart) => {
+      return this.getApiForProject()
+        .carts()
+        .withId({
+          ID: cart.cartId,
+        })
+        .post({
+          body: {
+            version: +cart.cartVersion,
+            actions: [
+              {
+                action: 'setLineItemShippingDetails',
+                lineItemId,
+                shippingDetails: {
+                  targets,
+                },
+              },
+            ],
+          },
+        })
+        .execute();
+    });
   };
 
   protected doesCartNeedLocaleUpdate: (commercetoolsCart: CommercetoolsCart, locale: Locale) => boolean = (

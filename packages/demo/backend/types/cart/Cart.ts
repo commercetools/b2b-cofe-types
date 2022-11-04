@@ -23,6 +23,7 @@ export interface Cart {
   availableShippingMethods?: ShippingMethod[]; // Available shipping methods for this cart
   shippingAddress?: Address;
   billingAddress?: Address;
+  itemShippingAddresses?: Address[];
   sum?: Money;
   payments?: Payment[];
   discountCodes?: Discount[];

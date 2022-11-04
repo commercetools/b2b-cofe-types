@@ -71,6 +71,11 @@ export const getProjectSettings = async () => {
   return await fetchApiHub('/action/project/getProjectSettings');
 };
 
+export const splitLineItem = async (lineItemId: string, data: { address: Address; quantity: number }[]) => {
+  const res = await fetchApiHub('/action/cart/splitLineItem', { method: 'POST' }, { lineItemId, data });
+  mutate('/action/cart/getCart', res);
+};
+
 export const removeItem = async (lineItemId: string) => {
   const payload = {
     lineItem: { id: lineItemId },

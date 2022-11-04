@@ -47,6 +47,7 @@ export class CartMapper {
       discountCodes: CartMapper.commercetoolsDiscountCodesInfoToDiscountCodes(commercetoolsCart.discountCodes, locale),
       directDiscounts: commercetoolsCart.directDiscounts?.length,
       taxed: CartMapper.commercetoolsTaxedPriceToTaxed(commercetoolsCart.taxedPrice, locale),
+      itemShippingAddresses: commercetoolsCart.itemShippingAddresses,
       origin: commercetoolsCart.origin,
     };
   };
@@ -81,6 +82,7 @@ export class CartMapper {
         ),
         isGift:
           commercetoolsLineItem?.lineItemMode !== undefined && commercetoolsLineItem.lineItemMode === 'GiftLineItem',
+        shippingDetails: commercetoolsLineItem.shippingDetails,
       };
       item._url = ProductRouter.generateUrlFor(item);
       lineItems.push(item);
