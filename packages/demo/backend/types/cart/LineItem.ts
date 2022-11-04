@@ -1,8 +1,11 @@
 import { Discount } from './Discount';
 import { Variant } from '../product/Variant';
 import { Money } from '../product/Money';
-import { ItemShippingDetails } from '@commercetools/platform-sdk';
 
+export interface Target {
+  quantity: number;
+  addressKey: string;
+}
 export interface LineItem {
   lineItemId?: string;
   name?: string;
@@ -16,5 +19,8 @@ export interface LineItem {
   variant?: Variant;
   isGift?: boolean;
   _url?: string;
-  shippingDetails?: ItemShippingDetails;
+  shippingDetails?: {
+    targets?: Target[];
+    valid: boolean;
+  };
 }
