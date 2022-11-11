@@ -914,7 +914,11 @@ export class CartApi extends BaseApi {
     cartId: string,
     lineItemId: string,
     targets: { addressKey: string; quantity: number }[],
-  ) => Promise<any> = async (cartId: string, lineItemId: string, targets: { addressKey: string; quantity: number }[]) => {
+  ) => Promise<any> = async (
+    cartId: string,
+    lineItemId: string,
+    targets: { addressKey: string; quantity: number }[],
+  ) => {
     return this.getById(cartId).then((cart) => {
       return this.getApiForProject()
         .carts()

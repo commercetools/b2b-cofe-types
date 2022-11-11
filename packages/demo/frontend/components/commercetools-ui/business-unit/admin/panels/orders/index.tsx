@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { Order } from '@Types/cart/Order';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
-import QuoteList from 'components/commercetools-ui/quotes/quote-list';
-import { useBusinessUnit } from 'helpers/hooks/useBusinessUnit';
 import { useFormat } from 'helpers/hooks/useFormat';
+import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 import { useBusinessUnitDetailsStateContext } from '../../provider';
 import OrderList from './order-list';
 
 const OrdersPanel = () => {
-  const { selectedBusinessUnit: businessUnit, businessUnitTree } = useBusinessUnitDetailsStateContext();
-  const { getBusinessUnitOrders } = useBusinessUnit();
+  const { selectedBusinessUnit: businessUnit } = useBusinessUnitDetailsStateContext();
+  const { getOrders, getAllOrders } = useBusinessUnitStateContext();
   const { formatMessage: formatAccountMessage } = useFormat({ name: 'account' });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -21,41 +19,26 @@ const OrdersPanel = () => {
     if (businessUnit) {
       (async () => {
         setIsLoading(true);
-        const results = await getBusinessUnitOrders([businessUnit.key]);
+        const results = await getOrders(businessUnit);
         setOrderList(results);
         setIsLoading(false);
       })();
     }
   }, [businessUnit]);
 
-  const getAllChildKeys = (businessUnit: BusinessUnit, businessUnitTree: BusinessUnit[]): string[] => {
-    let tree = [businessUnit];
-
-    let tempParents = [businessUnit];
-    while (tempParents.length) {
-      const [current] = tempParents.splice(0, 1);
-      const list = businessUnitTree.filter((bu) => bu.parentUnit?.key === current.key);
-      if (list.length) {
-        tree = tree.concat(list);
-        tempParents = tempParents.concat(list);
-      }
-    }
-    return tree.map((bu) => bu.key);
-  };
-
   useEffect(() => {
     if (businessUnit) {
       if (showAllChildOrders) {
         (async () => {
           setIsLoading(true);
-          const results = await getBusinessUnitOrders(getAllChildKeys(businessUnit, businessUnitTree as any));
+          const results = await getAllOrders(businessUnit);
           setOrderList(results);
           setIsLoading(false);
         })();
       } else {
         (async () => {
           setIsLoading(true);
-          const results = await getBusinessUnitOrders([businessUnit.key]);
+          const results = await getOrders(businessUnit);
           setOrderList(results);
           setIsLoading(false);
         })();

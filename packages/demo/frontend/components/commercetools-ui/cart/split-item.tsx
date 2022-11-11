@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
-import { useCart, useDarkMode } from 'frontastic';
 import { LineItem } from '@Types/cart/LineItem';
-import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
+import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { mapAddressToString } from 'helpers/utils/addressUtil';
+import { useCart, useDarkMode } from 'frontastic';
+import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 
 type Props = {
   open: boolean;

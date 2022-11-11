@@ -3,23 +3,25 @@ import Link from 'next/link';
 import { TruckIcon } from '@heroicons/react/outline';
 import { Order } from '@Types/cart/Order';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
-import { useCart } from 'frontastic';
+import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 
 const DeliveryStatusWidget = () => {
-  const { orderHistory } = useCart();
+  const { businessUnit, getAllOrders } = useBusinessUnitStateContext();
   const [lastOrder, setLastOrder] = useState<Order>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    (async () => {
-      setIsLoading(true);
-      const orders = await orderHistory();
-      if (orders?.length) {
-        setLastOrder(orders[0]);
-      }
-      setIsLoading(false);
-    })();
-  }, []);
+    if (businessUnit) {
+      (async () => {
+        setIsLoading(true);
+        const orders = await getAllOrders(businessUnit);
+        if (orders?.length) {
+          setLastOrder(orders[0]);
+        }
+        setIsLoading(false);
+      })();
+    }
+  }, [businessUnit]);
 
   return (
     <div className="h-full border-l-4 border-red-400 bg-white drop-shadow-md">

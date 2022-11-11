@@ -437,9 +437,11 @@ export const splitLineItem: ActionHook = async (request: Request, actionContext:
   const cartItemsShippingAddresses = cart.itemShippingAddresses || [];
   const remainingAddresses = body.data
     .map((item) => item.address)
-    // @ts-ignore
-    .filter((addressSplit) => cartItemsShippingAddresses.findIndex((address: Address) => address.key === addressSplit.id) === -1);
-
+    .filter(
+      (addressSplit) =>
+        // @ts-ignore
+        cartItemsShippingAddresses.findIndex((address: Address) => address.key === addressSplit.id) === -1,
+    );
 
   if (remainingAddresses.length) {
     for await (const address of remainingAddresses) {
@@ -449,11 +451,7 @@ export const splitLineItem: ActionHook = async (request: Request, actionContext:
 
   const target = body.data.map((item) => ({ addressKey: item.address.id, quantity: item.quantity }));
 
-  const cartData = await cartApi.updateLineItemShippingDetails(
-    cart.cartId,
-    body.lineItemId,
-    target,
-  );
+  const cartData = await cartApi.updateLineItemShippingDetails(cart.cartId, body.lineItemId, target);
 
   const response: Response = {
     statusCode: 200,

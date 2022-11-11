@@ -5,10 +5,10 @@ import { ChevronDownIcon } from '@heroicons/react/solid';
 import { Order } from '@Types/cart/Order';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
-import { useCart } from 'frontastic';
+import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 
 const AverageOrderWidget = () => {
-  const { orderHistory } = useCart();
+  const { businessUnit, getAllOrders } = useBusinessUnitStateContext();
   const [orders, setOrders] = useState<Order[]>([]);
   const [duration, setDuration] = useState({ label: 'Week', value: 7 });
   const [isLoading, setIsLoading] = useState(false);
@@ -21,15 +21,17 @@ const AverageOrderWidget = () => {
   ];
 
   useEffect(() => {
-    (async () => {
-      setIsLoading(true);
-      const orders = await orderHistory();
-      if (orders?.length) {
-        setOrders(orders);
-      }
-      setIsLoading(false);
-    })();
-  }, []);
+    if (businessUnit) {
+      (async () => {
+        setIsLoading(true);
+        const orders = await getAllOrders(businessUnit);
+        if (orders?.length) {
+          setOrders(orders);
+        }
+        setIsLoading(false);
+      })();
+    }
+  }, [businessUnit]);
 
   useEffect(() => {
     if (orders.length) {

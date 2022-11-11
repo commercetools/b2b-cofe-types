@@ -3,18 +3,18 @@ import { CurrencyDollarIcon } from '@heroicons/react/solid';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
-import { useAccount, useCart } from 'frontastic';
+import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 
 const RecentPurchaseWidget = () => {
-  const { orderHistory } = useCart();
-  const { account } = useAccount();
+  const { getAllOrders, businessUnit } = useBusinessUnitStateContext();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
+
   useEffect(() => {
     (async () => {
-      if (account) {
+      if (businessUnit) {
         setIsLoading(true);
-        const orders = await orderHistory();
+        const orders = await getAllOrders(businessUnit);
         if (orders.length) {
           setData(
             orders.map((order) => ({
@@ -26,7 +26,7 @@ const RecentPurchaseWidget = () => {
         setIsLoading(false);
       }
     })();
-  }, [account]);
+  }, [businessUnit]);
 
   return (
     <div className="h-full w-full bg-white px-4 drop-shadow-md">

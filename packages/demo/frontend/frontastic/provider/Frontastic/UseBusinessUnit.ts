@@ -18,8 +18,9 @@ export interface UseBusinessUnit {
   updateUser: (key: string, id: string, roles: string[]) => Promise<BusinessUnit>;
   removeUser: (key: string, id: string) => Promise<BusinessUnit>;
   getUser: (id: string) => Promise<Account>;
+  getOrders: (businessUnit: BusinessUnit) => Promise<Order[]>;
+  getAllOrders: (businessUnit: BusinessUnit) => Promise<Order[]>;
   setMyBusinessUnit: (businessUnitKey: string) => void;
   removeBusinessUnit: (businessUnitKey: string) => Promise<BusinessUnit>;
   setMyStore: (storeKey: string) => Promise<ChannelResourceIdentifier>;
-  getBusinessUnitOrders: (keys: string[]) => Promise<Order[]>;
 }

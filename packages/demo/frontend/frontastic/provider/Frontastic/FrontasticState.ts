@@ -15,7 +15,7 @@ import {
   removeDiscountCode,
   getProjectSettings,
   createQuoteRequestFromCurrentCart,
-  splitLineItem
+  splitLineItem,
 } from '../../actions/cart';
 import { query } from '../../actions/product';
 import { getMyQuoteRequests, getBusinessUserQuoteRequests, updateQuoteState } from '../../actions/quotes';

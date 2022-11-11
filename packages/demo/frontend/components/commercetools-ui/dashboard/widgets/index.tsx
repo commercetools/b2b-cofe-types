@@ -27,6 +27,12 @@ export const WIDGETS = [
     id: 'AverageOrder',
     layout: { i: 'AverageOrder', x: 0, y: 0, w: 3, h: 1 },
   },
+  {
+    name: 'Order Status',
+    component: () => import(`./OrderStatus`),
+    id: 'OrderStatus',
+    layout: { i: 'OrderStatus', x: 0, y: 0, w: 5, h: 2 },
+  },
 ];
 
 const loadWidget = (widgetId) => {

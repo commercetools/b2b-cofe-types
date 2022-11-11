@@ -136,6 +136,30 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     );
   };
 
+  const getAllChildKeys = (businessUnit: BusinessUnit, businessUnitTree: BusinessUnit[]): string[] => {
+    let tree = [businessUnit];
+
+    let tempParents = [businessUnit];
+    while (tempParents.length) {
+      const [current] = tempParents.splice(0, 1);
+      const list = businessUnitTree.filter((bu) => bu.parentUnit?.key === current.key);
+      if (list.length) {
+        tree = tree.concat(list);
+        tempParents = tempParents.concat(list);
+      }
+    }
+    return tree.map((bu) => bu.key);
+  };
+
+  const getOrders = async (businessUnit: BusinessUnit): Promise<Order[]> => {
+    return getBusinessUnitOrders([businessUnit.key]);
+  };
+
+  const getAllOrders = async (businessUnit: BusinessUnit): Promise<Order[]> => {
+    const keys = getAllChildKeys(businessUnit, await getMyOrganization());
+    return getBusinessUnitOrders(keys);
+  };
+
   useEffect(() => {
     if (account?.accountId) {
       (async () => {
@@ -162,6 +186,7 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     setMyStore,
     updateName,
     updateContactEmail,
-    getBusinessUnitOrders,
+    getOrders,
+    getAllOrders,
   };
 };
