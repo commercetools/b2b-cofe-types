@@ -2,7 +2,6 @@ import { Context, createContext, useContext, useEffect, useState } from 'react';
 import { TreeNode, TreeNodeList } from '@naisutech/react-tree';
 import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
-import BusinessUnitTree from './tree';
 
 const BusinessUnitDetailsStateContext: Context<{
   businessUnitTree: TreeNodeList;

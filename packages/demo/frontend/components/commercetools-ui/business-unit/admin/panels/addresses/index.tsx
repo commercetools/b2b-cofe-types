@@ -69,7 +69,6 @@ const AddressesPanel: React.FC = () => {
           <thead>
             <tr>
               <td>{formatMessage({ id: '', defaultMessage: 'Name' })}</td>
-              <td>{formatMessage({ id: '', defaultMessage: 'Company' })}</td>
               <td>{formatMessage({ id: '', defaultMessage: 'Address' })}</td>
               <td>{formatMessage({ id: '', defaultMessage: 'City' })}</td>
               <td>{formatMessage({ id: '', defaultMessage: 'Zipcode' })}</td>
@@ -82,7 +81,6 @@ const AddressesPanel: React.FC = () => {
               businessUnit.addresses.map((address) => (
                 <tr key={address.id}>
                   <td>{`${address.firstName} ${address.lastName}`}</td>
-                  <td>{address.country}</td>
                   <td>{`${address.streetNumber} ${address.streetName}`}</td>
                   <td>{address.city}</td>
                   <td>{address.postalCode}</td>
