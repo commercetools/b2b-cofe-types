@@ -1197,21 +1197,21 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@commercetools/platform-sdk@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@commercetools/platform-sdk/-/platform-sdk-4.1.0.tgz#846baa3c5b457e0ca30e0597532de3b5149414b6"
-  integrity sha512-jTFan0K7aMyX6Rv6NqqWgS3PIj1O2GYLWHlhEMCXdhA15wP2rzaskyTY2E+voUyB2BR7C4JrniAi4DHsj+kdjQ==
+"@commercetools/platform-sdk@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@commercetools/platform-sdk/-/platform-sdk-4.2.0.tgz#cd71f359e01ca775585a772103d3145b2b4ac60d"
+  integrity sha512-wzyh89ojkCUxGeb8FjbNSthRYAU8soVIy1iCTlf5m01mhzCTIOqZ9E3A92SSnx6Kr++Kk3Y1Q1j+gSjifgsglA==
   dependencies:
-    "@commercetools/sdk-client-v2" "^2.0.1"
+    "@commercetools/sdk-client-v2" "^2.1.0"
     "@commercetools/sdk-middleware-auth" "^7.0.0"
     "@commercetools/sdk-middleware-http" "^7.0.0"
     "@commercetools/sdk-middleware-logger" "^3.0.0"
     querystring "^0.2.1"
 
-"@commercetools/sdk-client-v2@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@commercetools/sdk-client-v2/-/sdk-client-v2-2.0.1.tgz#a31d2504d9bb07a03523e89ba2f14c62e3f7eb00"
-  integrity sha512-gj3G4iR5iGOIUA1+N4hR1sKFlFHBE9momHt1Jr2TAg1gVxyO9tbCfEExTuQFUFDqfMCSaGair78+g1i8itgvpg==
+"@commercetools/sdk-client-v2@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@commercetools/sdk-client-v2/-/sdk-client-v2-2.1.0.tgz#d1a52afbbcfb4e85c2651b0dee11020e21ab7141"
+  integrity sha512-jfKzhIbVL7cDM5f0lXgbPMAUj5sjt61DUwm20vNhCtjSEWucatlvlXCC46UUajihm3dPseO7Ewa/lTWgZUj0/g==
   dependencies:
     buffer "^6.0.3"
     node-fetch "^2.6.1"

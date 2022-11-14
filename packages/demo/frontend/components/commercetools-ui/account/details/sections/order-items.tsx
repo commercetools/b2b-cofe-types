@@ -12,6 +12,11 @@ interface Props {
 export const OrderItems: React.FC<Props> = ({ lineItems }) => {
   const { formatMessage: formatProductMessage } = useFormat({ name: 'product' });
 
+  const discount = (lineItem: LineItem) => {
+    const discountValue = lineItem.discountedPrice?.centAmount || lineItem.discounts?.[0]?.discountedAmount?.centAmount;
+    return !discountValue ? 0 : lineItem.price?.centAmount - discountValue;
+  };
+
   return (
     <table className="mt-4 w-full text-gray-500 sm:mt-6">
       <caption className="sr-only">
@@ -73,7 +78,12 @@ export const OrderItems: React.FC<Props> = ({ lineItems }) => {
               </div>
             </td>
             <td className="hidden py-2 pr-8 dark:text-light-100 sm:table-cell">
-              {CurrencyHelpers.formatForCurrency(product.price)}
+              <span className={!!discount(product) ? 'line-through' : ''}>
+                {CurrencyHelpers.formatForCurrency(product.price)}
+              </span>
+              {!!discount(product) && (
+                <span className="ml-2">{CurrencyHelpers.formatForCurrency(discount(product))}</span>
+              )}
             </td>
             <td className="hidden py-2 pr-8 dark:text-light-100 sm:table-cell">{product.count}</td>
             <td className="hidden py-2 pr-8 dark:text-light-100 sm:table-cell">

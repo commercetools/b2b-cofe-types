@@ -146,6 +146,7 @@ export class CartMapper {
       sum: ProductMapper.commercetoolsMoneyToMoney(commercetoolsOrder.totalPrice),
       businessUnit: commercetoolsOrder.businessUnit?.key,
       createdAt: commercetoolsOrder.createdAt,
+      shippingInfo: CartMapper.commercetoolsShippingInfoToShippingInfo(commercetoolsOrder.shippingInfo, locale),
       //sum: commercetoolsOrder.totalPrice.centAmount,
       // payments:
       // discountCodes:
