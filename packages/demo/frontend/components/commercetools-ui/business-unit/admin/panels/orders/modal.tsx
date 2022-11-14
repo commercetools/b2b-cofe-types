@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from 'react';
 import { Transition, Dialog } from '@headlessui/react';
-import { CurrencyHelpers } from 'helpers/currencyHelpers';
-import { useDarkMode } from 'frontastic';
 import { Order } from '@Types/cart/Order';
 import { OrderItems } from 'components/commercetools-ui/account/details/sections/order-items';
+import { CurrencyHelpers } from 'helpers/currencyHelpers';
+import { useDarkMode } from 'frontastic';
 import OrderDetails from './details';
 
 interface Props {
@@ -56,11 +56,11 @@ const OrderDetailsModal: React.FC<Props> = ({ open, onClose, order }) => {
                 >
                   <div className="relative mx-auto">
                     <div className="text-center">
-                      <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-light-100 sm:text-4xl mb-8">
+                      <h2 className="mb-8 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-light-100 sm:text-4xl">
                         Order details
                       </h2>
                     </div>
-                    <OrderDetails order={order}/>
+                    <OrderDetails order={order} />
                   </div>
                 </div>
               </div>

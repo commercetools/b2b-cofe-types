@@ -1,9 +1,9 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Order } from '@Types/cart/Order';
+import OrderDetails from 'components/commercetools-ui/business-unit/admin/panels/orders/details';
 import Spinner from 'components/commercetools-ui/spinner';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useCart } from 'frontastic';
-import OrderDetails from 'components/commercetools-ui/business-unit/admin/panels/orders/details';
 export interface Props {
   orders?: Order[];
 }

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import { EyeIcon } from '@heroicons/react/outline';
 import { Order } from '@Types/cart/Order';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { mapAddressToString } from 'helpers/utils/addressUtil';
-import { EyeIcon } from '@heroicons/react/outline';
 import OrderDetailsModal from './modal';
 
 interface Props {
