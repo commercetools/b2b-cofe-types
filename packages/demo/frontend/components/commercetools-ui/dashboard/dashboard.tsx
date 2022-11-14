@@ -62,7 +62,7 @@ const Dashboard: React.FC<Props> = ({ organization }) => {
             isDroppable
             resizeHandles={[]}
             compactType={null}
-            width={1000}
+            width={1100}
             onDrop={onDrop}
             onDragStop={onLayoutChange}
             onResizeStop={onLayoutChange}

@@ -33,6 +33,12 @@ export const WIDGETS = [
     id: 'OrderStatus',
     layout: { i: 'OrderStatus', x: 0, y: 0, w: 5, h: 2 },
   },
+  {
+    name: 'Order List',
+    component: () => import(`./OrderList`),
+    id: 'OrderList',
+    layout: { i: 'OrderList', x: 0, y: 0, w: 12, h: 3 },
+  },
 ];
 
 const loadWidget = (widgetId) => {

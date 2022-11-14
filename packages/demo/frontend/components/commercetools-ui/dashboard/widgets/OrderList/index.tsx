@@ -1,18 +1,18 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
-import { CheckIcon, TruckIcon } from '@heroicons/react/outline';
+import { CheckIcon, ViewListIcon } from '@heroicons/react/outline';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 import { Order } from '@Types/cart/Order';
+import OrderList from 'components/commercetools-ui/business-unit/admin/panels/orders/order-list';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
-import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 
-const AverageOrderWidget = () => {
+const OrderListWidget = () => {
   const { businessUnit, getAllOrders } = useBusinessUnitStateContext();
   const [orders, setOrders] = useState<Order[]>([]);
+  const [orderList, setOrderList] = useState<Order[]>([]);
   const [duration, setDuration] = useState({ label: 'Week', value: 7 });
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState({ itemsCount: 0, itemsPrice: 0, total: 0 });
 
   const options = [
     { label: 'Week', value: 7 },
@@ -38,30 +38,12 @@ const AverageOrderWidget = () => {
       const from = new Date();
       from.setDate(from.getDate() - duration.value);
       const list = orders.filter((order) => new Date(order.createdAt) > from);
-      if (!list.length) {
-        setData({
-          itemsCount: 0,
-          total: 0,
-          itemsPrice: 0,
-        });
-        return;
-      }
-
-      const itemsCount = list.reduce(
-        (prev, order) => prev + order.lineItems.reduce((p, lineItem) => p + lineItem.count, 0),
-        0,
-      );
-      const total = list.reduce((prev, order) => prev + order.sum.centAmount, 0);
-      setData({
-        itemsCount: +(itemsCount / list.length).toFixed(2),
-        total,
-        itemsPrice: total / itemsCount,
-      });
+      setOrderList(list);
     }
   }, [duration, orders]);
 
   return (
-    <div className="h-full border-l-4 border-teal-400 bg-white drop-shadow-md">
+    <div className="h-full overflow-y-scroll border-l-4 border-teal-400 bg-white drop-shadow-md">
       {isLoading && (
         <div>
           <LoadingIcon className="my-0 mx-auto h-4 w-4 animate-spin" />
@@ -76,8 +58,8 @@ const AverageOrderWidget = () => {
         <div className="flex flex-col px-4">
           <div className="flex flex-row justify-between border-b-2 py-2">
             <p className="flex items-center text-sm font-bold">
-              <TruckIcon className="h-4 w-4" />
-              Average Order
+              <ViewListIcon className="h-4 w-4" />
+              Orders
             </p>
             <div className="text-sm">
               <Listbox value={duration} onChange={setDuration}>
@@ -126,18 +108,7 @@ const AverageOrderWidget = () => {
             </div>
           </div>
           <div className="mt-4 flex flex-row">
-            <div className="flex-1 border-r-2 text-sm">
-              <div className=" font-bold">Items</div>
-              <div className="">{data.itemsCount}</div>
-            </div>
-            <div className="ml-2 flex-1 border-r-2 text-sm">
-              <div className=" font-bold">Price</div>
-              <div className="">{CurrencyHelpers.formatForCurrency(data.itemsPrice)}</div>
-            </div>
-            <div className="ml-2 flex-1 text-sm">
-              <div className=" font-bold">Total</div>
-              <div className="">{CurrencyHelpers.formatForCurrency(data.total)}</div>
-            </div>
+            <OrderList orders={orderList} />
           </div>
         </div>
       )}
@@ -145,4 +116,4 @@ const AverageOrderWidget = () => {
   );
 };
 
-export default AverageOrderWidget;
+export default OrderListWidget;
