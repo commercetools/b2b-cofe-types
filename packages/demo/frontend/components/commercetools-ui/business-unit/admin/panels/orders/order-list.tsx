@@ -59,6 +59,13 @@ const OrderList: React.FC<Props> = ({ orders }) => {
                 </td>
               </tr>
             ))}
+          {!orders?.length && (
+            <tr>
+              <td colSpan={8} className="text-center">
+                No orders
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
       {isDetailsModalOpen && (
