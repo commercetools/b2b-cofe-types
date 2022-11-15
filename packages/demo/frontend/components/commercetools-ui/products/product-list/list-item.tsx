@@ -49,21 +49,21 @@ const ListItem: React.FC<Props> = ({ product }) => {
   }, [count]);
 
   return (
-    <div>
+    <div className="my-10">
       <NextLink href={product._url}>
         <a className="group">
-          <div className="bg-white-200 aspect-w-1 aspect-h-1 w-full rounded-lg transition-shadow hover:shadow-xl xl:aspect-w-7 xl:aspect-h-8">
+          <div className="bg-white-200 aspect-w-1 aspect-h-1 m-auto w-2/3 rounded-lg transition-shadow hover:shadow-xl xl:aspect-w-7 xl:aspect-h-8">
             <Image
               src={product.variants[0].images[0]}
               alt={product.name}
-              className="h-full w-full rounded-lg object-scale-down object-center"
+              className="rounded-lg object-scale-down object-center"
             />
           </div>
-          <h3 className="mt-4 overflow-hidden truncate text-lg font-bold text-gray-700 dark:text-light-100">
+          <h2 className="mt-10 mb-4 overflow-hidden truncate text-xl font-bold text-gray-700 dark:text-light-100">
             {product.name}
-          </h3>
-          <p className="text-sm text-gray-900 dark:text-light-100">
-            {CurrencyHelpers.formatForCurrency(product.variants[0].price)}
+          </h2>
+          <p className="mb-5 text-lg text-gray-900 dark:text-light-100">
+            {CurrencyHelpers.formatForCurrency(product.variants[0].price)} Each
           </p>
         </a>
       </NextLink>
@@ -101,6 +101,18 @@ const ListItem: React.FC<Props> = ({ product }) => {
           </button>
         </div>
       </div>
+      <button
+        className="mt-4 mt-4 
+                    flex flex w-full 
+                    w-full flex-1 
+                    justify-center rounded-md border border-transparent bg-sky-900 
+                    py-3 px-8 text-base
+                    font-medium text-white
+                    focus:ring-offset-2 
+                    focus:ring-offset-gray-50"
+      >
+        Add To Cart
+      </button>
     </div>
   );
 };
