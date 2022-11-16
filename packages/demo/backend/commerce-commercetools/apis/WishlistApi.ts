@@ -1,8 +1,8 @@
 import { BaseApi } from './BaseApi';
 import { WishlistMapper } from '../mappers/WishlistMapper';
-import { Wishlist } from '@Types/wishlist/Wishlist';
+import { Wishlist, WishlistDraft } from '@Types/wishlist/Wishlist';
 
-const expandVariants = ['lineItems[*].variant'];
+const expandVariants = ['lineItems[*].variant', 'store'];
 
 interface AddToWishlistRequest {
   sku: string;
@@ -42,6 +42,30 @@ export class WishlistApi extends BaseApi {
         })
         .execute();
 
+      console.log('RES');
+      console.log(response.body.results);
+
+      return response.body.results.map((shoppingList) =>
+        WishlistMapper.commercetoolsShoppingListToWishlist(shoppingList, locale),
+      );
+    } catch (error) {
+      throw new Error(`Get wishlist for account failed: ${error}`);
+    }
+  };
+
+  getForAccountStore = async (accountId: string, storeKey: string) => {
+    try {
+      const locale = await this.getCommercetoolsLocal();
+      const response = await this.getApiForProject()
+        .shoppingLists()
+        .get({
+          queryArgs: {
+            where: [`customer(id="${accountId}")`, `store(key="${storeKey}")`],
+            expand: expandVariants,
+          },
+        })
+        .execute();
+
       return response.body.results.map((shoppingList) =>
         WishlistMapper.commercetoolsShoppingListToWishlist(shoppingList, locale),
       );
@@ -66,14 +90,15 @@ export class WishlistApi extends BaseApi {
 
       return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale);
     } catch (error) {
-      throw new Error(`Get wishlist by ID failed: ${error}`);
+      // @ts-ignore
+      throw error;
     }
   };
 
-  create = async (wishlist: Omit<Wishlist, 'wishlistId'>) => {
+  create = async (accountId: string, storeKey: string, wishlist: WishlistDraft) => {
     try {
       const locale = await this.getCommercetoolsLocal();
-      const body = WishlistMapper.wishlistToCommercetoolsShoppingListDraft(wishlist, locale);
+      const body = WishlistMapper.wishlistToCommercetoolsShoppingListDraft(accountId, storeKey, wishlist, locale);
       const response = await this.getApiForProject()
         .shoppingLists()
         .post({

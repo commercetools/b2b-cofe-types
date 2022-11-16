@@ -95,6 +95,13 @@ export const shippingMethods = () => {
   return useSWR('/action/cart/getShippingMethods', fetchApiHub, revalidateOptions);
 };
 
+export const replicateCart = async (orderId: string) => {
+  const res = await fetchApiHub(`/action/cart/replicateCart?orderId=${orderId}`, {
+    method: 'POST',
+  });
+  mutate('/action/cart/getCart', res);
+};
+
 export const updateItem = async (lineItemId: string, newQuantity: number) => {
   const payload = {
     lineItem: {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { EyeIcon } from '@heroicons/react/outline';
+import { EyeIcon, DuplicateIcon } from '@heroicons/react/outline';
 import { Order } from '@Types/cart/Order';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { mapAddressToString } from 'helpers/utils/addressUtil';
@@ -55,6 +55,9 @@ const OrderList: React.FC<Props> = ({ orders }) => {
                 <td className="mt-1 flex flex-row">
                   <button onClick={() => handleOpen(order)}>
                     <EyeIcon className="h-4 w-4" />
+                  </button>
+                  <button onClick={() => null} disabled>
+                    <DuplicateIcon className="h-4 w-4" />
                   </button>
                 </td>
               </tr>

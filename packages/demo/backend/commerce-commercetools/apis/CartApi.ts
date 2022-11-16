@@ -882,6 +882,57 @@ export class CartApi extends BaseApi {
       .execute();
   };
 
+  replicateCart: (orderId: string) => Promise<Cart> = async (orderId: string) => {
+    try {
+      const locale = await this.getCommercetoolsLocal();
+      const response = await this.getApiForProject()
+        .carts()
+        .replicate()
+        .post({
+          body: {
+            reference: {
+              id: orderId,
+              typeId: 'order',
+            },
+          },
+        })
+        .execute();
+      return this.buildCartWithAvailableShippingMethods(response.body, locale);
+    } catch (e) {
+      throw `cannot replicate ${e}`;
+    }
+  };
+
+  addBusinessUnit: (cart: Cart, id: string) => Promise<void> = async (cart: Cart, id: string) => {
+    try {
+        console.log('BUS');
+        console.log(id);
+
+
+      await this.getApiForProject()
+        .carts()
+        .withId({ ID: cart.cartId })
+        .post({
+          body: {
+            version: +cart.cartVersion,
+            actions: [
+              {
+                // @ts-ignore
+                action: 'setBusinessUnit',
+                businessUnit: {
+                  id,
+                  typeId: 'business-unit',
+                },
+              },
+            ],
+          },
+        })
+        .execute();
+    } catch (e) {
+      throw `cannot set business unit ${e}`;
+    }
+  };
+
   addItemShippingAddress: (originalCart: Cart, address: AddressDraft) => Promise<any> = async (
     originalCart: Cart,
     address: AddressDraft,

@@ -1,9 +1,10 @@
-import { Wishlist } from '@Types/wishlist/Wishlist';
+import { Wishlist, WishlistDraft } from '@Types/wishlist/Wishlist';
 import { ShoppingList, ShoppingListLineItem } from '@commercetools/platform-sdk';
 import { ShoppingListDraft } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/shopping-list';
 import { Locale } from '../Locale';
 import { LineItem } from '@Types/wishlist/LineItem';
 import { ProductRouter } from '../utils/ProductRouter';
+import { Store, StoreKeyReference } from '@Types/store/store';
 
 export class WishlistMapper {
   static commercetoolsShoppingListToWishlist = (commercetoolsShoppingList: ShoppingList, locale: Locale): Wishlist => {
@@ -16,6 +17,16 @@ export class WishlistMapper {
       lineItems: (commercetoolsShoppingList.lineItems || []).map((lineItem) =>
         WishlistMapper.commercetoolsLineItemToLineItem(lineItem, locale),
       ),
+      store: WishlistMapper.commercetoolsStoreRefToStore(commercetoolsShoppingList.store),
+    };
+  };
+
+  private static commercetoolsStoreRefToStore = (commercetoolsStoreRef: StoreKeyReference): Store => {
+    return {
+      id: commercetoolsStoreRef?.id,
+      key: commercetoolsStoreRef?.key,
+      // @ts-ignore
+      ...commercetoolsStoreRef?.obj,
     };
   };
 
@@ -39,13 +50,16 @@ export class WishlistMapper {
   };
 
   static wishlistToCommercetoolsShoppingListDraft = (
-    wishlist: Omit<Wishlist, 'wishlistId'>,
+    accountId: string,
+    storeKey: string,
+    wishlist: WishlistDraft,
     locale: Locale,
   ): ShoppingListDraft => {
     return {
-      anonymousId: wishlist.anonymousId,
-      customer: wishlist.accountId === undefined ? undefined : { typeId: 'customer', id: wishlist.accountId },
+      customer: !accountId ? undefined : { typeId: 'customer', id: accountId },
       name: { [locale.language]: wishlist.name || '' },
+      description: { [locale.language]: wishlist.description || '' },
+      store: !storeKey ? undefined : { typeId: 'store', key: storeKey },
     };
   };
 }

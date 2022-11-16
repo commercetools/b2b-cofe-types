@@ -1,6 +1,5 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { WishlistApi } from '../apis/WishlistApi';
-import { Guid } from '../utils/Guid';
 import { Account } from '@Types/account/Account';
 import { getLocale } from '../utils/Request';
 
@@ -8,6 +7,14 @@ type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Re
 
 function getWishlistApi(request: Request, actionContext: ActionContext) {
   return new WishlistApi(actionContext.frontasticContext, getLocale(request));
+}
+
+function fetchStoreFromSession(request: Request): string {
+  const store = request.sessionData?.organization?.store?.key;
+  if (!store) {
+    throw 'No organization in session';
+  }
+  return store;
 }
 
 function fetchAccountFromSession(request: Request): Account | undefined {
@@ -23,60 +30,76 @@ function fetchAccountFromSessionEnsureLoggedIn(request: Request): Account {
 }
 
 async function fetchWishlist(request: Request, wishlistApi: WishlistApi) {
-  if (request.sessionData?.wishlistId !== undefined) {
-    return await wishlistApi.getById(request.sessionData?.wishlistId);
+  const account = fetchAccountFromSessionEnsureLoggedIn(request);
+  const wishlistId = request.query.id;
+  if (wishlistId !== undefined) {
+    return await wishlistApi.getByIdForAccount(wishlistId, account.accountId);
   }
-
-  const account = fetchAccountFromSession(request);
-  if (account) {
-    const wishlistId = request.query.id;
-    if (wishlistId !== undefined) {
-      return await wishlistApi.getByIdForAccount(wishlistId, account.accountId);
-    }
-
-    const accountWishlists = await wishlistApi.getForAccount(account.accountId);
-    if (accountWishlists.length > 0) {
-      return accountWishlists[0];
-    }
-
-    return await wishlistApi.create({ accountId: account.accountId, name: 'Wishlist' });
-  }
-
-  return await wishlistApi.create({ anonymousId: Guid.newGuid(), name: 'Wishlist' });
 }
 
-export const getWishlist: ActionHook = async (request, actionContext) => {
+export const getStoreWishlists: ActionHook = async (request, actionContext) => {
+  const account = fetchAccountFromSessionEnsureLoggedIn(request);
   const wishlistApi = getWishlistApi(request, actionContext);
-  const wishlist = await fetchWishlist(request, wishlistApi);
+  const storeKey = fetchStoreFromSession(request);
+  const wishlists = await wishlistApi.getForAccountStore(account.accountId, storeKey);
 
   return {
     statusCode: 200,
-    body: JSON.stringify(wishlist),
-    sessionData: {
-      ...request.sessionData,
-      wishlistId: wishlist.wishlistId,
-    },
+    body: JSON.stringify(wishlists),
+    sessionData: request.sessionData,
   };
+};
+
+export const getAllWishlists: ActionHook = async (request, actionContext) => {
+  const account = fetchAccountFromSessionEnsureLoggedIn(request);
+  console.log('ACC');
+  console.log(account);
+
+  const wishlistApi = getWishlistApi(request, actionContext);
+  const wishlists = await wishlistApi.getForAccount(account.accountId);
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify(wishlists),
+    sessionData: request.sessionData,
+  };
+};
+
+export const getWishlist: ActionHook = async (request, actionContext) => {
+  const wishlistApi = getWishlistApi(request, actionContext);
+  try {
+    const wishlist = await fetchWishlist(request, wishlistApi);
+    return {
+      statusCode: 200,
+      body: JSON.stringify(wishlist),
+      sessionData: request.sessionData,
+    };
+  } catch (e) {
+    return {
+      statusCode: 400,
+      sessionData: request.sessionData,
+      // @ts-ignore
+      error: e?.body?.message,
+      errorCode: 500,
+    };
+  }
 };
 
 export const createWishlist: ActionHook = async (request, actionContext) => {
   const wishlistApi = getWishlistApi(request, actionContext);
 
-  const body: {
-    name?: string;
-  } = JSON.parse(request.body);
+  const { wishlist } = JSON.parse(request.body);
 
   const account = fetchAccountFromSessionEnsureLoggedIn(request);
 
-  const wishlist = await wishlistApi.create({ accountId: account.accountId, name: body.name ?? 'Wishlist' });
+  const store = fetchStoreFromSession(request);
+
+  const wishlistRes = await wishlistApi.create(account.accountId, store, wishlist);
 
   return {
     statusCode: 200,
-    body: JSON.stringify(wishlist),
-    sessionData: {
-      ...request.sessionData,
-      wishlistId: wishlist.wishlistId,
-    },
+    body: JSON.stringify(wishlistRes),
+    sessionData: request.sessionData,
   };
 };
 
@@ -97,10 +120,7 @@ export const addToWishlist: ActionHook = async (request, actionContext) => {
   return {
     statusCode: 200,
     body: JSON.stringify(updatedWishlist),
-    sessionData: {
-      ...request.sessionData,
-      wishlistId: updatedWishlist.wishlistId,
-    },
+    sessionData: request.sessionData,
   };
 };
 
@@ -117,10 +137,7 @@ export const removeLineItem: ActionHook = async (request, actionContext) => {
   return {
     statusCode: 200,
     body: JSON.stringify(updatedWishlist),
-    sessionData: {
-      ...request.sessionData,
-      wishlistId: updatedWishlist.wishlistId,
-    },
+    sessionData: request.sessionData,
   };
 };
 
@@ -142,9 +159,6 @@ export const updateLineItemCount: ActionHook = async (request, actionContext) =>
   return {
     statusCode: 200,
     body: JSON.stringify(updatedWishlist),
-    sessionData: {
-      ...request.sessionData,
-      wishlistId: updatedWishlist.wishlistId,
-    },
+    sessionData: request.sessionData,
   };
 };
