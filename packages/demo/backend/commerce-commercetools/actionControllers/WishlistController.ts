@@ -35,6 +35,7 @@ async function fetchWishlist(request: Request, wishlistApi: WishlistApi) {
   if (wishlistId !== undefined) {
     return await wishlistApi.getByIdForAccount(wishlistId, account.accountId);
   }
+  return null;
 }
 
 export const getStoreWishlists: ActionHook = async (request, actionContext) => {
