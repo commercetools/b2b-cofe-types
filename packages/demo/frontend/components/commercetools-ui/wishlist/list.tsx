@@ -10,10 +10,10 @@ import Spinner from '../spinner';
 
 export interface Props {
   items?: LineItem[];
-  removeLineItems: (lineItem: LineItem) => void;
+  removeLineItem: (lineItem: LineItem) => void;
 }
 
-const List: React.FC<Props> = ({ items, removeLineItems }) => {
+const List: React.FC<Props> = ({ items, removeLineItem }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [isLargerThanMobile] = useMediaQuery(mobile);
 
@@ -95,7 +95,7 @@ const List: React.FC<Props> = ({ items, removeLineItems }) => {
                   <div className="ml-4">
                     <button
                       type="button"
-                      onClick={() => removeLineItems(item)}
+                      onClick={() => removeLineItem(item)}
                       className="text-sm font-medium text-accent-400 hover:text-accent-500"
                     >
                       <span>{formatMessage({ id: 'remove', defaultMessage: 'Remove' })}</span>

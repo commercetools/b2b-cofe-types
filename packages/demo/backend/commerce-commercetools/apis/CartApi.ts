@@ -905,9 +905,8 @@ export class CartApi extends BaseApi {
 
   addBusinessUnit: (cart: Cart, id: string) => Promise<void> = async (cart: Cart, id: string) => {
     try {
-        console.log('BUS');
-        console.log(id);
-
+      console.log('BUS');
+      console.log(id);
 
       await this.getApiForProject()
         .carts()

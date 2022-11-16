@@ -18,8 +18,8 @@ const Tile: React.FC<Product> = ({ variants, name, _url }) => {
           className="h-40 w-full object-scale-down group-hover:opacity-75"
         />
         <div>
-          <h3 className="dark:text-light-100 mt-4 overflow-hidden truncate text-sm font-bold text-gray-700">{name}</h3>
-          <p className="dark:text-light-100 text-sm text-gray-900">
+          <h3 className="mt-4 overflow-hidden truncate text-sm font-bold text-gray-700 dark:text-light-100">{name}</h3>
+          <p className="text-sm text-gray-900 dark:text-light-100">
             {CurrencyHelpers.formatForCurrency(variants[0].price)}
           </p>
         </div>

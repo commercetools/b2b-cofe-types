@@ -1,10 +1,10 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Product } from '@Types/product/Product';
 import { Variant } from '@Types/product/Variant';
 import ProductDetails, { UIProduct, UIColor, UISize } from 'components/commercetools-ui/products/product-details';
 import { useCart } from 'frontastic';
-import { addToWishlist } from 'frontastic/actions/wishlist';
 
 function ProductDetailsTastic({ data }) {
   const router = useRouter();
@@ -55,7 +55,7 @@ function ProductDetailsTastic({ data }) {
 
   useEffect(() => {
     if (!currentVariantIdx) {
-      const currentVariantSKU = router.asPath.split('/')[3];
+      const currentVariantSKU = router.asPath.split('?')[0].split('/')[3];
       const currentVariantIndex = product?.variants.findIndex(({ sku }) => sku == currentVariantSKU);
       setVariant(product.variants[currentVariantIndex]);
     }
@@ -98,17 +98,12 @@ function ProductDetailsTastic({ data }) {
     return addItem(variant, 1);
   };
 
-  const handleAddToWishList = () => {
-    addToWishlist(variant.sku, 1);
-  };
-
   return (
     <ProductDetails
       product={prod}
       onAddToCart={handleAddToCart}
       variant={variant}
       onChangeVariantIdx={setCurrentVariantIdx}
-      onAddToWishlist={handleAddToWishList}
     />
   );
 }

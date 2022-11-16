@@ -16,7 +16,6 @@ function classNames(...classes) {
 export interface Props {
   product: UIProduct;
   onAddToCart: (variant: Variant, quantity: number) => Promise<void>;
-  onAddToWishlist: () => void;
   variant: Variant;
   onChangeVariantIdx: (idx: number) => void;
 }
@@ -51,7 +50,7 @@ interface UIDetail {
   items: string[];
 }
 
-export default function ProductDetail({ product, onAddToCart, onAddToWishlist, variant, onChangeVariantIdx }: Props) {
+export default function ProductDetail({ product, onAddToCart, variant, onChangeVariantIdx }: Props) {
   //i18n messages
   const { formatMessage: formatProductMessage } = useFormat({ name: 'product' });
 
@@ -249,7 +248,9 @@ export default function ProductDetail({ product, onAddToCart, onAddToWishlist, v
                   )}
                 </button>
 
-                <WishlistButton variant={variant} onAddToWishlist={onAddToWishlist} />
+                <div className="ml-2">
+                  <WishlistButton variant={variant} />
+                </div>
               </div>
             </form>
 

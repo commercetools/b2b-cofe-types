@@ -1,11 +1,10 @@
 import React from 'react';
 import Header from 'components/commercetools-ui/header';
 import { calculateCartCount } from 'helpers/utils/calculateCartCount';
-import { useCart, useWishlist, useAccount } from 'frontastic/provider';
+import { useCart, useAccount } from 'frontastic/provider';
 
 const HeaderTastic = ({ data }) => {
   const { data: cart } = useCart();
-  const { data: wishlist } = useWishlist();
   const { account } = useAccount();
 
   return (
@@ -14,7 +13,6 @@ const HeaderTastic = ({ data }) => {
       links={data.links}
       organization={data.organization.dataSource.organization}
       cartItemCount={calculateCartCount(cart?.lineItems) || 0}
-      wishlistItemCount={wishlist?.lineItems?.length || 0}
       logo={data.logo}
       logoLink={data.logoLink}
       account={account}

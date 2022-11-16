@@ -7,6 +7,7 @@ export interface Wishlist {
   anonymousId?: string;
   accountId?: string;
   name?: string;
+  description?: string;
   lineItems?: LineItem[];
   store?: Store;
 }

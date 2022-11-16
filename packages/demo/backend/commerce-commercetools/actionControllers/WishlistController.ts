@@ -53,8 +53,6 @@ export const getStoreWishlists: ActionHook = async (request, actionContext) => {
 
 export const getAllWishlists: ActionHook = async (request, actionContext) => {
   const account = fetchAccountFromSessionEnsureLoggedIn(request);
-  console.log('ACC');
-  console.log(account);
 
   const wishlistApi = getWishlistApi(request, actionContext);
   const wishlists = await wishlistApi.getForAccount(account.accountId);

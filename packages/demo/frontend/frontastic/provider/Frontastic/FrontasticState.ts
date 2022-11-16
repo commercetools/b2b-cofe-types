@@ -21,7 +21,15 @@ import {
 import { query } from '../../actions/product';
 import { getMyQuoteRequests, getBusinessUserQuoteRequests, updateQuoteState } from '../../actions/quotes';
 import { getStoresByKey } from '../../actions/stores';
-import { getWishlist, addToWishlist, removeLineItem, updateLineItem } from '../../actions/wishlist';
+import {
+  addToWishlist,
+  removeLineItem,
+  updateLineItem,
+  getWishlist,
+  getAllWishlists,
+  getStoreWishlists,
+  addToNewWishlist,
+} from '../../actions/wishlist';
 import { UseAdyen } from './UseAdyen';
 import { UseCart } from './UseCart';
 import { UseProducts } from './UseProducts';
@@ -63,7 +71,10 @@ export const getFrontasticState = (): FrontasticState => {
       splitLineItem,
     },
     useWishlist: {
-      ...getWishlist(),
+      getWishlist,
+      getAllWishlists,
+      getStoreWishlists,
+      addToNewWishlist,
       addToWishlist,
       removeLineItem,
       updateLineItem,
