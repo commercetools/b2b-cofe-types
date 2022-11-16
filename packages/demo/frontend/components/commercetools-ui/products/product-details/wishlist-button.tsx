@@ -13,7 +13,7 @@ export interface WishlistButtonProps {
   isCompact?: boolean;
 }
 
-const WishlistButton: React.FC<WishlistButtonProps> = ({ variant, isCompact = true }) => {
+const WishlistButton: React.FC<WishlistButtonProps> = ({ variant, isCompact }) => {
   const { addToNewWishlist, addToWishlist, getStoreWishlists } = useWishlist();
   const router = useRouter();
 
