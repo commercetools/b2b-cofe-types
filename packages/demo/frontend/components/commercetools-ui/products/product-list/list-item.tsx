@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import NextLink from 'next/link';
 import { PlusCircleIcon, MinusCircleIcon } from '@heroicons/react/outline';
 import { Product } from '@Types/product/Product';
-import debounce from 'lodash.debounce';
+import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useCart } from 'frontastic';
@@ -14,39 +14,21 @@ interface Props {
 
 const ListItem: React.FC<Props> = ({ product }) => {
   const { formatMessage: formatProductMessage } = useFormat({ name: 'product' });
-  const { updateItem, addItem, data } = useCart();
+  const { addItem } = useCart();
 
-  const getInitialQuantity = () => {
-    const lineItem = data?.lineItems?.find((lineItem) => lineItem.variant?.sku === product.variants?.[0]?.sku);
-    return lineItem ? lineItem.count : 0;
-  };
-
-  const [count, setCount] = useState(getInitialQuantity());
+  const [count, setCount] = useState(1);
   const [isLoading, setisLoading] = useState(false);
-  const isMountedRef = useRef(false);
 
-  const modifyQuantity = useCallback(
-    debounce(async (quantity) => {
-      setisLoading(true);
-      const lineItem = data?.lineItems?.find((lineItem) => lineItem.variant?.sku === product.variants?.[0]?.sku);
-      if (lineItem) {
-        console.log('update', quantity);
-
-        await updateItem(lineItem.lineItemId, quantity);
-      } else {
-        await addItem(product.variants[0], quantity);
-      }
-      setisLoading(false);
-    }, 500),
-    [data],
-  );
-
-  useEffect(() => {
-    if (isMountedRef.current) {
-      modifyQuantity(count);
+  const addToCart = async () => {
+    setisLoading(true);
+    if (!count) {
+      await setCount(1);
     }
-    isMountedRef.current = true;
-  }, [count]);
+
+    await addItem(product.variants[0], count);
+    setCount(1);
+    setisLoading(false);
+  };
 
   return (
     <div className="my-10">
@@ -83,7 +65,7 @@ const ListItem: React.FC<Props> = ({ product }) => {
           </button>
           <input
             className="w-10 appearance-none rounded border border-gray-300 px-1 leading-tight text-gray-700 shadow focus:outline-none disabled:bg-gray-400"
-            onChange={(e) => setCount(parseInt(e.target.value || '0', 10))}
+            onChange={(e) => setCount(parseInt(e.target.value || '1', 10))}
             value={count}
             disabled={isLoading || !product.variants?.[0].isOnStock}
           ></input>
@@ -102,16 +84,18 @@ const ListItem: React.FC<Props> = ({ product }) => {
         </div>
       </div>
       <button
-        className="mt-4 mt-4 
-                    flex flex w-full 
-                    w-full flex-1 
-                    justify-center rounded-md border border-transparent bg-sky-900 
-                    py-3 px-8 text-base
-                    font-medium text-white
-                    focus:ring-offset-2 
-                    focus:ring-offset-gray-50"
+        disabled={
+          count > product.variants?.[0].availability?.availableQuantity ||
+          product.variants?.[0].availability?.availableQuantity <= 0 ||
+          isLoading ||
+          !product.variants?.[0].isOnStock
+        }
+        className="mt-4 flex w-full justify-center rounded-md border border-transparent bg-sky-900 py-3 px-8 text-base font-medium text-white focus:ring-offset-2 focus:ring-offset-gray-50 disabled:bg-gray-300"
+        type="button"
+        onClick={addToCart}
       >
         Add To Cart
+        {isLoading && <LoadingIcon className="ml-2 mt-1 h-4 w-4 animate-spin" />}
       </button>
     </div>
   );
