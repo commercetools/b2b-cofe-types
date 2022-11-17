@@ -50,10 +50,17 @@ const ListItem: React.FC<Props> = ({ product }) => {
         </a>
       </NextLink>
       <div className="flex flex-row justify-between">
-        <div className="text-sm text-gray-400">
-          {formatProductMessage({ id: 'available-quantity', defaultMessage: 'Available qty: ' })}
-          <span>{product.variants[0].availability?.availableQuantity}</span>
-        </div>
+        {product.variants[0].availability?.availableQuantity > 0 && (
+          <div className="text-sm text-gray-400">
+            {formatProductMessage({ id: 'available-quantity', defaultMessage: 'Available qty: ' })}
+            <span>{product.variants[0].availability?.availableQuantity}</span>
+          </div>
+        )}
+        {product.variants[0].availability?.availableQuantity <= 0 && (
+          <div className="text-sm text-gray-400">
+            {formatProductMessage({ id: 'outOfStock', defaultMessage: 'Out of stock' })}
+          </div>
+        )}
         <div className="flex flex-row">
           <button
             className="mr-2 items-center rounded-md border border-transparent bg-transparent text-center text-sm font-medium text-white transition-colors duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2"
