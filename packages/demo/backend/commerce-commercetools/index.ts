@@ -63,6 +63,9 @@ export default {
     // Identify Product
     if (ProductRouter.identifyFrom(request)) {
       return ProductRouter.loadFor(request, context.frontasticContext).then((product: Product) => {
+        console.log('PRODU');
+        console.log(product);
+
         if (product) {
           return {
             dynamicPageType: 'frontastic/product-detail-page',

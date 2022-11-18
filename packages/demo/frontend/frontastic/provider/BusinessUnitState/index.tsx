@@ -19,6 +19,7 @@ const BusinessUnitStateContext: Context<UseBusinessUnit> = createContext({
   setMyBusinessUnit: () => null,
   setMyStore: () => null,
   updateName: () => null,
+  updateBudget: () => null,
   updateContactEmail: () => null,
   removeBusinessUnit: () => null,
 });
@@ -43,6 +44,7 @@ export const BusinessUnitProvider = ({ children }) => {
     getOrders,
     getAllOrders,
     removeBusinessUnit,
+    updateBudget,
   } = useBusinessUnitHook();
 
   return (
@@ -66,6 +68,7 @@ export const BusinessUnitProvider = ({ children }) => {
         getOrders,
         getAllOrders,
         removeBusinessUnit,
+        updateBudget,
       }}
     >
       {children}

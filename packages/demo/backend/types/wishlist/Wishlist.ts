@@ -1,3 +1,4 @@
+import { Store } from '../store/store';
 import { LineItem } from './LineItem';
 
 export interface Wishlist {
@@ -6,5 +7,12 @@ export interface Wishlist {
   anonymousId?: string;
   accountId?: string;
   name?: string;
+  description?: string;
   lineItems?: LineItem[];
+  store?: Store;
+}
+
+export interface WishlistDraft {
+  name: string;
+  description?: string;
 }

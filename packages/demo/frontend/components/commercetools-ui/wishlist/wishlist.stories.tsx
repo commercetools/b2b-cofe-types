@@ -11,8 +11,6 @@ export default {
   },
 } as Meta;
 
-const Template: Story<Props> = (args) => (
-  <WishList items={wishlist} removeLineItems={() => console.log('CLICK')} {...args} />
-);
+const Template: Story<Props> = (args) => <WishList wishlistId="123" {...args} />;
 
 export const Primary = Template.bind({});

@@ -34,6 +34,12 @@ export const WIDGETS = [
     layout: { i: 'OrderStatus', x: 0, y: 0, w: 5, h: 2 },
   },
   {
+    name: 'Budget',
+    component: () => import(`./Budget`),
+    id: 'Budget',
+    layout: { i: 'Budget', x: 0, y: 0, w: 5, h: 1 },
+  },
+  {
     name: 'Order List',
     component: () => import(`./OrderList`),
     id: 'OrderList',

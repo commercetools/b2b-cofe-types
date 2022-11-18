@@ -1,14 +1,29 @@
-import React from 'react';
-import { LineItem } from '@Types/wishlist/LineItem';
+import React, { useEffect, useState } from 'react';
 import WishList from 'components/commercetools-ui/wishlist';
-import { useWishlist } from 'frontastic/provider';
+import { useRouter } from 'next/router';
+import Wishlists from 'components/commercetools-ui/wishlists';
 
 const WishlistTastic = ({ data }) => {
-  const { data: wishlist, removeLineItem } = useWishlist();
+  const router = useRouter();
 
-  const removeLineItems = async (item: LineItem) => {
-    await removeLineItem(item.lineItemId);
-  };
+  const [match, setMatch] = useState(null);
+
+  useEffect(() => {
+    setMatch(router.asPath.match(/^\/wishlist\/(.*)/));
+  }, [router.asPath]);
+
+  if (!match || !match?.[1]) {
+    return (
+      <Wishlists
+        pageTitle={data.pageTitle}
+        emptyStateImage={data.emptyStateImage}
+        emptyStateTitle={data.emptyStateTitle}
+        emptyStateSubtitle={data.emptyStateSubtitle}
+        emptyStateCTALabel={data.emptyStateCTALabel}
+        emptyStateCTALink={data.emptyStateCTALink}
+      />
+    );
+  }
 
   return (
     <WishList
@@ -18,8 +33,7 @@ const WishlistTastic = ({ data }) => {
       emptyStateSubtitle={data.emptyStateSubtitle}
       emptyStateCTALabel={data.emptyStateCTALabel}
       emptyStateCTALink={data.emptyStateCTALink}
-      items={wishlist}
-      removeLineItems={removeLineItems}
+      wishlistId={match[1]}
     />
   );
 };

@@ -1,12 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
+import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useStores } from 'frontastic';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 import { useBusinessUnitDetailsStateContext } from '../../provider';
 
 const GeneralPanel: React.FC = () => {
-  const { selectedBusinessUnit: businessUnit, getStoreKeys } = useBusinessUnitDetailsStateContext();
+  const { selectedBusinessUnit: businessUnit, getStoreKeys, reloadTree } = useBusinessUnitDetailsStateContext();
 
   const { formatMessage } = useFormat({ name: 'business-unit' });
   const [data, setData] = useState({
@@ -15,23 +16,33 @@ const GeneralPanel: React.FC = () => {
     status: '',
     unitType: '',
     stores: [],
+    budget: -1,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [stores, setStores] = useState([]);
   const [isStoreLoading, setIsStoreLoading] = useState(false);
 
-  const { updateName, updateContactEmail } = useBusinessUnitStateContext();
+  const { updateName, updateContactEmail, updateBudget } = useBusinessUnitStateContext();
   const { getStoresByKey } = useStores();
 
   const updateCompanyName = async () => {
     setIsLoading(true);
     await updateName(businessUnit?.key, data.name);
+    await reloadTree();
     setIsLoading(false);
   };
 
   const updateCompanyEmail = async () => {
     setIsLoading(true);
     await updateContactEmail(businessUnit?.key, data.contactEmail);
+    await reloadTree();
+    setIsLoading(false);
+  };
+
+  const updateCompanyBudget = async () => {
+    setIsLoading(true);
+    await updateBudget(businessUnit?.key, data.budget);
+    await reloadTree();
     setIsLoading(false);
   };
 
@@ -49,6 +60,7 @@ const GeneralPanel: React.FC = () => {
       status: businessUnit?.status,
       unitType: businessUnit?.unitType,
       stores: businessUnit?.stores,
+      budget: CurrencyHelpers.getDollarsValue(businessUnit?.custom?.fields?.budget),
     });
   }, [businessUnit]);
 
@@ -124,6 +136,36 @@ const GeneralPanel: React.FC = () => {
             )}
           </div>
         </div>
+        <div className="basis-1/2">
+          <label htmlFor="budget">{formatMessage({ id: 'budget', defaultMessage: 'Budget in USD' })}</label>
+          <div className="flex flex-row">
+            <input
+              id="budget"
+              name="budget"
+              type="number"
+              min={1}
+              onChange={updateValue}
+              placeholder={data.budget === -1 ? 'No budget set' : ''}
+              value={data.budget === -1 ? '' : data.budget}
+              className="input input-primary"
+            />
+            {CurrencyHelpers.getDollarsValue(businessUnit.custom?.fields?.budget) !== data.budget && data.budget > 0 && (
+              <button
+                className="ml-2 flex w-16 justify-center rounded-md border border-transparent bg-accent-400 py-2 text-center text-sm font-medium text-white shadow-sm transition-colors duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 disabled:bg-gray-300"
+                onClick={updateCompanyBudget}
+              >
+                {!isLoading && 'Apply'}
+                {isLoading && <LoadingIcon className="mt-0.5 h-4 w-4 animate-spin" />}
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="basis-1/2">
+          <label htmlFor="type" className="ml-2">
+            {formatMessage({ id: 'type', defaultMessage: 'Unit type' })}
+          </label>
+          <input id="type" type="text" value={data.unitType} readOnly={true} className="input input-primary ml-2" />
+        </div>
         <div className="flex-flex-row basis-1/2 items-center pt-6">
           <input
             id="status"
@@ -134,12 +176,7 @@ const GeneralPanel: React.FC = () => {
           />
           <label htmlFor="status">{formatMessage({ id: 'status', defaultMessage: 'Status' })}</label>
         </div>
-        <div className="basis-1/2">
-          <label htmlFor="type" className="ml-2">
-            {formatMessage({ id: 'type', defaultMessage: 'Unit type' })}
-          </label>
-          <input id="type" type="text" value={data.unitType} readOnly={true} className="input input-primary ml-2" />
-        </div>
+
         <div className="w-full">
           <h3 className="text-bold text-lg">Stores:</h3>
           {isStoreLoading && <LoadingIcon className="mt-0.5 h-4 w-4 animate-spin" />}
