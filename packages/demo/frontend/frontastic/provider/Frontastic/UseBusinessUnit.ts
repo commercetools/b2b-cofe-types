@@ -10,6 +10,7 @@ export interface UseBusinessUnit {
   createBusinessUnitAndStore: (account, customer, parentBusinessUnit?: string) => Promise<any>;
   getMyOrganization: () => Promise<any>;
   updateName: (key: string, name: string) => Promise<any>;
+  updateBudget: (key: string, value: number) => Promise<any>;
   updateContactEmail: (key: string, email: string) => Promise<any>;
   addAddress: (key: string, address: Omit<Address, 'addressId'>) => Promise<BusinessUnit>;
   editAddress: (key: string, addressId: string, address: Address) => Promise<BusinessUnit>;

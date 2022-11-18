@@ -187,6 +187,7 @@ export class BusinessUnitApi extends BaseApi {
         );
         const tempParents = [...tree];
 
+        // filter results and add nodes to tree if they are descendents of tree nodes
         while (tempParents.length) {
           const [item] = tempParents.splice(0, 1);
           const children = results.filter((bu) => bu.parentUnit?.key === item.key);

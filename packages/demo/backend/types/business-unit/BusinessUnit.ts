@@ -1,6 +1,7 @@
 import { Address } from '../account/Address';
 import { StoreKeyReference } from '../store/store';
 import { Associate } from '../associate/Associate';
+import { Money } from '@Types/product/Money';
 
 export enum BusinessUnitType {
   Company = 'Company',
@@ -44,6 +45,11 @@ export interface BusinessUnit {
   children?: BusinessUnit[];
   isRootAdmin?: boolean;
   isAdmin?: boolean;
+  custom?: {
+    fields?: {
+      budget?: Money;
+    };
+  };
 }
 
 export interface BusinessUnitPagedQueryResponse {

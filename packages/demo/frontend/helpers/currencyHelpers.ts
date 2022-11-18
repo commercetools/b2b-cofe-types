@@ -3,6 +3,18 @@ import { Log } from './errorLogger';
 import { StringHelpers } from './stringHelpers';
 
 export class CurrencyHelpers {
+  static getDollarsValue = (value: Money): number => {
+    return value ? parseFloat((value.centAmount / 100).toFixed(2)) : -1;
+  };
+
+  static formatToMoney = function (costInDollars: number): Money {
+    return {
+      centAmount: costInDollars * 100,
+      currencyCode: 'USD',
+      fractionDigits: 2,
+    };
+  };
+
   private static formatNumberForCurrency = function (costInCents: number) {
     return CurrencyHelpers.formatMoneyCurrency({
       centAmount: costInCents,

@@ -8,6 +8,7 @@ import { fetchApiHub } from 'frontastic/lib/fetch-api-hub';
 import { UseBusinessUnit } from 'frontastic/provider/Frontastic/UseBusinessUnit';
 import { createStore } from '../../frontastic/actions/stores';
 import { Order } from '@Types/cart/Order';
+import { CurrencyHelpers } from 'helpers/currencyHelpers';
 
 export const useBusinessUnit = (): UseBusinessUnit => {
   const [businessUnit, setBusinessUnit] = useState(null);
@@ -76,6 +77,25 @@ export const useBusinessUnit = (): UseBusinessUnit => {
       `/action/business-unit/update`,
       { method: 'POST' },
       { actions: [{ action: 'changeName', name }], key },
+    );
+  };
+
+  const updateBudget = async (key: string, value: number): Promise<any> => {
+    return fetchApiHub(
+      `/action/business-unit/update`,
+      { method: 'POST' },
+      {
+        actions: [
+          {
+            action: 'setCustomType',
+            type: { typeId: 'type', key: 'bu-custom-type' },
+            fields: {
+              budget: CurrencyHelpers.formatToMoney(value),
+            },
+          },
+        ],
+        key,
+      },
     );
   };
 
@@ -173,6 +193,7 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     addUser,
     removeUser,
     updateUser,
+    updateBudget,
     getUser,
     addAddress,
     deleteAddress,

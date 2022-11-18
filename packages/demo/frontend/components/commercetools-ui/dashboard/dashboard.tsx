@@ -57,7 +57,6 @@ const Dashboard: React.FC<Props> = ({ organization }) => {
           <WidgetList />
           <GridLayout
             autoSize
-            preventCollision
             useCSSTransforms
             isDroppable
             resizeHandles={[]}
