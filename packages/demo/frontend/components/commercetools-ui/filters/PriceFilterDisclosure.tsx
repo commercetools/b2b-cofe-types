@@ -11,7 +11,7 @@ const PriceFilterDisclosure: FC<PriceFilterDisclosureProps> = ({ products, facet
 
   return (
     <div className="border-b border-gray-200 py-6">
-      <Disclosure>
+      <Disclosure defaultOpen>
         {({ open }) => (
           <>
             <Disclosure.Button className="flex w-full items-center justify-between py-3 text-gray-400 hover:text-gray-500">

@@ -21,7 +21,7 @@ export interface Props {
 }
 
 export default function ProductList({ products, totalProducts, previousCursor, nextCursor, category, facets }: Props) {
-  const [isFiltering, setIsFiltering] = useState<boolean>(false);
+  const [isFiltering, setIsFiltering] = useState<boolean>(true);
   const [previousPageURL, setPreviousPageURL] = useState<string>('/');
   const [nextPageURL, setNextPageURL] = useState<string>('/');
 

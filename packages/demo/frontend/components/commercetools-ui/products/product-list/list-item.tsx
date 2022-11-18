@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import NextLink from 'next/link';
-import { PlusCircleIcon, MinusCircleIcon } from '@heroicons/react/outline';
+import { PlusCircleIcon, MinusCircleIcon } from '@heroicons/react/solid';
 import { Product } from '@Types/product/Product';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
@@ -56,12 +56,16 @@ const ListItem: React.FC<Props> = ({ product }) => {
         </div>
         <div className="flex flex-row">
           <button
-            className="mr-2 items-center rounded-md border border-transparent bg-transparent text-center text-sm font-medium text-white shadow-sm transition-colors duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 disabled:bg-gray-300"
+            className="mr-2 items-center rounded-md border border-transparent bg-transparent text-center text-sm font-medium text-white transition-colors duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2"
             type="button"
             onClick={() => setCount(count - 1)}
             disabled={count <= 1 || isLoading || !product.variants?.[0].isOnStock}
           >
-            <MinusCircleIcon className="h-4 w-4 text-accent-400" />
+            <MinusCircleIcon
+              className={`h-4 w-4 ${
+                count <= 1 || isLoading || !product.variants?.[0].isOnStock ? 'text-gray-300' : 'text-accent-400'
+              }`}
+            />
           </button>
           <input
             className="w-10 appearance-none rounded border border-gray-300 px-1 leading-tight text-gray-700 shadow focus:outline-none disabled:bg-gray-400"
@@ -71,7 +75,7 @@ const ListItem: React.FC<Props> = ({ product }) => {
           ></input>
           <button
             type="button"
-            className="ml-2 items-center rounded-md border border-transparent bg-transparent text-center text-sm font-medium text-white shadow-sm transition-colors duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 disabled:bg-gray-300"
+            className="ml-2 items-center rounded-md border border-transparent bg-transparent text-center text-sm font-medium text-white transition-colors duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2"
             onClick={() => setCount(count + 1)}
             disabled={
               count >= product.variants?.[0].availability?.availableQuantity ||
@@ -79,7 +83,15 @@ const ListItem: React.FC<Props> = ({ product }) => {
               !product.variants?.[0].isOnStock
             }
           >
-            <PlusCircleIcon className="h-4 w-4 text-accent-400" />
+            <PlusCircleIcon
+              className={`h-4 w-4 ${
+                count >= product.variants?.[0].availability?.availableQuantity ||
+                isLoading ||
+                !product.variants?.[0].isOnStock
+                  ? 'text-gray-300'
+                  : 'text-accent-400'
+              }`}
+            />
           </button>
         </div>
       </div>
