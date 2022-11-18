@@ -76,3 +76,5 @@ yalc.lock
 
 # Do not ignore any .gitkeep files which are there to keep directories
 !**/.gitkeep
+packages/demo/backend/build/bundle.min.js
+packages/demo/backend/build/bundle.min.js.map
