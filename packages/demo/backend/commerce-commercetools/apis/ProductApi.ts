@@ -113,6 +113,7 @@ export class ProductApi extends BaseApi {
           priceCountry: locale.country,
           facet: queryArgFacets.length > 0 ? queryArgFacets : undefined,
           filter: filterFacets.length > 0 ? filterFacets : undefined,
+          expand: 'categories[*]',
           'filter.facets': filterFacets.length > 0 ? filterFacets : undefined,
           'filter.query': filterQuery.length > 0 ? filterQuery : undefined,
           [`text.${locale.language}`]: productQuery.query,

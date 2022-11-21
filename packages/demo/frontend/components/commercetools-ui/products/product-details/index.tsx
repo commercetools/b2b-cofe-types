@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Disclosure, RadioGroup, Tab } from '@headlessui/react';
 import { MinusSmIcon, PlusSmIcon } from '@heroicons/react/outline';
+import { Category } from '@Types/product/Category';
 import { Money } from '@Types/product/Money';
 import { Variant } from '@Types/product/Variant';
+import Breadcrumb from 'components/commercetools-ui/breadcrumb';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useFormat } from 'helpers/hooks/useFormat';
@@ -29,6 +32,7 @@ export type UIProduct = {
   sizes: UISize[];
   description: string;
   details: UIDetail[];
+  categories?: Category[];
 };
 interface UIImage {
   id: string;
@@ -92,6 +96,17 @@ export default function ProductDetail({ product, onAddToCart, variant, onChangeV
   return (
     <div>
       <div className=" mx-auto max-w-2xl md:py-4 lg:max-w-7xl lg:px-8">
+        <div>
+          {!!product?.categories?.length && (
+            <Breadcrumb Separator="/">
+              {product.categories.map((category) => (
+                <Link key={category.categoryId} href={category.slug}>
+                  {category.name}
+                </Link>
+              ))}
+            </Breadcrumb>
+          )}
+        </div>
         <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
           {/* Image gallery */}
           <Tab.Group>

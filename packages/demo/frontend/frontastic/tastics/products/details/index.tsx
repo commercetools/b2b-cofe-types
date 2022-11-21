@@ -66,6 +66,7 @@ function ProductDetailsTastic({ data }) {
       name: product.name,
       // add variants as well, so we can select and filter
       variants: product.variants,
+      categories: product.categories,
       price: variant.price,
       // rating: 4,
       images: variant.images?.map((img: string, id: number) => ({

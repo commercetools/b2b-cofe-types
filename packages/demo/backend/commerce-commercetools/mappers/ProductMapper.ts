@@ -162,7 +162,7 @@ export class ProductMapper {
 
       categories.push(category);
     });
-
+    categories.sort((a, b) => b.depth - a.depth);
     return categories;
   };
 

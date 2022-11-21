@@ -20,18 +20,11 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ children, Separator }) => {
             </NextLink>
           </div>
         </li>
-        {React.Children.map(children, (Child, index) => {
-          if (index < React.Children.count(children) - 1) {
-            return (
-              <li>
-                <b className="font-medium capitalize dark:text-light-100">{Child}</b>
-                <span className="dark:text-light-100">{Separator}</span>
-              </li>
-            );
-          }
+        {React.Children.map(children, (Child) => {
           return (
             <li>
-              <span className="font-medium capitalize text-gray-400 dark:text-accent-400">{Child}</span>
+              <span className="mr-4 text-gray-400">{Separator}</span>
+              <b className="font-medium capitalize dark:text-light-100">{Child}</b>
             </li>
           );
         })}

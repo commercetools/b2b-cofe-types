@@ -50,7 +50,7 @@ export default function ProductList({ products, totalProducts, previousCursor, n
 
   return (
     <div className="mt-10 px-1 sm:px-3 lg:px-6">
-      {category && <Breadcrumb Separator="/">{category.split('/')}</Breadcrumb>}
+      {category && <Breadcrumb Separator="/">{category.split('/').filter((item) => !!item)}</Breadcrumb>}
 
       <div className="mt-8 gap-16 lg:grid lg:grid-cols-3">
         {isFiltering ? (
