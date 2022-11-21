@@ -91,7 +91,7 @@ export class AccountApi extends BaseApi {
       return account;
     } catch (error) {
       //TODO: better error, get status code etc...
-      throw new Error(`create failed. ${error}`);
+      throw error;
     }
   };
 
@@ -190,7 +190,7 @@ export class AccountApi extends BaseApi {
       return account;
     } catch (error) {
       //TODO: better error, get status code etc...
-      throw new Error(`login failed. ${error}`);
+      throw error;
     }
   };
 

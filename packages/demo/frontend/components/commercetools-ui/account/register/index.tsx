@@ -91,7 +91,7 @@ const Register: React.FC<RegisterProps> = ({ logo, loginLink }) => {
         );
       }
     } catch (err) {
-      setError(formatErrorMessage({ id: 'wentWrong', defaultMessage: 'Sorry. Something went wrong..' }));
+      setError(err.message);
       setSuccess('');
     }
     //processing ends

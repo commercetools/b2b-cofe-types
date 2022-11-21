@@ -42,9 +42,6 @@ export class WishlistApi extends BaseApi {
         })
         .execute();
 
-      console.log('RES');
-      console.log(response.body.results);
-
       return response.body.results.map((shoppingList) =>
         WishlistMapper.commercetoolsShoppingListToWishlist(shoppingList, locale),
       );

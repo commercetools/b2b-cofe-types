@@ -41,10 +41,14 @@ async function loginAccount(request: Request, actionContext: ActionContext, acco
 
   const cart = await CartFetcher.fetchCart(request, actionContext);
 
-  const accountRes = await accountApi.login(account, cart, reverify);
-  const organization = await channelApi.fetch(accountRes.accountId);
+  try {
+    const accountRes = await accountApi.login(account, cart, reverify);
+    const organization = await channelApi.fetch(accountRes.accountId);
 
-  return { account: accountRes, organization };
+    return { account: accountRes, organization };
+  } catch (e) {
+    throw e;
+  }
 }
 
 function assertIsAuthenticated(request: Request) {
@@ -143,18 +147,27 @@ export const register: ActionHook = async (request: Request, actionContext: Acti
 
   const cart = await CartFetcher.fetchCart(request, actionContext).catch(() => undefined);
 
-  const account = await accountApi.create(accountData, cart);
+  let response: Response;
 
-  if (!account.confirmed) await emailApi.sendVerificationEmail(account, host);
+  try {
+    const account = await accountApi.create(accountData, cart);
 
-  const response: Response = {
-    statusCode: 200,
-    body: JSON.stringify({ accountId: account.accountId }),
-    sessionData: {
-      ...request.sessionData,
-    },
-  };
-
+    if (!account.confirmed) await emailApi.sendVerificationEmail(account, host);
+    response = {
+      statusCode: 200,
+      body: JSON.stringify({ accountId: account.accountId }),
+      sessionData: {
+        ...request.sessionData,
+      },
+    };
+  } catch (e) {
+    response = {
+      statusCode: 400,
+      // @ts-ignore
+      error: e?.message,
+      errorCode: 500,
+    };
+  }
   return response;
 };
 
@@ -208,17 +221,27 @@ export const login: ActionHook = async (request: Request, actionContext: ActionC
     password: accountLoginBody.password,
   } as Account;
 
-  const { account, organization } = await loginAccount(request, actionContext, loginInfo);
+  let response: Response;
 
-  const response: Response = {
-    statusCode: 200,
-    body: JSON.stringify(account),
-    sessionData: {
-      ...request.sessionData,
-      account,
-      organization,
-    },
-  };
+  try {
+    const { account, organization } = await loginAccount(request, actionContext, loginInfo);
+    response = {
+      statusCode: 200,
+      body: JSON.stringify(account),
+      sessionData: {
+        ...request.sessionData,
+        account,
+        organization,
+      },
+    };
+  } catch (e) {
+    response = {
+      statusCode: 400,
+      // @ts-ignore
+      error: e?.message,
+      errorCode: 500,
+    };
+  }
 
   return response;
 };

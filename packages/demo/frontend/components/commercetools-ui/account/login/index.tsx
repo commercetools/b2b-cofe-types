@@ -78,7 +78,7 @@ const Login: React.FC<LoginProps> = ({ logo, registerLink, accountLink }) => {
         setError(formatErrorMessage({ id: 'auth.wrong', defaultMessage: 'Wrong email address or password' }));
       }
     } catch (err) {
-      setError(formatErrorMessage({ id: 'wentWrong', defaultMessage: 'Sorry. Something went wrong..' }));
+      setError(err.message);
     }
   };
 
