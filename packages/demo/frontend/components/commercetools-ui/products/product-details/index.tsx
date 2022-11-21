@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Disclosure, RadioGroup, Tab } from '@headlessui/react';
 import { MinusSmIcon, PlusSmIcon } from '@heroicons/react/outline';
@@ -10,6 +9,7 @@ import Breadcrumb from 'components/commercetools-ui/breadcrumb';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useFormat } from 'helpers/hooks/useFormat';
+import { ImageGallery } from './image-gallery';
 import WishlistButton from './wishlist-button';
 
 function classNames(...classes) {
@@ -109,57 +109,7 @@ export default function ProductDetail({ product, onAddToCart, variant, onChangeV
         </div>
         <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
           {/* Image gallery */}
-          <Tab.Group>
-            <div className="flex flex-col-reverse">
-              {/* Image selector */}
-              <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
-                <Tab.List className="grid grid-cols-4 gap-6">
-                  {product?.images?.map((image) => (
-                    <Tab
-                      key={image.id}
-                      className="relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-white/50 focus:ring-offset-4"
-                    >
-                      {({ selected }) => (
-                        <>
-                          <span className="sr-only">{image.alt}</span>
-                          <span className="absolute inset-0 overflow-hidden rounded-md">
-                            <Image
-                              loader={({ src }) => src}
-                              layout="fill"
-                              src={image.src}
-                              alt=""
-                              className="h-full w-full object-cover object-center"
-                            />
-                          </span>
-                          <span
-                            className={classNames(
-                              selected ? 'ring-accent-400' : 'ring-transparent',
-                              'pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2',
-                            )}
-                            aria-hidden="true"
-                          />
-                        </>
-                      )}
-                    </Tab>
-                  ))}
-                </Tab.List>
-              </div>
-
-              <Tab.Panels className="aspect-w-1 aspect-h-1 w-full">
-                {product?.images?.map((image) => (
-                  <Tab.Panel key={image.id}>
-                    <Image
-                      loader={({ src }) => src}
-                      layout="fill"
-                      src={image.src}
-                      alt={image.alt}
-                      className="w-full object-scale-down object-center sm:rounded-lg"
-                    />
-                  </Tab.Panel>
-                ))}
-              </Tab.Panels>
-            </div>
-          </Tab.Group>
+          <ImageGallery product={product} />
 
           {/* Product info */}
           <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
