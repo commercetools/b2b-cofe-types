@@ -11,6 +11,7 @@ import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { ImageGallery } from './image-gallery';
 import WishlistButton from './wishlist-button';
+import { StringHelpers } from 'helpers/stringHelpers';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -18,6 +19,7 @@ function classNames(...classes) {
 
 export interface Props {
   product: UIProduct;
+  productFeaturesAttributes: string[];
   onAddToCart: (variant: Variant, quantity: number) => Promise<void>;
   variant: Variant;
   onChangeVariantIdx: (idx: number) => void;
@@ -28,10 +30,11 @@ export type UIProduct = {
   variants: Variant[];
   price: Money;
   images: UIImage[];
-  colors: UIColor[];
-  sizes: UISize[];
+  colors?: UIColor[];
+  sizes?: UISize[];
+  tastes?: string[];
   description: string;
-  details: UIDetail[];
+  details?: UIDetail[];
   categories?: Category[];
 };
 interface UIImage {
@@ -54,27 +57,44 @@ interface UIDetail {
   items: string[];
 }
 
-export default function ProductDetail({ product, onAddToCart, variant, onChangeVariantIdx }: Props) {
+export default function ProductDetail({
+  product,
+  onAddToCart,
+  variant,
+  onChangeVariantIdx,
+  productFeaturesAttributes,
+}: Props) {
   //i18n messages
   const { formatMessage: formatProductMessage } = useFormat({ name: 'product' });
 
-  const [selectedColor, setSelectedColor] = useState<UIColor>(product?.colors[0]);
-  const [selectedSize, setSelectedSize] = useState<UISize>();
+  const [selectedTaste, setSelectedTaste] = useState(variant?.attributes?.['taste']);
   const [loading, setLoading] = useState<boolean>(false);
   const [added, setAdded] = useState<boolean>(false);
+
+  const isAttributeAvailable = (attribute: string) => {
+    console.log(attribute, typeof variant.attributes[attribute] !== 'undefined');
+
+    return typeof variant.attributes[attribute] !== 'undefined';
+  };
+
+  const getAttributeValue = (attribute: string) => {
+    if (typeof variant.attributes[attribute] === 'boolean') {
+      return variant.attributes[attribute] ? 'Yes' : 'No';
+    }
+    if (typeof variant.attributes[attribute] === 'object' && variant.attributes[attribute]?.label) {
+      return variant.attributes[attribute].label;
+    }
+    return variant.attributes[attribute];
+  };
 
   // changes the selected variant whenever
   // one of the attributes changes and
   // notifies the wrapping tastic via
   // the onChangeVariantIdx handler
   useEffect(() => {
-    const idx = product?.variants.findIndex(
-      (v: Variant) =>
-        v.attributes.color?.key === selectedColor?.key && v.attributes.commonSize?.key === selectedSize?.key,
-    );
-
+    const idx = product?.variants.findIndex((v: Variant) => v.attributes.taste === selectedTaste);
     onChangeVariantIdx(idx === -1 ? 0 : idx);
-  }, [selectedColor, selectedSize, onChangeVariantIdx, product?.variants]);
+  }, [selectedTaste, onChangeVariantIdx, product?.variants]);
 
   const handleAddToCart = (variant: Variant, quantity: number) => {
     if (!variant.isOnStock) return;
@@ -113,73 +133,47 @@ export default function ProductDetail({ product, onAddToCart, variant, onChangeV
 
           {/* Product info */}
           <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-            <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-light-100">
-              {product?.name}
-            </h1>
+            <h2 className="text-2xl font-extrabold tracking-tight text-gray-900 dark:text-light-100">
+              {variant?.attributes?.['brand']?.label}&nbsp;
+            </h2>
+            <h1 className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-light-100">{product?.name}</h1>
+            {!!variant.attributes?.['manufacturer-number'] && (
+              <p className="mt-4">{`Manufacturer Part: ${variant.attributes['manufacturer-number']}`}</p>
+            )}
 
-            <div className="mt-3">
-              <h2 className="sr-only">
+            <div className="mt-3 flex flex-row">
+              {/* <h2 className="sr-only">
                 {formatProductMessage({ id: 'product?.info', defaultMessage: 'Product information' })}
-              </h2>
-              <p className="text-3xl text-accent-400">{CurrencyHelpers.formatForCurrency(product?.price)}</p>
-            </div>
-
-            <div className="mt-6">
-              <h3 className="sr-only">
-                {formatProductMessage({ id: 'product?.desc', defaultMessage: 'Description' })}
-              </h3>
-
-              <div
-                className="space-y-6 text-base text-gray-700 dark:text-light-100"
-                dangerouslySetInnerHTML={{ __html: product?.description }}
-              />
+              </h2> */}
+              <div className="basis-1/2">
+                <p className="text-3xl font-bold">
+                  {CurrencyHelpers.formatForCurrency(product?.price)}
+                  <span className="ml-8 text-base font-normal">Each</span>
+                </p>
+                {!!product?.tastes?.length && (
+                  <div className="mt-6">
+                    <p className="text-sm font-semibold">Taste:</p>
+                    <select
+                      className="input input-primary"
+                      value={selectedTaste}
+                      onChange={(e) => setSelectedTaste(e.target.value)}
+                    >
+                      {product.tastes.map((taste) => (
+                        <option key={taste} disabled={selectedTaste === taste}>
+                          {taste}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
+              <div className="basis-1/2">
+                {/* <p className="text-3xl text-accent-400">{CurrencyHelpers.formatForCurrency(product?.price)}</p> */}
+                {/* <p className="text-3xl text-accent-400">{CurrencyHelpers.formatForCurrency(product?.price)}</p> */}
+              </div>
             </div>
 
             <form className="mt-6">
-              {/* Colors */}
-              {!!product?.colors?.length && (
-                <div>
-                  <h3 className="text-sm font-medium text-gray-900 dark:text-light-100">
-                    {formatProductMessage({ id: 'color', defaultMessage: 'Color' })}
-                  </h3>
-
-                  <RadioGroup value={selectedColor} onChange={setSelectedColor} className="mt-2">
-                    <RadioGroup.Label className="sr-only">Choose a color</RadioGroup.Label>
-                    <div className="flex items-center space-x-3">
-                      {product?.colors?.map(
-                        (color: { name: string; bgColor: string; selectedColor: string; key: string }) => (
-                          <RadioGroup.Option
-                            key={color.name}
-                            value={color}
-                            className={({ active, checked }) =>
-                              classNames(
-                                color.selectedColor,
-                                (active && checked) || selectedColor?.key === color.key
-                                  ? 'ring-2 ring-accent-400 ring-offset-1'
-                                  : '',
-                                !active && checked ? 'ring-2 ring-accent-400 ring-offset-1' : '',
-                                'relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none',
-                              )
-                            }
-                          >
-                            <RadioGroup.Label>
-                              <p className="sr-only">{color.name}</p>
-                            </RadioGroup.Label>
-                            <span
-                              aria-hidden="true"
-                              className={classNames(
-                                color.bgColor,
-                                'h-8 w-8 rounded-full border border-black border-opacity-10',
-                              )}
-                            />
-                          </RadioGroup.Option>
-                        ),
-                      )}
-                    </div>
-                  </RadioGroup>
-                </div>
-              )}
-
               {!!variant.attributes?.narcotic && !!variant.attributes?.['product-alert-text'] && (
                 <div>
                   <p className="text-sm text-red-500">{variant.attributes?.['product-alert-text']}</p>
@@ -218,61 +212,81 @@ export default function ProductDetail({ product, onAddToCart, variant, onChangeV
                 </div>
               </div>
             </form>
-
-            <section aria-labelledby="details-heading" className="mt-12">
-              <h2 id="details-heading" className="sr-only">
-                {formatProductMessage({ id: 'details.additional', defaultMessage: 'Additional details' })}
-              </h2>
-
-              {product?.details?.length > 0 && (
-                <div className="divide-y divide-gray-200 border-t">
-                  {product?.details?.map((detail) => (
-                    <Disclosure key={detail.name}>
-                      {({ open }) => (
-                        <>
-                          <h3>
-                            <Disclosure.Button className="group relative flex w-full items-center justify-between py-6 text-left">
-                              <span
-                                className={classNames(
-                                  open ? 'text-accent-400' : 'text-gray-900 dark:text-light-100',
-                                  'text-sm font-medium',
-                                )}
-                              >
-                                {detail.name}
-                              </span>
-                              <span className="ml-6 flex items-center">
-                                {open ? (
-                                  <MinusSmIcon
-                                    className="block h-6 w-6 text-accent-400 group-hover:text-accent-500"
-                                    aria-hidden="true"
-                                  />
-                                ) : (
-                                  <PlusSmIcon
-                                    className="block h-6 w-6 text-gray-400 group-hover:text-gray-500"
-                                    aria-hidden="true"
-                                  />
-                                )}
-                              </span>
-                            </Disclosure.Button>
-                          </h3>
-                          <Disclosure.Panel>
-                            <div className="prose prose-sm py-6 dark:text-light-100">
-                              <ul role="list">
-                                {detail.items?.map((item, index) => (
-                                  <li key={index}>{item}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          </Disclosure.Panel>
-                        </>
-                      )}
-                    </Disclosure>
-                  ))}
-                </div>
-              )}
-            </section>
           </div>
         </div>
+        <section aria-labelledby="details-heading" className="mt-12 border-t">
+          <div className="mt-6">
+            <h3 className="text-xl font-bold">Description</h3>
+            <div
+              className="space-y-6 text-base text-gray-700 dark:text-light-100"
+              dangerouslySetInnerHTML={{ __html: product?.description }}
+            />
+          </div>
+        </section>
+        {!!productFeaturesAttributes.filter(isAttributeAvailable).length && (
+          <section aria-labelledby="details-heading" className="mt-12 border-t">
+            <div className="mt-6">
+              <h3 className="text-xl font-bold">Specifications</h3>
+
+              <div className="mt-3 grid grid-cols-3 gap-y-6 gap-x-10">
+                {productFeaturesAttributes.filter(isAttributeAvailable).map((attribute) => (
+                  <div key={attribute} className="border-b pb-2">
+                    <span className="mr-2 font-semibold">{`${StringHelpers.capitaliseFirstLetter(attribute)}:`}</span>
+                    <span className="">{getAttributeValue(attribute)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+        {product?.details?.length > 0 && (
+          <section className="mt-12 border-t">
+            <div className="divide-y divide-gray-200 border-t">
+              {product?.details?.map((detail) => (
+                <Disclosure key={detail.name}>
+                  {({ open }) => (
+                    <>
+                      <h3>
+                        <Disclosure.Button className="group relative flex w-full items-center justify-between py-6 text-left">
+                          <span
+                            className={classNames(
+                              open ? 'text-accent-400' : 'text-gray-900 dark:text-light-100',
+                              'text-sm font-medium',
+                            )}
+                          >
+                            {detail.name}
+                          </span>
+                          <span className="ml-6 flex items-center">
+                            {open ? (
+                              <MinusSmIcon
+                                className="block h-6 w-6 text-accent-400 group-hover:text-accent-500"
+                                aria-hidden="true"
+                              />
+                            ) : (
+                              <PlusSmIcon
+                                className="block h-6 w-6 text-gray-400 group-hover:text-gray-500"
+                                aria-hidden="true"
+                              />
+                            )}
+                          </span>
+                        </Disclosure.Button>
+                      </h3>
+                      <Disclosure.Panel>
+                        <div className="prose prose-sm py-6 dark:text-light-100">
+                          <ul role="list">
+                            {detail.items?.map((item, index) => (
+                              <li key={index}>{item}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </Disclosure.Panel>
+                    </>
+                  )}
+                </Disclosure>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

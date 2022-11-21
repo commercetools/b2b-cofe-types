@@ -1,6 +1,7 @@
 import {
   Attribute as CommercetoolsAttribute,
   AttributeDefinition as CommercetoolsAttributeDefinition,
+  AttributeGroup,
   Category as CommercetoolsCategory,
   CategoryReference,
   FacetResults as CommercetoolsFacetResults,
@@ -545,6 +546,10 @@ export class ProductMapper {
       rangeFacet.maxSelected = facetQuery.max;
     }
     return rangeFacet;
+  }
+
+  static commercetoolsAttributeGroupToString(body: AttributeGroup): string[] {
+    return body.attributes.map(attribute => attribute.key);
   }
 
   static calculatePreviousCursor(offset: number, count: number) {

@@ -10,6 +10,7 @@ import { RangeFilter } from '@Types/query/RangeFilter';
 import { CategoryQuery } from '@Types/query/CategoryQuery';
 import { Category } from '@Types/product/Category';
 import { FacetDefinition } from '@Types/product/FacetDefinition';
+import { Attribute, AttributeGroup } from '@commercetools/platform-sdk';
 
 export class ProductApi extends BaseApi {
   protected getOffsetFromCursor = (cursor: string) => {
@@ -196,6 +197,18 @@ export class ProductApi extends BaseApi {
     } catch (error) {
       //TODO: better error, get status code etc...
       throw new Error(`getSearchableAttributes failed. ${error}`);
+    }
+  };
+
+  getAttributeGroup: (key: string) => Promise<AttributeGroup> = async (key: string) => {
+    try {
+      const {body} = await this.getApiForProject().attributeGroups().withKey({ key }).get().execute();
+
+
+      return ProductMapper.commercetoolsAttributeGroupToString(body);
+    } catch (error) {
+      //TODO: better error, get status code etc...
+      throw new Error(`get attributeGroup failed. ${error}`);
     }
   };
 

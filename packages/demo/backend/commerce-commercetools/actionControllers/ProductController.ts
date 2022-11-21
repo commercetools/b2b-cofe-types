@@ -52,6 +52,20 @@ export const query: ActionHook = async (request: Request, actionContext: ActionC
   return response;
 };
 
+export const getAttributeGroup: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const productApi = new ProductApi(actionContext.frontasticContext, getLocale(request));
+
+  const queryResult = await productApi.getAttributeGroup(request.query?.['key']);
+
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(queryResult),
+    sessionData: request.sessionData,
+  };
+
+  return response;
+};
+
 export const queryCategories: ActionHook = async (request: Request, actionContext: ActionContext) => {
   const productApi = new ProductApi(actionContext.frontasticContext, getLocale(request));
 
