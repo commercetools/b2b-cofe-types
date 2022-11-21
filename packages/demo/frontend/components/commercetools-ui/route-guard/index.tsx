@@ -2,6 +2,7 @@ import React, { ReactElement, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import debounce from 'lodash.debounce';
 import { useAccount } from 'frontastic';
+import { LoadingIcon } from '../icons/loading';
 
 const RouteGuard: React.FC<{ children }> = ({ children }): ReactElement => {
   const { loggedIn } = useAccount();
@@ -29,7 +30,11 @@ const RouteGuard: React.FC<{ children }> = ({ children }): ReactElement => {
 
   return (
     <>
-      {isLoading && <div>loading</div>}
+      {isLoading && (
+        <div>
+          <LoadingIcon className="mx-auto mt-8 h-4 w-4 animate-spin" />
+        </div>
+      )}
       {!isLoading && children}
     </>
   );
