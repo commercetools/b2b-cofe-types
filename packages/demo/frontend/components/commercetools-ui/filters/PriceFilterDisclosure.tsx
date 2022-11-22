@@ -10,7 +10,7 @@ const PriceFilterDisclosure: FC<PriceFilterDisclosureProps> = ({ products, facet
   const { formatMessage } = useFormat({ name: 'product' });
 
   return (
-    <div className="border-b border-gray-200 py-6">
+    <div className="max-w-xs border-y border-gray-200 py-6">
       <Disclosure defaultOpen>
         {({ open }) => (
           <>

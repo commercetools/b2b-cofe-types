@@ -69,15 +69,53 @@ const Header: React.FC<HeaderProps> = ({
             <Typography>{tagline}</Typography>
           </p>
         )}
-
-        <nav aria-label="Top" className="mx-auto max-w-full border-b border-gray-200 px-6 lg:px-8">
+        <div className="h-12 bg-stone-100 px-6 drop-shadow-md">
+          {!!account && (
+            <div className="pt-2">
+              <span>
+                {account?.firstName
+                  ? formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) + account?.firstName
+                  : account?.lastName
+                  ? formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) + account?.lastName
+                  : formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) +
+                    formatAccountMessage({ id: 'user', defaultMessage: 'User ' })}
+              </span>
+              <span className="px-4">*Business Unit</span>
+              <select className="store-picker w-40 appearance-none rounded border border-gray-300 py-1 px-3 leading-tight text-gray-700 shadow focus:outline-none">
+                <option>Business Unit</option>
+              </select>
+              <span className="px-4">*Admin Buyer</span>
+              <StorePicker organization={organization} />
+              <span className="px-4">Country: US</span>
+              <span className="px-4">Language: English</span>
+            </div>
+          )}
+        </div>
+        <div className="h-10 border-b-2 bg-primary-400 px-6 text-white">
+          <div className="float-right flex grow items-center pt-2">
+            {!!account && (
+              <>
+                <WishListButton wishlistItemCount={wishlistItemCount} wishlistLink={wishlistLink} />
+                <FlyingCartButton />
+              </>
+            )}
+            <AccountButton
+              account={account}
+              accountLink={accountLink}
+              organization={organization}
+              businessUnitLink={businessUnitLink}
+            />
+            {!!account && <CartButton cartItemCount={cartItemCount} cartLink={cartLink} />}
+          </div>
+        </div>
+        <nav aria-label="Top" className="mx-auto max-w-full border-b border-gray-200 px-6 lg:px-0">
           {/* Secondary navigation */}
           <div className="h-full">
             <div className="flex items-center justify-between">
               {/* Logo */}
               <ReferenceLink target={logoLink} className="flex h-full items-center py-4 pr-2 md:py-3">
                 <span className="sr-only">Catwalk</span>
-                <div className="relative h-20 w-[60px] px-4 pr-3 sm:w-[120px] sm:pr-7">
+                <div className="relative mx-6 h-14 w-[60px] sm:w-[120px]">
                   <Image
                     media={logo.media ? logo.media : { media: {} }}
                     className="dark:invert"
@@ -104,7 +142,7 @@ const Header: React.FC<HeaderProps> = ({
               {/* Mega menus */}
               {!!account && (
                 <Popover.Group className="hidden lg:block lg:flex-1 lg:self-stretch">
-                  <div className="flex h-full space-x-8">
+                  <div className="flex items-end h-full space-x-8">
                     {headerNavigation.categories.map((category, categoryIdx) => (
                       <Popover key={category.name} className="flex">
                         {({ open }) => (
@@ -147,7 +185,7 @@ const Header: React.FC<HeaderProps> = ({
                       <ReferenceLink
                         key={id}
                         target={link.reference}
-                        className="flex items-center text-base font-medium text-primary-400 hover:text-primary-500 dark:text-light-100"
+                        className="flex border-r-2 px-4 py-2 text-lg font-semibold text-primary-200 hover:text-primary-500 dark:text-light-100"
                       >
                         <Typography>{link.name}</Typography>
                       </ReferenceLink>
@@ -157,40 +195,10 @@ const Header: React.FC<HeaderProps> = ({
               )}
 
               <div className="flex flex-col items-center justify-end">
-                <div className="flex grow items-center pt-2">
-                  {/* <DarkModeWidget className="mr-4 text-primary-400 hover:text-primary-500 dark:text-light-100" /> */}
-                  <SearchButton />
-
-                  <span className="mx-4 h-6 w-px bg-gray-200 lg:mx-4" aria-hidden="true" />
-                  {!!account && (
-                    <>
-                      <WishListButton wishlistItemCount={wishlistItemCount} wishlistLink={wishlistLink} />
-                      <FlyingCartButton />
-                    </>
-                  )}
-                  <AccountButton
-                    account={account}
-                    accountLink={accountLink}
-                    organization={organization}
-                    businessUnitLink={businessUnitLink}
-                  />
-                  {!!account && <CartButton cartItemCount={cartItemCount} cartLink={cartLink} />}
-                </div>
                 {!!account && (
                   <div className="flex w-full grow items-center py-2">
-                    <span>
-                      {account?.firstName
-                        ? formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) + account?.firstName
-                        : account?.lastName
-                        ? formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) + account?.lastName
-                        : formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) +
-                          formatAccountMessage({ id: 'user', defaultMessage: 'User ' })}
-                    </span>
-                    <span className="mx-4 h-8 w-px bg-gray-200 lg:mx-4" aria-hidden="true" />
-                    <div className="flex items-center">
-                      <span>Store:&nbsp;</span>
-                      <StorePicker organization={organization} />
-                    </div>
+                    {/* <DarkModeWidget className="mr-4 text-primary-400 hover:text-primary-500 dark:text-light-100" /> */}
+                    <SearchButton />
                   </div>
                 )}
               </div>
