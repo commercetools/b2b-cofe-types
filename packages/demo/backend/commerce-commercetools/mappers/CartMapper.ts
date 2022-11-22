@@ -13,10 +13,11 @@ import {
   ShippingMethod as CommercetoolsShippingMethod,
   TaxedPrice as CommercetoolsTaxedPrice,
   ZoneRate as CommercetoolsZoneRate,
+  ReturnInfo as CommercetoolsReturnInfo,
 } from '@commercetools/platform-sdk';
 import { LineItem } from '@Types/cart/LineItem';
 import { Address } from '@Types/account/Address';
-import { Order } from '@Types/cart/Order';
+import { Order, ReturnInfo } from '@Types/cart/Order';
 import { Locale } from '../Locale';
 import { ShippingMethod } from '@Types/cart/ShippingMethod';
 import { ShippingRate } from '@Types/cart/ShippingRate';
@@ -147,6 +148,7 @@ export class CartMapper {
       businessUnit: commercetoolsOrder.businessUnit?.key,
       createdAt: commercetoolsOrder.createdAt,
       shippingInfo: CartMapper.commercetoolsShippingInfoToShippingInfo(commercetoolsOrder.shippingInfo, locale),
+      returnInfo: CartMapper.commercetoolsReturnInfoToReturnInfo(commercetoolsOrder.returnInfo),
       //sum: commercetoolsOrder.totalPrice.centAmount,
       // payments:
       // discountCodes:
@@ -176,6 +178,24 @@ export class CartMapper {
       ...shippingMethod,
       price: ProductMapper.commercetoolsMoneyToMoney(commercetoolsShippingInfo.price),
     };
+  };
+
+  static commercetoolsReturnInfoToReturnInfo: (commercetoolsReturnInfo: CommercetoolsReturnInfo[]) => ReturnInfo[] = (
+    commercetoolsReturnInfo: CommercetoolsReturnInfo[],
+  ) => {
+    return commercetoolsReturnInfo.map((ctReturnInfo) => ({
+      returnDate: ctReturnInfo.returnDate,
+      returnTrackingId: ctReturnInfo.returnTrackingId,
+      items: ctReturnInfo.items.map((item) => ({
+        comment: item.comment,
+        createdAt: item.createdAt,
+        // @ts-ignore
+        lineItemId: item.lineItemId,
+        returnInfoId: item.id,
+        quantity: item.quantity,
+        shipmentState: item.shipmentState,
+      })),
+    }));
   };
 
   static commercetoolsShippingMethodToShippingMethod: (

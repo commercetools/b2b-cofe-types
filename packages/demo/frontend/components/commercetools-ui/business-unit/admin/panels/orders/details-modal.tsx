@@ -1,8 +1,6 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
 import { Transition, Dialog } from '@headlessui/react';
 import { Order } from '@Types/cart/Order';
-import { OrderItems } from 'components/commercetools-ui/account/details/sections/order-items';
-import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useDarkMode } from 'frontastic';
 import OrderDetails from './details';
 

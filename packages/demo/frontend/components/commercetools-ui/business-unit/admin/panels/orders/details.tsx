@@ -1,20 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { DuplicateIcon, ReceiptRefundIcon } from '@heroicons/react/outline';
 import { Order } from '@Types/cart/Order';
 import { OrderItems } from 'components/commercetools-ui/account/details/sections/order-items';
+import OrderReturns from 'components/commercetools-ui/account/details/sections/order-returns';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
+import OrderReturnModal from './return-modal';
 
 interface Props {
   order: Order;
 }
 
 const OrderDetails: React.FC<Props> = ({ order }) => {
+  const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
   if (!order) {
     return null;
   }
   return (
     <div id={order.orderId}>
       <div className="rounded-lg bg-gray-100 py-6 px-4">
-        <dl className="flex-auto space-y-6 divide-y divide-gray-200 text-sm text-gray-600 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:space-y-0 sm:divide-y-0 lg:gap-x-8">
+        <dl className="flex-auto space-y-6 divide-y divide-gray-200 text-sm text-gray-600 sm:grid sm:grid-cols-3 sm:gap-x-6 sm:space-y-0 sm:divide-y-0 lg:gap-x-8">
           <div className="flex pt-6 sm:block sm:pt-0">
             <dt className="font-medium text-gray-900">Order number</dt>
             <dd className="mb-4 sm:mt-1">{order.orderId}</dd>
@@ -32,6 +36,20 @@ const OrderDetails: React.FC<Props> = ({ order }) => {
             </dd>
             <dt className="font-medium text-gray-900">Shipping method</dt>
             <dd className="mb-4 sm:mt-1">{order.shippingInfo?.name || 'N/A'}</dd>
+          </div>
+          <div className="flex pt-6 sm:block sm:pt-0">
+            <div className="flex flex-row">
+              <DuplicateIcon className="mr-2 mt-1 h-4 w-4" />
+              <button type="button" className="mb-2 text-gray-900 underline">
+                Reorder
+              </button>
+            </div>
+            <div className="flex flex-row">
+              <ReceiptRefundIcon className="mr-2 mt-1 h-4 w-4" />
+              <button type="button" className="mb-2 text-gray-900 underline" onClick={() => setIsReturnModalOpen(true)}>
+                Return
+              </button>
+            </div>
           </div>
         </dl>
 
@@ -66,7 +84,13 @@ const OrderDetails: React.FC<Props> = ({ order }) => {
           <p>{order.billingAddress.country}</p>
         </div>
       </div>
+      {!!order.returnInfo?.[0]?.items?.length && (
+        <OrderReturns lineItems={order.lineItems} returnInfo={order.returnInfo} className="mt-4" />
+      )}
       <OrderItems lineItems={order.lineItems}></OrderItems>
+      {isReturnModalOpen && (
+        <OrderReturnModal onClose={() => setIsReturnModalOpen(false)} open={isReturnModalOpen} order={order} />
+      )}
     </div>
   );
 };

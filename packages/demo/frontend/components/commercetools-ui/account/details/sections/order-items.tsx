@@ -48,7 +48,7 @@ export const OrderItems: React.FC<Props> = ({ lineItems }) => {
           <th scope="col" className="hidden w-1/5 py-1 pr-8 font-normal dark:text-light-100 sm:table-cell">
             {formatProductMessage({
               id: 'total-price',
-              defaultMessage: 'Totla price',
+              defaultMessage: 'Total price',
             })}
           </th>
           <th scope="col" className="w-0 py-1 text-right font-normal dark:text-light-100">

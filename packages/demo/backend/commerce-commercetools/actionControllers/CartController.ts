@@ -1,7 +1,7 @@
 import { Request, Response } from '@frontastic/extension-types';
 import { ActionContext } from '@frontastic/extension-types';
 import { Cart } from '@Types/cart/Cart';
-import { LineItem } from '@Types/cart/LineItem';
+import { LineItem, LineItemReturnItemDraft } from '@Types/cart/LineItem';
 import { Address } from '@Types/account/Address';
 import { CartFetcher } from '../utils/CartFetcher';
 import { ShippingMethod } from '@Types/cart/ShippingMethod';
@@ -263,6 +263,33 @@ export const getShippingMethods: ActionHook = async (request: Request, actionCon
       cartId: cart.cartId,
     },
   };
+
+  return response;
+};
+
+export const returnItems: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const cartApi = new CartApi(actionContext.frontasticContext, getLocale(request));
+
+  let response: Response;
+
+  try {
+    const { orderNumber, returnLineItems }: { orderNumber: string; returnLineItems: LineItemReturnItemDraft[] } =
+      JSON.parse(request.body);
+    const res = await cartApi.returnItems(orderNumber, returnLineItems);
+    response = {
+      statusCode: 200,
+      body: JSON.stringify(res),
+      sessionData: request.sessionData,
+    };
+  } catch (e) {
+    response = {
+      statusCode: 400,
+      sessionData: request.sessionData,
+      // @ts-ignore
+      error: e?.message,
+      errorCode: 500,
+    };
+  }
 
   return response;
 };

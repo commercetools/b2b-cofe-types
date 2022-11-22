@@ -2,6 +2,12 @@ import { Discount } from './Discount';
 import { Variant } from '../product/Variant';
 import { Money } from '../product/Money';
 
+export interface LineItemReturnItemDraft {
+  quantity: number;
+  lineItemId: string;
+  comment?: string;
+  shipmentState: string;
+}
 export interface Target {
   quantity: number;
   addressKey: string;

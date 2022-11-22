@@ -10,7 +10,7 @@ import {
   CartSetShippingMethodAction,
 } from '@commercetools/platform-sdk';
 import { CartMapper } from '../mappers/CartMapper';
-import { LineItem } from '@Types/cart/LineItem';
+import { LineItem, LineItemReturnItemDraft } from '@Types/cart/LineItem';
 import { Cart as CommercetoolsCart } from '@commercetools/platform-sdk';
 import {
   CartAddDiscountCodeAction,
@@ -457,6 +457,65 @@ export class CartApi extends BaseApi {
     } catch (error) {
       //TODO: better error, get status code etc...
       throw new Error(`get orders failed. ${error}`);
+    }
+  };
+
+  getOrder: (orderNumber: string) => Promise<Order> = async (orderNumber: string) => {
+    try {
+      const locale = await this.getCommercetoolsLocal();
+
+      const response = await this.getApiForProject()
+        .orders()
+        .withOrderNumber({ orderNumber })
+        .get({
+          queryArgs: {
+            expand: [
+              'lineItems[*].discountedPrice.includedDiscounts[*].discount',
+              'discountCodes[*].discountCode',
+              'paymentInfo.payments[*]',
+            ],
+          },
+        })
+        .execute();
+
+      return CartMapper.commercetoolsOrderToOrder(response.body, locale);
+    } catch (error) {
+      //TODO: better error, get status code etc...
+      throw new Error(`get orders failed. ${error}`);
+    }
+  };
+
+  returnItems: (orderNumber: string, returnLineItems: LineItemReturnItemDraft[]) => Promise<Order> = async (
+    orderNumber: string,
+    returnLineItems: LineItemReturnItemDraft[],
+  ) => {
+    try {
+      const locale = await this.getCommercetoolsLocal();
+
+      const response = await this.getOrder(orderNumber).then((order) => {
+        return this.getApiForProject()
+          .orders()
+          .withOrderNumber({ orderNumber })
+          .post({
+            body: {
+              version: +order.orderVersion,
+              actions: [
+                {
+                  action: 'addReturnInfo',
+                  items: returnLineItems,
+                  returnDate: new Date().toISOString(),
+                  returnTrackingId: new Date().getTime().toString(),
+                },
+              ],
+            },
+          })
+          .execute();
+      });
+
+      return CartMapper.commercetoolsOrderToOrder(response.body, locale);
+    } catch (error) {
+      //TODO: better error, get status code etc...
+      throw error;
     }
   };
 

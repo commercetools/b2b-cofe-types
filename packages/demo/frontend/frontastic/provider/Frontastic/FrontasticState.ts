@@ -17,6 +17,7 @@ import {
   createQuoteRequestFromCurrentCart,
   splitLineItem,
   replicateCart,
+  returnItems,
 } from '../../actions/cart';
 import { query } from '../../actions/product';
 import { getMyQuoteRequests, getBusinessUserQuoteRequests, updateQuoteState } from '../../actions/quotes';
@@ -69,6 +70,7 @@ export const getFrontasticState = (): FrontasticState => {
       createQuoteRequestFromCurrentCart,
       replicateCart,
       splitLineItem,
+      returnItems,
     },
     useWishlist: {
       getWishlist,

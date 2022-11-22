@@ -5,6 +5,8 @@ import { Discount } from '@Types/cart/Discount';
 import { Variant } from '@Types/product/Variant';
 import useSWR, { mutate } from 'swr';
 import { fetchApiHub, revalidateOptions } from 'frontastic';
+import { LineItemReturnItemDraft } from '@Types/cart/LineItem';
+import { Order } from '@Types/cart/Order';
 
 export type CartDetails = {
   account?: { email: string };
@@ -193,5 +195,14 @@ export const removeDiscountCode = async (discount: Discount) => {
 };
 
 export const createQuoteRequestFromCurrentCart = async (comment: string): Promise<QuoteRequest> => {
-  return await fetchApiHub('/action/quote/createQuoteRequest', { method: 'POST' }, { comment });
+  return fetchApiHub('/action/quote/createQuoteRequest', { method: 'POST' }, { comment });
+};
+
+export const returnItems = async (orderNumber: string, returnLineItems: LineItemReturnItemDraft[]): Promise<Order> => {
+  try {
+    const res = fetchApiHub('/action/cart/returnItems', { method: 'POST' }, { orderNumber, returnLineItems });
+    return res;
+  } catch (e) {
+    throw e;
+  }
 };

@@ -3,7 +3,7 @@ import { EyeIcon, DuplicateIcon } from '@heroicons/react/outline';
 import { Order } from '@Types/cart/Order';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { mapAddressToString } from 'helpers/utils/addressUtil';
-import OrderDetailsModal from './modal';
+import OrderDetailsModal from './details-modal';
 
 interface Props {
   orders: Order[];
