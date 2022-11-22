@@ -200,7 +200,7 @@ export class ProductApi extends BaseApi {
     }
   };
 
-  getAttributeGroup: (key: string) => Promise<AttributeGroup> = async (key: string) => {
+  getAttributeGroup: (key: string) => Promise<string[]> = async (key: string) => {
     try {
       const {body} = await this.getApiForProject().attributeGroups().withKey({ key }).get().execute();
 
