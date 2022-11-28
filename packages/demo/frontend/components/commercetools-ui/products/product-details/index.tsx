@@ -1,17 +1,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Disclosure, RadioGroup, Tab } from '@headlessui/react';
+import { Disclosure } from '@headlessui/react';
 import { MinusSmIcon, PlusSmIcon } from '@heroicons/react/outline';
 import { Category } from '@Types/product/Category';
 import { Money } from '@Types/product/Money';
 import { Variant } from '@Types/product/Variant';
 import Breadcrumb from 'components/commercetools-ui/breadcrumb';
-import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
-import { CurrencyHelpers } from 'helpers/currencyHelpers';
-import { useFormat } from 'helpers/hooks/useFormat';
-import { ImageGallery } from './image-gallery';
-import WishlistButton from './wishlist-button';
 import { StringHelpers } from 'helpers/stringHelpers';
+import { ImageGallery } from './image-gallery';
+import VariantSelector from './variant-selector';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -20,7 +17,6 @@ function classNames(...classes) {
 export interface Props {
   product: UIProduct;
   productFeaturesAttributes: string[];
-  onAddToCart: (variant: Variant, quantity: number) => Promise<void>;
   variant: Variant;
   onChangeVariantIdx: (idx: number) => void;
 }
@@ -30,8 +26,6 @@ export type UIProduct = {
   variants: Variant[];
   price: Money;
   images: UIImage[];
-  colors?: UIColor[];
-  sizes?: UISize[];
   tastes?: string[];
   description: string;
   details?: UIDetail[];
@@ -42,12 +36,6 @@ interface UIImage {
   src: string;
   alt: string;
 }
-export interface UIColor {
-  name: string;
-  key: string;
-  bgColor: string;
-  selectedColor: string;
-}
 export interface UISize {
   label: string;
   key: string;
@@ -57,18 +45,7 @@ interface UIDetail {
   items: string[];
 }
 
-export default function ProductDetail({
-  product,
-  onAddToCart,
-  variant,
-  onChangeVariantIdx,
-  productFeaturesAttributes,
-}: Props) {
-  //i18n messages
-  const { formatMessage: formatProductMessage } = useFormat({ name: 'product' });
-
-  const [selectedTaste, setSelectedTaste] = useState(variant?.attributes?.['taste']);
-  const [loading, setLoading] = useState<boolean>(false);
+export default function ProductDetail({ product, variant, onChangeVariantIdx, productFeaturesAttributes }: Props) {
   const [added, setAdded] = useState<boolean>(false);
 
   const isAttributeAvailable = (attribute: string) => {
@@ -85,24 +62,6 @@ export default function ProductDetail({
       return variant.attributes[attribute].label;
     }
     return variant.attributes[attribute];
-  };
-
-  // changes the selected variant whenever
-  // one of the attributes changes and
-  // notifies the wrapping tastic via
-  // the onChangeVariantIdx handler
-  useEffect(() => {
-    const idx = product?.variants.findIndex((v: Variant) => v.attributes.taste === selectedTaste);
-    onChangeVariantIdx(idx === -1 ? 0 : idx);
-  }, [selectedTaste, onChangeVariantIdx, product?.variants]);
-
-  const handleAddToCart = (variant: Variant, quantity: number) => {
-    if (!variant.isOnStock) return;
-    setLoading(true);
-    onAddToCart(variant, quantity).then(() => {
-      setLoading(false);
-      setAdded(true);
-    });
   };
 
   useEffect(() => {
@@ -141,38 +100,6 @@ export default function ProductDetail({
               <p className="mt-4">{`Manufacturer Part: ${variant.attributes['manufacturer-number']}`}</p>
             )}
 
-            <div className="mt-3 flex flex-row">
-              {/* <h2 className="sr-only">
-                {formatProductMessage({ id: 'product?.info', defaultMessage: 'Product information' })}
-              </h2> */}
-              <div className="basis-1/2">
-                <p className="text-3xl font-bold">
-                  {CurrencyHelpers.formatForCurrency(product?.price)}
-                  <span className="ml-8 text-base font-normal">Each</span>
-                </p>
-                {!!product?.tastes?.length && (
-                  <div className="mt-6">
-                    <p className="text-sm font-semibold">Taste:</p>
-                    <select
-                      className="input input-primary"
-                      value={selectedTaste}
-                      onChange={(e) => setSelectedTaste(e.target.value)}
-                    >
-                      {product.tastes.map((taste) => (
-                        <option key={taste} disabled={selectedTaste === taste}>
-                          {taste}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-              </div>
-              <div className="basis-1/2">
-                {/* <p className="text-3xl text-accent-400">{CurrencyHelpers.formatForCurrency(product?.price)}</p> */}
-                {/* <p className="text-3xl text-accent-400">{CurrencyHelpers.formatForCurrency(product?.price)}</p> */}
-              </div>
-            </div>
-
             <form className="mt-6">
               {!!variant.attributes?.narcotic && !!variant.attributes?.['product-alert-text'] && (
                 <div>
@@ -180,36 +107,12 @@ export default function ProductDetail({
                 </div>
               )}
               <div className="mt-10 flex sm:flex-1">
-                <button
-                  type="button"
-                  onClick={() => handleAddToCart(variant, 1)}
-                  className="flex w-full flex-1 items-center justify-center rounded-md border border-transparent bg-accent-400 py-3 px-8 text-base font-medium text-white hover:bg-accent-500 focus:bg-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 focus:ring-offset-gray-50 disabled:bg-gray-400"
-                  disabled={!variant.isOnStock}
-                >
-                  {!loading && !added && (
-                    <>
-                      {variant.isOnStock
-                        ? formatProductMessage({ id: 'cart.add', defaultMessage: 'Add to Cart' })
-                        : formatProductMessage({ id: 'outOfStock', defaultMessage: 'Out of stock' })}
-                    </>
-                  )}
-
-                  {loading && <LoadingIcon className="h-6 w-6 animate-spin" />}
-                  {!loading && added && (
-                    <svg className="h-6 w-6" fill="#fff" viewBox="0 0 80.588 61.158">
-                      <path
-                        d="M29.658,61.157c-1.238,0-2.427-0.491-3.305-1.369L1.37,34.808c-1.826-1.825-1.826-4.785,0-6.611
-                     c1.825-1.826,4.786-1.827,6.611,0l21.485,21.481L72.426,1.561c1.719-1.924,4.674-2.094,6.601-0.374
-                     c1.926,1.72,2.094,4.675,0.374,6.601L33.145,59.595c-0.856,0.959-2.07,1.523-3.355,1.56C29.746,61.156,29.702,61.157,29.658,61.157z
-                     "
-                      />
-                    </svg>
-                  )}
-                </button>
-
-                <div className="ml-2">
-                  <WishlistButton variant={variant} />
-                </div>
+                <VariantSelector
+                  className="mt-4"
+                  product={product}
+                  onChangeVariantIdx={onChangeVariantIdx}
+                  variant={variant}
+                />
               </div>
             </form>
           </div>

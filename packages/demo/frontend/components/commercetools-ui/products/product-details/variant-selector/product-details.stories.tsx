@@ -1,7 +1,7 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import { productItem } from 'helpers/mocks/mockData';
-import ProductDetails, { Props as ProductDetailsProps } from './index';
+import ProductDetails, { Props as ProductDetailsProps } from '../index';
 
 export default {
   title: 'Frontastic/ProductDetails',
@@ -14,7 +14,6 @@ export default {
 const Template: Story<ProductDetailsProps> = (args) => (
   <ProductDetails
     product={productItem}
-    onAddToCart={() => console.log('Added to Cart')}
     onChangeVariantIdx={() => console.log('EVENT CLICKED')}
     variant={productItem.variants[0]}
     {...args}

@@ -202,8 +202,7 @@ export class ProductApi extends BaseApi {
 
   getAttributeGroup: (key: string) => Promise<string[]> = async (key: string) => {
     try {
-      const {body} = await this.getApiForProject().attributeGroups().withKey({ key }).get().execute();
-
+      const { body } = await this.getApiForProject().attributeGroups().withKey({ key }).get().execute();
 
       return ProductMapper.commercetoolsAttributeGroupToString(body);
     } catch (error) {

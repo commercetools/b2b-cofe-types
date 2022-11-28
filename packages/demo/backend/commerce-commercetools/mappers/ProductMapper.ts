@@ -549,7 +549,7 @@ export class ProductMapper {
   }
 
   static commercetoolsAttributeGroupToString(body: AttributeGroup): string[] {
-    return body.attributes.map(attribute => attribute.key);
+    return body.attributes.map((attribute) => attribute.key);
   }
 
   static calculatePreviousCursor(offset: number, count: number) {
