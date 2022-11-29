@@ -57,6 +57,7 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     const res = await fetchApiHub('/action/business-unit/setMe', { method: 'POST' }, { key: businessUnitKey });
     await getCart();
     setBusinessUnit(res);
+    return res;
   };
 
   const setMyStore = async (storeKey: string): Promise<ChannelResourceIdentifier> => {

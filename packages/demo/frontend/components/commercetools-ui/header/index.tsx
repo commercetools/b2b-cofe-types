@@ -2,12 +2,15 @@ import React, { Fragment, useState } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { MenuIcon } from '@heroicons/react/outline';
 import { Account } from '@Types/account/Account';
+import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { Organization } from '@Types/organization/organization';
 import Typography from 'components/commercetools-ui/typography';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { headerNavigation } from 'helpers/mocks/mockData';
 import { Reference, ReferenceLink } from 'helpers/reference';
 import Image, { NextFrontasticImage } from 'frontastic/lib/image';
+import BusinessUnitDropdownTree from '../business-unit/dropdown-tree';
+import BusinessUnitRole from '../business-unit/role';
 import StorePicker from '../business-unit/store-picker';
 import AccountButton from './account-button';
 import CartButton from './cart-button';
@@ -28,6 +31,7 @@ export interface Link {
 
 export interface HeaderProps {
   organization: Organization;
+  organizationTree: BusinessUnit[];
   tagline?: string;
   links: Link[];
   cartItemCount: number;
@@ -43,6 +47,7 @@ export interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({
   organization,
+  organizationTree,
   tagline,
   links,
   cartItemCount,
@@ -80,11 +85,8 @@ const Header: React.FC<HeaderProps> = ({
                   : formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) +
                     formatAccountMessage({ id: 'user', defaultMessage: 'User ' })}
               </span>
-              <span className="px-4">*Business Unit</span>
-              <select className="store-picker w-40 appearance-none rounded border border-gray-300 py-1 px-3 leading-tight text-gray-700 shadow focus:outline-none">
-                <option>Business Unit</option>
-              </select>
-              <span className="px-4">*Admin Buyer</span>
+              <BusinessUnitDropdownTree tree={organizationTree} />
+              <BusinessUnitRole organization={organization} />
               <StorePicker organization={organization} />
               <span className="px-4">Country: US</span>
               <span className="px-4">Language: English</span>
@@ -142,7 +144,7 @@ const Header: React.FC<HeaderProps> = ({
               {/* Mega menus */}
               {!!account && (
                 <Popover.Group className="hidden lg:block lg:flex-1 lg:self-stretch">
-                  <div className="flex items-end h-full space-x-8">
+                  <div className="flex h-full items-end space-x-8">
                     {headerNavigation.categories.map((category, categoryIdx) => (
                       <Popover key={category.name} className="flex">
                         {({ open }) => (
