@@ -19,9 +19,6 @@ interface UIVariant {
   quantity: number;
 }
 const getAttributeValue = (attributes, attributeKey) => {
-  if (attributeKey == 'color') {
-    return attributes?.color?.key;
-  }
   if (typeof attributes?.[attributeKey] === 'object') {
     return attributes?.[attributeKey]?.key;
   }
@@ -64,6 +61,7 @@ const GridVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElement>
   const [selectedFirstVariantIdx, setSelectedFirstVariantIdx] = useState(0);
   const [firstSelectedVariant, setFirstSelectedVariant] = useState(grouped?.[0]?.[grouped?.[0]?.length - 1].variant);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [added, setAdded] = useState<boolean>(false);
 
@@ -114,6 +112,7 @@ const GridVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElement>
           0,
         ),
       );
+      setTotalCount(grouped.reduce((curr, group) => curr + group.reduce((c, item) => c + item.quantity || 0, 0), 0));
     }
   }, [grouped]);
 
@@ -197,7 +196,7 @@ const GridVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElement>
             type="button"
             onClick={handleAddToCart}
             className="flex w-full flex-1 items-center justify-center rounded-md border border-transparent bg-accent-400 py-3 px-8 text-base font-medium text-white hover:bg-accent-500 focus:bg-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 focus:ring-offset-gray-50 disabled:bg-gray-400"
-            disabled={!variant.isOnStock || isLoading}
+            disabled={!variant.isOnStock || isLoading || totalCount === 0}
           >
             {!isLoading && !added && `Add all to cart`}
 

@@ -93,6 +93,12 @@ export const removeItem = async (lineItemId: string) => {
   mutate('/action/cart/getCart', res);
 };
 
+export const getShippingMethods = async () => {
+  const res = await fetchApiHub('/action/cart/getShippingMethods');
+  mutate('/action/cart/getShippingMethods', res);
+  return res;
+};
+
 export const shippingMethods = () => {
   return useSWR('/action/cart/getShippingMethods', fetchApiHub, revalidateOptions);
 };

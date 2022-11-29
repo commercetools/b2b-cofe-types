@@ -86,7 +86,7 @@ export default function ProductDetail({ product, variant, onChangeVariantIdx, pr
             </Breadcrumb>
           )}
         </div>
-        <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
+        <div className="mt-8 lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
           {/* Image gallery */}
           <ImageGallery product={product} />
 
@@ -117,15 +117,17 @@ export default function ProductDetail({ product, variant, onChangeVariantIdx, pr
             </form>
           </div>
         </div>
-        <section aria-labelledby="details-heading" className="mt-12 border-t">
-          <div className="mt-6">
-            <h3 className="text-xl font-bold">Description</h3>
-            <div
-              className="space-y-6 text-base text-gray-700 dark:text-light-100"
-              dangerouslySetInnerHTML={{ __html: product?.description }}
-            />
-          </div>
-        </section>
+        {!!product?.description && (
+          <section aria-labelledby="details-heading" className="mt-12 border-t">
+            <div className="mt-6">
+              <h3 className="text-xl font-bold">Description</h3>
+              <div
+                className="space-y-6 text-base text-gray-700 dark:text-light-100"
+                dangerouslySetInnerHTML={{ __html: product?.description }}
+              />
+            </div>
+          </section>
+        )}
         {!!productFeaturesAttributes.filter(isAttributeAvailable).length && (
           <section aria-labelledby="details-heading" className="mt-12 border-t">
             <div className="mt-6">

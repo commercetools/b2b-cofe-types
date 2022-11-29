@@ -55,7 +55,12 @@ export const query: ActionHook = async (request: Request, actionContext: ActionC
 export const getAttributeGroup: ActionHook = async (request: Request, actionContext: ActionContext) => {
   const productApi = new ProductApi(actionContext.frontasticContext, getLocale(request));
 
-  const queryResult = await productApi.getAttributeGroup(request.query?.['key']);
+  let queryResult: any[] = [];
+  try {
+    queryResult = await productApi.getAttributeGroup(request.query?.['key']);
+  } catch (e) {
+    console.log(e);
+  }
 
   const response: Response = {
     statusCode: 200,

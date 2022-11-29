@@ -22,18 +22,21 @@ const Address: React.FC<AddressProps> = ({ data, updateData, billingIsSameAsShip
   const [shippingMethodsData, setShippingMethodsData] = useState<ShippingMethod[]>(null);
   const [availableCountryOptions, setAvailableCountryOptions] = useState<CountryOption[]>(null);
   const [selectedAddress, setSelectedAddress] = useState<Address>(null);
-  const { getProjectSettings, shippingMethods } = useCart();
+  const { getProjectSettings, getShippingMethods } = useCart();
   const { formatMessage } = useFormat({ name: 'checkout' });
 
   useEffect(() => {
-    getProjectSettings().then((data) => {
-      setProjectSettingsCountries(data);
-      setShippingMethodsData(shippingMethods.data);
-    });
+    (async () => {
+      const shippingMethods = await getShippingMethods();
+      getProjectSettings().then((data) => {
+        setProjectSettingsCountries(data);
+        setShippingMethodsData(shippingMethods);
+      });
+    })();
   }, []);
 
   useEffect(() => {
-    if (!shippingMethods.data || !projectSettingsCountries) {
+    if (!shippingMethodsData || !projectSettingsCountries) {
       const showMessageInDropdown = {
         data: '',
         display: `${formatMessage({
@@ -43,11 +46,13 @@ const Address: React.FC<AddressProps> = ({ data, updateData, billingIsSameAsShip
       };
       setAvailableCountryOptions([showMessageInDropdown]);
     } else {
-      const totalCountries = getTaxedCountries(shippingMethods?.data, projectSettingsCountries?.countries);
+      console.log('here');
+
+      const totalCountries = getTaxedCountries(shippingMethodsData, projectSettingsCountries?.countries);
 
       setAvailableCountryOptions(totalCountries);
     }
-  }, [shippingMethods, projectSettingsCountries, shippingMethodsData]);
+  }, [projectSettingsCountries, shippingMethodsData]);
 
   const updateSelection = (address: FormData) => {
     setSelectedAddress(address);

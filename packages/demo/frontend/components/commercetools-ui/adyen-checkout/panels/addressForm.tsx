@@ -138,7 +138,7 @@ const AddressForm = ({
           onChange={handleChange}
           value={data.shippingCountry}
         >
-          <option key={-1} disabled>
+          <option key={-1} value="" disabled>
             {formatMessage({
               id: 'selectShippingCountry',
               defaultMessage: 'Please select a country',

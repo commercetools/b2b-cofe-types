@@ -16,6 +16,7 @@ export interface UseCart {
   addItems: (lineItems: { variant: Variant; quantity: number }[]) => Promise<void>;
   updateCart: (payload: CartDetails) => Promise<Cart>;
   setShippingMethod: (shippingMethodId: string) => Promise<void>;
+  getShippingMethods: () => Promise<ShippingMethod[]>;
   removeItem: (lineItemId: string) => Promise<void>;
   updateItem: (lineItemId: string, newQuantity: number) => Promise<void>;
   removeDiscountCode?: (discount: Discount) => Promise<void>;

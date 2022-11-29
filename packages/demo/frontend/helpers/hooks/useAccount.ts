@@ -3,7 +3,7 @@ import { Account } from '@Types/account/Account';
 import { Address } from '@Types/account/Address';
 import { REMEMBER_ME } from 'helpers/constants/localStorage';
 import useSWR, { mutate } from 'swr';
-import { revalidateOptions } from 'frontastic';
+import { revalidateOptions, useCart } from 'frontastic';
 import { fetchApiHub, ResponseError } from 'frontastic/lib/fetch-api-hub';
 import { UseAccount } from 'frontastic/provider/Frontastic/UseAccount';
 import { createStore } from '../../frontastic/actions/stores';
@@ -36,6 +36,8 @@ export const useAccount = (): UseAccount => {
   const [account, setAccount] = useState<Account>(null);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
+  const { getShippingMethods } = useCart();
+
   const { data, error } = useSWR<Account | GetAccountResult>(
     '/action/account/getAccount',
     fetchApiHub,
@@ -62,6 +64,7 @@ export const useAccount = (): UseAccount => {
     try {
       const res = await fetchApiHub('/action/account/login', { method: 'POST' }, payload);
       await mutate('/action/account/getAccount', res);
+      await getShippingMethods();
       return res;
     } catch (e) {
       throw e;
