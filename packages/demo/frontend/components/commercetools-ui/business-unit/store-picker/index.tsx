@@ -33,11 +33,11 @@ const StorePicker: React.FC<Props> = ({ organization }) => {
   if (!organization?.store) return null;
 
   return (
-    <div className="mr-4 w-56 flex-row">
+    <span className="px-4">
       <select
         defaultValue={organization.store.key}
         onChange={setStore}
-        className="store-picker w-56 appearance-none rounded border border-gray-300 py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+        className="store-picker w-52 appearance-none rounded border border-gray-300 py-1 px-3 leading-tight text-gray-700 shadow focus:outline-none"
       >
         {organization.businessUnit.stores.map((item) => (
           <option key={item.key} value={item.key}>
@@ -45,7 +45,7 @@ const StorePicker: React.FC<Props> = ({ organization }) => {
           </option>
         ))}
       </select>
-    </div>
+    </span>
   );
 };
 

@@ -40,7 +40,7 @@ const SortingDisclosure: FC<SortingDisclosureProps> = ({ updateSortingParams }) 
   }, [router?.query]);
 
   return (
-    <div className="border-y border-gray-200 py-6">
+    <div className="max-w-xs border-y border-gray-200 py-6">
       <Disclosure defaultOpen>
         {({ open }) => (
           <>

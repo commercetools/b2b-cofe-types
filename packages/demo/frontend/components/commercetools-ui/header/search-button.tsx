@@ -30,35 +30,8 @@ const SearchButton: React.FC = () => {
   };
 
   return (
-    <div className="relative flex">
-      <Transition
-        show={!searching}
-        enter="transition-opacity duration-75"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="transition-opacity duration-150"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-      >
-        <div className="cursor-pointer dark:text-light-100" onClick={startSearch}>
-          <span className="sr-only">Search</span>
-          <SearchIcon
-            className="h-6 w-6 text-primary-400 hover:text-primary-500 dark:text-light-100"
-            aria-hidden="true"
-          />
-        </div>
-      </Transition>
-      <Transition
-        show={searching}
-        enter="transition-opacity duration-75"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="transition-opacity duration-150"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-      >
-        <SearchInput onBlur={endSearch} value={searchValue} onChange={handleChange} onSubmit={handleSubmit} />
-      </Transition>
+    <div className="relative mr-4 flex">
+      <SearchInput onBlur={endSearch} value={searchValue} onChange={handleChange} onSubmit={handleSubmit} />
     </div>
   );
 };

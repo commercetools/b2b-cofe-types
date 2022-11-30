@@ -92,6 +92,12 @@
                 "field": "organization",
                 "type": "dataSource",
                 "dataSourceType": "b2b/organization"
+            },
+            {
+                "label": "Organization Tree Info",
+                "field": "tree",
+                "type": "dataSource",
+                "dataSourceType": "b2b/organization-tree"
             }
         ]
     }

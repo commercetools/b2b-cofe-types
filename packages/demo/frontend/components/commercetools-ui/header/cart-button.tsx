@@ -14,11 +14,8 @@ const CartButton: React.FC<CartButtonProps> = ({ cartItemCount, cartLink }) => {
 
   return (
     <div className="flow-root">
-      <ReferenceLink target={cartLink} className="group relative -m-2 ml-5 flex items-center p-2">
-        <ShoppingCartIcon
-          className="h-6 w-6 shrink-0 text-primary-400 group-hover:text-primary-500 dark:text-light-100 dark:group-hover:text-light-100"
-          aria-hidden="true"
-        />
+      <ReferenceLink target={cartLink} className="group relative -m-2 ml-5 flex items-center px-2">
+        <ShoppingCartIcon className="h-6 w-6 shrink-0 text-white" aria-hidden="true" />
         {cartItemCount > 0 && (
           <>
             <span className="absolute -top-0 -right-1 rounded-full bg-accent-400 px-1 hover:bg-accent-500">
