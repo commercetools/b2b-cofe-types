@@ -23,7 +23,7 @@ const BusinessUnitDropdownTree = ({ tree }) => {
     );
   };
 
-  if (!businessUnit || !tree.length) return null;
+  if (!businessUnit || !tree?.length) return null;
 
   return (
     <span className="">
