@@ -55,7 +55,10 @@ const GridVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElement>
   variantSelectors,
   className,
 }) => {
-  const { addItems } = useCart();
+  const {
+    addItems,
+    data: { isPreBuyCart },
+  } = useCart();
 
   const [grouped, setGrouped] = useState(groupedVariants(product.variants, variantSelectors));
   const [selectedFirstVariantIdx, setSelectedFirstVariantIdx] = useState(0);
@@ -166,9 +169,11 @@ const GridVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElement>
                     {CurrencyHelpers.formatForCurrency(item.variant.price)}
                     <span className="ml-2 text-xs font-light">Each</span>
                   </div>
-                  <p className="text-sm text-gray-400">{`Available Qty: ${
-                    item.variant.availability?.availableQuantity || 0
-                  }`}</p>
+                  {!isPreBuyCart && (
+                    <p className="text-sm text-gray-400">{`Available Qty: ${
+                      item.variant.availability?.availableQuantity || 0
+                    }`}</p>
+                  )}
                 </div>
 
                 <div className="basis-1/2">
@@ -176,7 +181,7 @@ const GridVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElement>
                     className="input input-primary"
                     type="number"
                     min="0"
-                    disabled={!item.variant.isOnStock}
+                    disabled={!item.variant.isOnStock && !isPreBuyCart}
                     value={item.quantity}
                     onChange={(e) => updateQuantity(e.target.value, i, j)}
                   ></input>
@@ -191,12 +196,12 @@ const GridVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElement>
           <p className="text-gray-400">Total price:</p>
           <p>{CurrencyHelpers.formatForCurrency(totalPrice)}</p>
         </div>
-        <div className="ml-8 basis-2/3">
+        <div className="?basis-2/3 ml-8">
           <button
             type="button"
             onClick={handleAddToCart}
             className="flex w-full flex-1 items-center justify-center rounded-md border border-transparent bg-accent-400 py-3 px-8 text-base font-medium text-white hover:bg-accent-500 focus:bg-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 focus:ring-offset-gray-50 disabled:bg-gray-400"
-            disabled={!variant.isOnStock || isLoading || totalCount === 0}
+            disabled={isLoading || totalCount === 0}
           >
             {!isLoading && !added && `Add all to cart`}
 

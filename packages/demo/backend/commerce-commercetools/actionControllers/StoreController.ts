@@ -68,7 +68,7 @@ export const setMe: ActionHook = async (request: Request, actionContext: ActionC
     ...request.sessionData?.organization,
     store: {
       typeId: 'store',
-      key: data.key,
+      ...store,
     },
     distributionChannel,
   };

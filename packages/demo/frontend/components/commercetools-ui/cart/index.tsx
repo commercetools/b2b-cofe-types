@@ -103,6 +103,7 @@ const Cart = ({
           />
           <OrderSummary
             cart={cart}
+            submitButtonLabel={cart.isPreBuyCart && 'Pre order'}
             onSubmit={onCheckout}
             showDiscountsForm={false}
             currentStep="cart"

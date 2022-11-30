@@ -1,6 +1,6 @@
 import { BaseApi } from './BaseApi';
 import { Store } from '@Types/store/store';
-import { StoreDraft } from '@commercetools/platform-sdk';
+import { StoreDraft, Store as CommercetoolsStore } from '@commercetools/platform-sdk';
 import { mapCommercetoolsStoreToStore } from '../mappers/StoreMappers';
 
 const convertStoreToBody = (store: Store, locale: string): StoreDraft => {
@@ -35,7 +35,10 @@ export class StoreApi extends BaseApi {
     }
   };
 
-  get: (key: string) => Promise<any> = async (key: string): Promise<any> => {
+  get: (key: string) => Promise<any> = async (key: string): Promise<Store> => {
+    const locale = await this.getCommercetoolsLocal();
+    const config = this.frontasticContext?.project?.configuration?.preBuy;
+
     try {
       return this.getApiForProject()
         .stores()
@@ -43,7 +46,7 @@ export class StoreApi extends BaseApi {
         .get()
         .execute()
         .then((response) => {
-          return response.body;
+          return mapCommercetoolsStoreToStore(response.body, locale.language, config);
         });
     } catch (e) {
       console.log(e);
@@ -52,8 +55,9 @@ export class StoreApi extends BaseApi {
     }
   };
 
-  query: (where: string) => Promise<any> = async (where: string): Promise<any> => {
+  query: (where: string) => Promise<any> = async (where: string): Promise<Store[]> => {
     const locale = await this.getCommercetoolsLocal();
+    const config = this.frontasticContext?.project?.configuration?.preBuy;
 
     try {
       return this.getApiForProject()
@@ -65,7 +69,7 @@ export class StoreApi extends BaseApi {
         })
         .execute()
         .then((response) => {
-          return mapCommercetoolsStoreToStore(response.body, locale.language);
+          return response.body.results.map((store) => mapCommercetoolsStoreToStore(store, locale.language, config));
         });
     } catch (e) {
       console.log(e);

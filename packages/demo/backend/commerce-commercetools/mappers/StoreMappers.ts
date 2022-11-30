@@ -1,9 +1,15 @@
-import { StorePagedQueryResponse } from '@commercetools/platform-sdk';
+import { Store as CommercetoolsStore } from '@commercetools/platform-sdk';
 import { Store } from '@Types/store/store';
+import { ClientConfig } from 'commerce-commercetools/interfaces/ClientConfig';
 
-export const mapCommercetoolsStoreToStore = (body: StorePagedQueryResponse, locale: string): Store[] => {
-  return body.results?.map((store) => ({
+export const mapCommercetoolsStoreToStore = (
+  store: CommercetoolsStore,
+  locale: string,
+  config: Record<string, string>,
+): Store => {
+  return {
     ...store,
     name: store.name?.[locale],
-  }));
+    isPreBuyStore: !!config ? store.custom?.fields?.[config.storeCustomField] : false,
+  };
 };

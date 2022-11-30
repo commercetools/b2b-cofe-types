@@ -86,6 +86,7 @@ export class CartApi extends BaseApi {
   ) => {
     try {
       const locale = await this.getCommercetoolsLocal();
+      const config = this.frontasticContext?.project?.configuration?.preBuy;
 
       const cartDraft: CartDraft = {
         currency: locale.currency,
@@ -103,6 +104,21 @@ export class CartApi extends BaseApi {
         },
         inventoryMode: 'ReserveOnOrder',
       };
+
+      if (organization.store.isPreBuyStore) {
+        // @ts-ignore
+        cartDraft.custom = {
+          type: {
+            typeId: 'type',
+            key: config.orderCustomType,
+          },
+          fields: {
+            [config.orderCustomField]: true,
+          },
+        };
+        // @ts-ignore
+        cartDraft.inventoryMode = 'None';
+      }
 
       const commercetoolsCart = await this.getApiForProject()
         .carts()
@@ -407,11 +423,13 @@ export class CartApi extends BaseApi {
         id: cart.cartId,
         version: +cart.cartVersion,
         orderNumber: Guid.newGuid(),
+        orderState: cart.isPreBuyCart ? 'Open' : 'Confirmed',
       };
 
       if (!isReadyForCheckout(cart)) {
         throw new Error('Cart not complete yet.');
       }
+      const config = this.frontasticContext?.project?.configuration?.preBuy;
 
       const response = await this.getApiForProject()
         .orders()
@@ -427,7 +445,7 @@ export class CartApi extends BaseApi {
         })
         .execute();
 
-      return CartMapper.commercetoolsOrderToOrder(response.body, locale);
+      return CartMapper.commercetoolsOrderToOrder(response.body, locale, config);
     } catch (error) {
       //TODO: better error, get status code etc...
       throw new Error(`order failed. ${error}`);
@@ -437,6 +455,7 @@ export class CartApi extends BaseApi {
   getOrders: (account: Account) => Promise<Order[]> = async (account: Account) => {
     try {
       const locale = await this.getCommercetoolsLocal();
+      const config = this.frontasticContext?.project?.configuration?.preBuy;
 
       const response = await this.getApiForProject()
         .orders()
@@ -453,7 +472,7 @@ export class CartApi extends BaseApi {
         })
         .execute();
 
-      return response.body.results.map((order) => CartMapper.commercetoolsOrderToOrder(order, locale));
+      return response.body.results.map((order) => CartMapper.commercetoolsOrderToOrder(order, locale, config));
     } catch (error) {
       //TODO: better error, get status code etc...
       throw new Error(`get orders failed. ${error}`);
@@ -463,6 +482,7 @@ export class CartApi extends BaseApi {
   getOrder: (orderNumber: string) => Promise<Order> = async (orderNumber: string) => {
     try {
       const locale = await this.getCommercetoolsLocal();
+      const config = this.frontasticContext?.project?.configuration?.preBuy;
 
       const response = await this.getApiForProject()
         .orders()
@@ -478,7 +498,7 @@ export class CartApi extends BaseApi {
         })
         .execute();
 
-      return CartMapper.commercetoolsOrderToOrder(response.body, locale);
+      return CartMapper.commercetoolsOrderToOrder(response.body, locale, config);
     } catch (error) {
       //TODO: better error, get status code etc...
       throw new Error(`get orders failed. ${error}`);
@@ -491,6 +511,7 @@ export class CartApi extends BaseApi {
   ) => {
     try {
       const locale = await this.getCommercetoolsLocal();
+      const config = this.frontasticContext?.project?.configuration?.preBuy;
 
       const response = await this.getOrder(orderNumber).then((order) => {
         return this.getApiForProject()
@@ -512,7 +533,7 @@ export class CartApi extends BaseApi {
           .execute();
       });
 
-      return CartMapper.commercetoolsOrderToOrder(response.body, locale);
+      return CartMapper.commercetoolsOrderToOrder(response.body, locale, config);
     } catch (error) {
       //TODO: better error, get status code etc...
       throw error;
@@ -522,6 +543,7 @@ export class CartApi extends BaseApi {
   getBusinessUnitOrders: (keys: string) => Promise<Order[]> = async (keys: string) => {
     try {
       const locale = await this.getCommercetoolsLocal();
+      const config = this.frontasticContext?.project?.configuration?.preBuy;
 
       const response = await this.getApiForProject()
         .orders()
@@ -538,7 +560,7 @@ export class CartApi extends BaseApi {
         })
         .execute();
 
-      return response.body.results.map((order) => CartMapper.commercetoolsOrderToOrder(order, locale));
+      return response.body.results.map((order) => CartMapper.commercetoolsOrderToOrder(order, locale, config));
     } catch (error) {
       //TODO: better error, get status code etc...
       throw new Error(`get orders failed. ${error}`);
@@ -810,6 +832,8 @@ export class CartApi extends BaseApi {
       return this.recreate(commercetoolsCart, locale);
     }
 
+    const config = this.frontasticContext?.project?.configuration?.preBuy;
+
     if (this.doesCartNeedLocaleUpdate(commercetoolsCart, locale)) {
       const cartUpdate: CartUpdate = {
         version: commercetoolsCart.version,
@@ -827,10 +851,10 @@ export class CartApi extends BaseApi {
 
       commercetoolsCart = await this.updateCart(commercetoolsCart.id, cartUpdate, locale);
 
-      return CartMapper.commercetoolsCartToCart(commercetoolsCart, locale);
+      return CartMapper.commercetoolsCartToCart(commercetoolsCart, locale, config);
     }
 
-    return CartMapper.commercetoolsCartToCart(commercetoolsCart, locale);
+    return CartMapper.commercetoolsCartToCart(commercetoolsCart, locale, config);
   };
 
   protected recreate: (primaryCommercetoolsCart: CommercetoolsCart, locale: Locale) => Promise<Cart> = async (

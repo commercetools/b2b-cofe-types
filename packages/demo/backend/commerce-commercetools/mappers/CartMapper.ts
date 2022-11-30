@@ -31,10 +31,11 @@ import { TaxPortion } from '@Types/cart/TaxPortion';
 import { Discount } from '@Types/cart/Discount';
 
 export class CartMapper {
-  static commercetoolsCartToCart: (commercetoolsCart: CommercetoolsCart, locale: Locale) => Cart = (
+  static commercetoolsCartToCart: (
     commercetoolsCart: CommercetoolsCart,
     locale: Locale,
-  ) => {
+    config?: Record<string, string>,
+  ) => Cart = (commercetoolsCart: CommercetoolsCart, locale: Locale, config?: Record<string, string>) => {
     return {
       cartId: commercetoolsCart.id,
       cartVersion: commercetoolsCart.version.toString(),
@@ -50,6 +51,7 @@ export class CartMapper {
       taxed: CartMapper.commercetoolsTaxedPriceToTaxed(commercetoolsCart.taxedPrice, locale),
       itemShippingAddresses: commercetoolsCart.itemShippingAddresses,
       origin: commercetoolsCart.origin,
+      isPreBuyCart: !!config ? commercetoolsCart.custom?.fields?.[config.orderCustomField] : false,
     };
   };
 
@@ -130,10 +132,11 @@ export class CartMapper {
     } as CommercetoolsAddress;
   };
 
-  static commercetoolsOrderToOrder: (commercetoolsOrder: CommercetoolsOrder, locale: Locale) => Order = (
+  static commercetoolsOrderToOrder: (
     commercetoolsOrder: CommercetoolsOrder,
     locale: Locale,
-  ) => {
+    config?: Record<string, string>,
+  ) => Order = (commercetoolsOrder: CommercetoolsOrder, locale: Locale, config?: Record<string, string>) => {
     return {
       cartId: commercetoolsOrder.id,
       orderState: commercetoolsOrder.orderState,
@@ -149,6 +152,7 @@ export class CartMapper {
       createdAt: commercetoolsOrder.createdAt,
       shippingInfo: CartMapper.commercetoolsShippingInfoToShippingInfo(commercetoolsOrder.shippingInfo, locale),
       returnInfo: CartMapper.commercetoolsReturnInfoToReturnInfo(commercetoolsOrder.returnInfo),
+      isPreBuyCart: !!config ? commercetoolsOrder.custom?.fields?.[config.orderCustomField] : false,
       //sum: commercetoolsOrder.totalPrice.centAmount,
       // payments:
       // discountCodes:

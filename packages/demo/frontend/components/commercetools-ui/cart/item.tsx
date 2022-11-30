@@ -3,6 +3,7 @@ import { XIcon } from '@heroicons/react/solid';
 import { LineItem } from '@Types/cart/LineItem';
 import debounce from 'lodash.debounce';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
+import { useCart } from 'frontastic';
 import { LoadingIcon } from '../icons/loading';
 import { SplitIcon } from '../icons/split';
 import SplitItemModal from './split-item';
@@ -20,6 +21,10 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem, isModif
   const [count, setCount] = useState(lineItem.count);
   const isMountedRef = useRef(false);
   const [isSplitModalOpen, setIsSplitModalOpen] = useState(false);
+
+  const {
+    data: { isPreBuyCart },
+  } = useCart();
 
   const handleRemoveItem = async () => {
     setIsLoading(true);
@@ -64,13 +69,15 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem, isModif
             {lineItem.name}
           </p>
         </td>
-        <td className="p-1">
-          <input
-            value={lineItem.variant.availability.availableQuantity}
-            className="input input-primary disabled"
-            disabled
-          />
-        </td>
+        {!isPreBuyCart && (
+          <td className="p-1">
+            <input
+              value={lineItem.variant.availability?.availableQuantity}
+              className="input input-primary disabled"
+              disabled
+            />
+          </td>
+        )}
         <td className="p-1">
           <input
             value={count}

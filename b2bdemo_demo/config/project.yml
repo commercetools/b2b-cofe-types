@@ -86,6 +86,11 @@ configuration:
     password: 2acf9dd7a69cc699b1484b22f1b2fe6c-c1fe131e-bb1f026f
     sender: no-reply@frontastic.cloud
     client_host: 'https://demo-b2bdemo.frontastic.io.netlify.app'
+  preBuy:
+    storeCustomType: lulu-store
+    orderCustomType: lulu-order
+    storeCustomField: is-pre-buy-store
+    orderCustomField: is-created-from-pre-buy-store
 data: {  }
 languages:
   - en_GB

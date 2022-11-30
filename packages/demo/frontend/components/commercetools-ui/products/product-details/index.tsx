@@ -49,8 +49,6 @@ export default function ProductDetail({ product, variant, onChangeVariantIdx, pr
   const [added, setAdded] = useState<boolean>(false);
 
   const isAttributeAvailable = (attribute: string) => {
-    console.log(attribute, typeof variant.attributes[attribute] !== 'undefined');
-
     return typeof variant.attributes[attribute] !== 'undefined';
   };
 

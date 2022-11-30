@@ -122,7 +122,6 @@ export class BusinessUnitApi extends BaseApi {
     console.log('BU');
     console.log(businessUnits);
 
-
     const rootNode = businessUnits.find((bu) => !bu.parentUnit);
     if (rootNode) {
       return [rootNode];

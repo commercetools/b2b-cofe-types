@@ -30,7 +30,10 @@ const SingleVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElemen
   hidePrice = false,
   hideWishlistButton = false,
 }) => {
-  const { addItem } = useCart();
+  const {
+    addItem,
+    data: { isPreBuyCart },
+  } = useCart();
   const { formatMessage: formatProductMessage } = useFormat({ name: 'product' });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -62,7 +65,6 @@ const SingleVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElemen
   };
 
   const handleAddToCart = (variant: Variant, quantity: number) => {
-    if (!variant.isOnStock) return;
     setIsLoading(true);
     onAddToCart(variant, quantity).then(() => {
       setIsLoading(false);
@@ -81,6 +83,7 @@ const SingleVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElemen
       }, 1000);
     }
   }, [added]);
+  console.log(isPreBuyCart);
 
   return (
     <div className={`w-full ${className}`}>
@@ -91,7 +94,7 @@ const SingleVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElemen
         </p>
       )}
       <div className="mt-4">{attributeSelector()}</div>
-      {!hideAddTocartButton && (
+      {!hideAddTocartButton && !isPreBuyCart && (
         <button
           type="button"
           onClick={() => handleAddToCart(variant, 1)}
@@ -105,6 +108,19 @@ const SingleVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElemen
                 : formatProductMessage({ id: 'outOfStock', defaultMessage: 'Out of stock' })}
             </>
           )}
+
+          {isLoading && <LoadingIcon className="h-6 w-6 animate-spin" />}
+          {!isLoading && added && <CheckIcon className="h-6 w-6" />}
+        </button>
+      )}
+      {!hideAddTocartButton && isPreBuyCart && (
+        <button
+          type="button"
+          onClick={() => handleAddToCart(variant, 1)}
+          className="mt-8 flex w-full flex-1 items-center justify-center rounded-md border border-transparent bg-accent-400 py-3 px-8 text-base font-medium text-white hover:bg-accent-500 focus:bg-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 focus:ring-offset-gray-50 disabled:bg-gray-400"
+          disabled={isLoading}
+        >
+          {!isLoading && !added && formatProductMessage({ id: 'cart.add', defaultMessage: 'Add to Cart' })}
 
           {isLoading && <LoadingIcon className="h-6 w-6 animate-spin" />}
           {!isLoading && added && <CheckIcon className="h-6 w-6" />}
