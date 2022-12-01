@@ -1,0 +1,25 @@
+{
+  "tasticType": "commercetools/ui/header/context-bar",
+  "name": "commercetools UI header: Context-bar",
+  "icon": "menu",
+  "category": "Header and footer",
+  "schema": [
+    {
+        "name": "Data source",
+        "fields": [
+            {
+                "label": "Organization Info",
+                "field": "organization",
+                "type": "dataSource",
+                "dataSourceType": "b2b/organization"
+            },
+            {
+                "label": "Organization Tree Info",
+                "field": "tree",
+                "type": "dataSource",
+                "dataSourceType": "b2b/organization-tree"
+            }
+        ]
+    }
+  ]
+}

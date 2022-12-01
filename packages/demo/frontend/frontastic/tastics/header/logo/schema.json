@@ -1,0 +1,25 @@
+{
+  "tasticType": "commercetools/ui/header/logo",
+  "name": "commercetools UI header: Logo",
+  "icon": "menu",
+  "category": "Header and footer",
+  "schema": [
+    {
+      "name": "Config",
+      "fields": [
+        {
+          "label": "Logo",
+          "field": "logo",
+          "type": "media",
+          "required": true
+        },
+        {
+          "label": "Logo link",
+          "field": "logoLink",
+          "type": "reference",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

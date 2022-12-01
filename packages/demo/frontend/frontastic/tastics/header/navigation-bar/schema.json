@@ -1,0 +1,34 @@
+{
+  "tasticType": "commercetools/ui/header",
+  "name": "commercetools UI header",
+  "icon": "menu",
+  "category": "Header and footer",
+  "schema": [
+    {
+      "name": "Links",
+      "fields": [
+        {
+          "label": "Links",
+          "field": "links",
+          "type": "group",
+          "itemLabelField": "name",
+          "fields": [
+            {
+              "label": "Name",
+              "field": "name",
+              "translatable": true,
+              "required": true,
+              "type": "string"
+            },
+            {
+              "label": "Link",
+              "field": "reference",
+              "required": true,
+              "type": "reference"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
