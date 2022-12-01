@@ -51,6 +51,9 @@ const DropdownVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElem
           .map((item) => item.sku)
           .filter((item) => item.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, '')));
 
+  const restockDate = new Date();
+  restockDate.setDate(restockDate.getDate() + (variant?.availability?.restockableInDays || 0));
+
   useEffect(() => {
     if (added) {
       setTimeout(() => {
@@ -133,8 +136,18 @@ const DropdownVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElem
           </Combobox>
         </div>
       )}
-      {!isPreBuyCart && (
+      {!isPreBuyCart && variant.isOnStock && (
         <p className="text-sm text-gray-400">{`Available Qty: ${variant?.availability?.availableQuantity || 0}`}</p>
+      )}
+      {!isPreBuyCart && !variant.isOnStock && (
+        <>
+          <p className="text-sm text-gray-400">
+            {formatProductMessage({ id: 'outOfStock', defaultMessage: 'Out of stock' })}
+          </p>
+          {!!variant?.availability?.restockableInDays && (
+            <p className="text-sm text-gray-400">{`Expected restock date: ${restockDate.toLocaleDateString()}`}</p>
+          )}
+        </>
       )}
       {!isPreBuyCart && (
         <button
