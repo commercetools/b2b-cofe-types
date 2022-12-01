@@ -109,8 +109,7 @@ const AddToCartItem: React.FC<Props> = ({ goToProductPage }) => {
   };
 
   return (
-    <tr className="line-item dynamic-cart-item">
-      <td></td>
+    <tr className="dynamic-cart-item">
       {!lineItem.selectedVariant && (
         <td colSpan={6} className="relative">
           <input

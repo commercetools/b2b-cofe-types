@@ -32,14 +32,9 @@ const ItemList: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = ({
         <thead className="cart-table__header">
           <tr>
             <th className="cart-table__header-sku">
-              {formatCartMessage({ id: 'product-sku', defaultMessage: 'SKU' })}
+              {formatCartMessage({ id: 'product-item', defaultMessage: 'Item' })}
             </th>
-            <th className="cart-table__header-name">
-              {formatCartMessage({ id: 'product-name', defaultMessage: 'Name' })}
-            </th>
-            <th className="cart-table__header-available-quantity">
-              {formatCartMessage({ id: 'product-availability', defaultMessage: 'AQ' })}
-            </th>
+
             <th className="cart-table__header-quantity">
               {formatCartMessage({ id: 'product-quantity', defaultMessage: 'Quantity' })}
             </th>
@@ -47,9 +42,8 @@ const ItemList: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = ({
               {formatCartMessage({ id: 'product-price', defaultMessage: 'Price' })}
             </th>
             <th className="cart-table__header-total-price">
-              {formatCartMessage({ id: 'product-total-price', defaultMessage: 'Total Price' })}
+              {formatCartMessage({ id: 'product-total-price', defaultMessage: 'Total' })}
             </th>
-            <th className="cart-table__header-action"></th>
           </tr>
         </thead>
         <tbody>
