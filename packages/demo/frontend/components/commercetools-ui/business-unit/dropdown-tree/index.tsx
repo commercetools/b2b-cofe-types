@@ -30,7 +30,7 @@ const BusinessUnitDropdownTree = ({ tree }) => {
       <select
         defaultValue={businessUnit.key}
         onChange={setBusinessUnit}
-        className="store-picker w-52 appearance-none rounded border border-gray-300 py-0 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+        className="store-picker w-36 appearance-none border-none py-0 pl-3 pr-6 text-xs leading-tight text-gray-700 shadow-none focus:outline-none"
       >
         {tree.map((item) => (
           <option key={item.key} value={item.key}>
