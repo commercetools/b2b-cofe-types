@@ -19,7 +19,7 @@ export function TasticWrapper(props: TasticWrapperProps) {
   return (
     <div
       className={classnames(
-        `w-full ${highlightClassNames(highlight)} ${data.configuration.mobile ? 'block' : 'hidden'} ${
+        `h-full w-full ${highlightClassNames(highlight)} ${data.configuration.mobile ? 'block' : 'hidden'} ${
           data.configuration.tablet ? 'md:block' : 'md:hidden'
         } ${data.configuration.desktop ? 'lg:block' : 'lg:hidden'}`,
       )}

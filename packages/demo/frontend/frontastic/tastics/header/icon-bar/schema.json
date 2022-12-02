@@ -1,0 +1,43 @@
+{
+  "tasticType": "commercetools/ui/header/icon-bar",
+  "name": "Icons",
+  "icon": "bookmarks",
+  "category": "Header and footer",
+  "schema": [
+    {
+      "name": "Config",
+      "fields": [
+        {
+          "label": "Background Color",
+          "field": "bgColor",
+          "translatable": false,
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "Links",
+      "fields": [
+        {
+          "label": "Business Unit link",
+          "field": "businessUnitLink",
+          "type": "reference",
+          "required": true
+        },
+        {
+          "label": "Wishlist link",
+          "field": "wishlistLink",
+          "type": "reference",
+          "required": true
+        },
+        {
+          "label": "Cart link",
+          "field": "cartLink",
+          "type": "reference",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

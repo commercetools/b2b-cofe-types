@@ -1,0 +1,32 @@
+{
+  "tasticType": "commercetools/ui/header/logo",
+  "name": "Logo",
+  "icon": "perm_media",
+  "category": "Header and footer",
+  "schema": [
+    {
+      "name": "Config",
+      "fields": [
+        {
+          "label": "Logo",
+          "field": "logo",
+          "type": "media",
+          "required": true
+        },
+        {
+          "label": "Logo link",
+          "field": "logoLink",
+          "type": "reference",
+          "required": true
+        },
+        {
+          "label": "Background Color",
+          "field": "bgColor",
+          "translatable": false,
+          "required": false,
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

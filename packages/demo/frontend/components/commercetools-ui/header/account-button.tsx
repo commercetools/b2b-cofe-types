@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-import { UserIcon } from '@heroicons/react/outline';
+import { UserIcon as LoggedInIcon } from '@heroicons/react/solid';
 import { Account } from '@Types/account/Account';
 import { Organization } from '@Types/organization/organization';
 import { useFormat } from 'helpers/hooks/useFormat';
@@ -25,13 +25,13 @@ const AccountButton: React.FC<AccountButtonProps> = ({ accountLink, account, bus
   };
 
   return (
-    <div className="relative ml-4 flex items-center">
+    <div className="relative ml-4 inline-block">
       {account ? (
         <Menu>
           <div className="relative flex space-x-8">
             <Menu.Button className="flex">
-              <span>Account</span>
-              {/* <UserIcon className="h-6 w-6 text-primary-400 dark:text-light-100" aria-hidden="true" /> */}
+              {/* <span>Account</span> */}
+              <LoggedInIcon className="h-4 w-4 text-primary-400 dark:text-light-100" aria-hidden="true" />
             </Menu.Button>
             {/* <div className="absolute -right-[1px] -bottom-[2px] h-[9px] w-[9px] rounded-md bg-green-700"></div> */}
           </div>

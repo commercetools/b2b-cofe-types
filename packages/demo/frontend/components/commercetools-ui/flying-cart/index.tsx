@@ -22,7 +22,7 @@ export const FlyingCart: React.FC = () => {
             leaveFrom="transform scale-x-5 opacity-100"
             leaveTo="transform scale-x-0 opacity-0"
           >
-            <div className="flying-cart fixed right-0 top-0 flex flex-col items-end bg-white p-4">
+            <div className="flying-cart fixed right-0 top-0 z-50 flex flex-col items-end bg-white p-4">
               <button className="h-6 w-6" onClick={() => toggleFlyingCart(false)}>
                 <XCircleIcon className="h-6 w-6 text-primary-400 dark:text-light-100" />
               </button>

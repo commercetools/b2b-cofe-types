@@ -1,0 +1,53 @@
+{
+  "tasticType": "commercetools/ui/header/links",
+  "name": "Links",
+  "icon": "touch_app",
+  "category": "Header and footer",
+  "schema": [
+    {
+      "name": "Config",
+      "fields": [
+        {
+          "label": "Background Color",
+          "field": "bgColor",
+          "translatable": false,
+          "required": false,
+          "type": "string"
+        },
+        {
+          "label": "Text Color",
+          "field": "textColor",
+          "translatable": false,
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "Links",
+      "fields": [
+        {
+          "label": "Links",
+          "field": "links",
+          "type": "group",
+          "itemLabelField": "name",
+          "fields": [
+            {
+              "label": "Name",
+              "field": "name",
+              "translatable": true,
+              "required": true,
+              "type": "string"
+            },
+            {
+              "label": "Link",
+              "field": "reference",
+              "required": true,
+              "type": "reference"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -30,7 +30,7 @@ const SearchButton: React.FC = () => {
   };
 
   return (
-    <div className="relative mr-4 flex">
+    <div className="mr-4 flex">
       <SearchInput onBlur={endSearch} value={searchValue} onChange={handleChange} onSubmit={handleSubmit} />
     </div>
   );

@@ -1,0 +1,54 @@
+{
+  "tasticType": "commercetools/ui/header/user-bar",
+  "name": "User-bar",
+  "icon": "account_circle",
+  "category": "Header and footer",
+  "schema": [
+    {
+        "name": "Config",
+        "fields": [
+          {
+              "label": "Background Color",
+              "field": "bgColor",
+              "translatable": false,
+              "required": false,
+              "type": "string"
+            }
+        ]
+      },
+      {
+        "name": "Links",
+        "fields": [
+          {
+            "label": "Account link",
+            "field": "accountLink",
+            "type": "reference",
+            "required": true
+          },
+          {
+            "label": "Business Unit link",
+            "field": "businessUnitLink",
+            "type": "reference",
+            "required": true
+          }
+        ]
+      },
+      {
+        "name": "Data source",
+        "fields": [
+            {
+                "label": "Organization Info",
+                "field": "organization",
+                "type": "dataSource",
+                "dataSourceType": "b2b/organization"
+            },
+            {
+                "label": "Organization Tree Info",
+                "field": "tree",
+                "type": "dataSource",
+                "dataSourceType": "b2b/organization-tree"
+            }
+        ]
+    }
+  ]
+}
