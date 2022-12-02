@@ -4,6 +4,7 @@ import HeaderMenu from 'components/commercetools-ui/header/header-menu';
 import Typography from 'components/commercetools-ui/typography';
 import { useAccount } from 'frontastic/provider';
 import { ReferenceLink } from 'helpers/reference';
+import { FlyingCartButton } from 'components/commercetools-ui/header/flying-cart-button';
 
 import React, { Fragment, useState } from 'react';
 
@@ -16,10 +17,10 @@ const LinksBarTastic: React.FC<Props> = ({ data }) => {
   const { account } = useAccount();
 
   return (
-    <div className={`flex h-full flex-row items-center bg-${data.bgColor}-400`}>
+    <div className={`flex h-full w-full flex-row items-center bg-${data.bgColor}-400`}>
       {/* Mobile menu */}
       <HeaderMenu open={open} setOpen={setOpen} links={data.links} navigation={{ categories: [] }} />
-      <nav aria-label="Top" className="max-w-full px-6 lg:px-0">
+      <nav aria-label="Top" className="w-full px-6 lg:px-0">
         {/* Secondary navigation */}
         <div className="h-full">
           <div className="flex items-center justify-between">
@@ -49,6 +50,13 @@ const LinksBarTastic: React.FC<Props> = ({ data }) => {
                       <Typography>{link.name}</Typography>
                     </ReferenceLink>
                   ))}
+                  {data.showQuickAdd && (
+                    <div className="inline h-full flex-grow">
+                      <span className={`text-md flex justify-end px-4 py-2 font-semibold text-${data.textColor}`}>
+                        <FlyingCartButton />
+                      </span>
+                    </div>
+                  )}
                 </div>
               </Popover.Group>
             )}

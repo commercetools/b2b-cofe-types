@@ -20,6 +20,13 @@
           "translatable": false,
           "required": false,
           "type": "string"
+        },
+        {
+          "label": "Show Quick add",
+          "field": "showQuickAdd",
+          "translatable": false,
+          "required": false,
+          "type": "boolean"
         }
       ]
     },
