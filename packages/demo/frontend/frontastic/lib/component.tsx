@@ -4,8 +4,18 @@ import ErrorBoundary from './error-boundary';
 import { TasticWrapperProps } from './types';
 import { injectDataSources } from './utils/inject-data-sources';
 
+const fullHeightTastics = [
+  'commercetools/ui/header/links',
+  'commercetools/ui/header/icon-bar',
+  'commercetools/ui/header/search-bar',
+];
+
 export function highlightClassNames(highlight: boolean) {
   return highlight ? 'outline outline-dashed outline-2 outline-accent-400' : '';
+}
+
+function height(type: string) {
+  return fullHeightTastics.includes(type) ? 'h-full' : '';
 }
 
 export function TasticWrapper(props: TasticWrapperProps) {
@@ -19,9 +29,10 @@ export function TasticWrapper(props: TasticWrapperProps) {
   return (
     <div
       className={classnames(
-        `h-full w-full ${highlightClassNames(highlight)} ${data.configuration.mobile ? 'block' : 'hidden'} ${
+        `w-full ${highlightClassNames(highlight)} ${data.configuration.mobile ? 'block' : 'hidden'} ${
           data.configuration.tablet ? 'md:block' : 'md:hidden'
         } ${data.configuration.desktop ? 'lg:block' : 'lg:hidden'}`,
+        height(data.tasticType),
       )}
     >
       {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
