@@ -90,9 +90,9 @@ export default {
           return {
             dynamicPageType: 'frontastic/search',
             dataSourcePayload: {
-                totalItems: result.total,
-                ...result
-              },
+              totalItems: result.total,
+              ...result,
+            },
             pageMatchingPayload: {
               query: result.query,
             },
