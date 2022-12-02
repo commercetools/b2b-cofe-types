@@ -57,7 +57,7 @@ const Filters: FC<FiltersProps> = ({ facets, products }) => {
         facets={facets}
         updatePriceFilteringParams={updatePriceFilteringParams}
       />
-      <div className="mt-8 flex justify-between gap-3">
+      <div className="mt-8 flex max-w-xs justify-between gap-3">
         <NextLink href={router?.asPath.split('?')[0] || ''}>
           <a className="w-full rounded border border-accent-400 py-2.5 text-center text-accent-400">
             {formatMessage({ id: 'clear', defaultMessage: 'Clear' })}

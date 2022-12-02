@@ -26,11 +26,11 @@ const BusinessUnitDropdownTree = ({ tree }) => {
   if (!businessUnit || !tree?.length) return null;
 
   return (
-    <span className="">
+    <span>
       <select
         defaultValue={businessUnit.key}
         onChange={setBusinessUnit}
-        className="store-picker w-52 appearance-none rounded border border-gray-300 py-1 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+        className="store-picker w-52 appearance-none rounded border border-gray-300 py-0 px-3 leading-tight text-gray-700 shadow focus:outline-none"
       >
         {tree.map((item) => (
           <option key={item.key} value={item.key}>

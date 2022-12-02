@@ -12,7 +12,7 @@ interface Props {
 const IconBarTastic: React.FC<Props> = ({ data }) => {
   const { account } = useAccount();
   return (
-    <div className={`flex h-full flex-row items-center bg-${data.bgColor}-400`}>
+    <div className={`flex h-full flex-row items-center justify-end bg-${data.bgColor}-400`}>
       {!!account && (
         <>
           <WishListButton wishlistItemCount={0} wishlistLink={data.wishlistLink} />
