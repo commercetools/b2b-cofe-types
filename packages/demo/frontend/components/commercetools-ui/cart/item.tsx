@@ -101,7 +101,7 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem, isModif
         <td className="p-1">
           <input
             value={count}
-            type="number"
+            type="text"
             disabled={isLoading}
             readOnly={isModificationForbidden}
             onChange={(e) => handleChange(e.target.value)}
