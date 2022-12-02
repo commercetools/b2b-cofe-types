@@ -1,9 +1,28 @@
 {
-  "tasticType": "commercetools/ui/header",
-  "name": "commercetools UI header",
-  "icon": "menu",
+  "tasticType": "commercetools/ui/header/links",
+  "name": "Links",
+  "icon": "touch_app",
   "category": "Header and footer",
   "schema": [
+    {
+      "name": "Config",
+      "fields": [
+        {
+          "label": "Background Color",
+          "field": "bgColor",
+          "translatable": false,
+          "required": false,
+          "type": "string"
+        },
+        {
+          "label": "Text Color",
+          "field": "textColor",
+          "translatable": false,
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
     {
       "name": "Links",
       "fields": [

@@ -1,0 +1,18 @@
+{
+  "tasticType": "commercetools/ui/header/search-bar",
+  "name": "Search",
+  "icon": "perm_media",
+  "category": "Header and footer",
+  "schema": [{
+      "name": "Config",
+      "fields": [
+        {
+            "label": "Background Color",
+            "field": "bgColor",
+            "translatable": false,
+            "required": false,
+            "type": "string"
+          }
+      ]
+    }]
+}

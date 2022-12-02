@@ -16,7 +16,7 @@ const BusinessUnitRole: React.FC<Props> = ({ organization }) => {
     (associate) => associate?.customer?.id === account.accountId,
   )?.roles;
 
-  return <span className="px-4">{!!roles?.length && roles.join(', ')}</span>;
+  return <span className="px-4 text-xs font-light">{!!roles?.length && `(${roles.join(', ')})`}</span>;
 };
 
 export default BusinessUnitRole;

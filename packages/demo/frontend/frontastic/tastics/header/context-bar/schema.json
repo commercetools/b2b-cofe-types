@@ -1,25 +1,51 @@
 {
   "tasticType": "commercetools/ui/header/context-bar",
-  "name": "commercetools UI header: Context-bar",
-  "icon": "menu",
+  "name": "Context-bar",
+  "icon": "work",
   "category": "Header and footer",
   "schema": [
     {
-        "name": "Data source",
-        "fields": [
-            {
-                "label": "Organization Info",
-                "field": "organization",
-                "type": "dataSource",
-                "dataSourceType": "b2b/organization"
-            },
-            {
-                "label": "Organization Tree Info",
-                "field": "tree",
-                "type": "dataSource",
-                "dataSourceType": "b2b/organization-tree"
-            }
-        ]
+      "name": "Config",
+      "fields": [
+        {
+          "label": "Background Color",
+          "field": "bgColor",
+          "translatable": false,
+          "required": false,
+          "type": "string"
+        },
+        {
+          "label": "Hide Store picker",
+          "field": "isStorePickerHidden",
+          "translatable": false,
+          "required": false,
+          "type": "boolean"
+        },
+        {
+          "label": "Hide BU picker",
+          "field": "isBUPickerHidden",
+          "translatable": false,
+          "required": false,
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "name": "Data source",
+      "fields": [
+        {
+          "label": "Organization Info",
+          "field": "organization",
+          "type": "dataSource",
+          "dataSourceType": "b2b/organization"
+        },
+        {
+          "label": "Organization Tree Info",
+          "field": "tree",
+          "type": "dataSource",
+          "dataSourceType": "b2b/organization-tree"
+        }
+      ]
     }
   ]
 }

@@ -20,6 +20,12 @@ import Spacer from './content/spacer';
 import Tile from './content/tile';
 import Footer from './footer';
 import Header from './header';
+import HeaderContext from './header/context-bar';
+import HeaderIcon from './header/icon-bar';
+import HeaderLinks from './header/links';
+import HeaderLogo from './header/logo';
+import HeaderSearch from './header/search-bar';
+import HeaderUser from './header/user-bar';
 import Newsletter from './newsletter';
 import NotFound from './not-found';
 import ProductDetails from './products/details';
@@ -54,6 +60,12 @@ export const tastics = {
   'commercetools/ui/cart': Cart,
   'commercetools/ui/footer': Footer,
   'commercetools/ui/header': Header,
+  'commercetools/ui/header/context-bar': HeaderContext,
+  'commercetools/ui/header/icon-bar': HeaderIcon,
+  'commercetools/ui/header/links': HeaderLinks,
+  'commercetools/ui/header/logo': HeaderLogo,
+  'commercetools/ui/header/search-bar': HeaderSearch,
+  'commercetools/ui/header/user-bar': HeaderUser,
   'commercetools/ui/content/tile': Tile,
   'commercetools/ui/content/spacer': Spacer,
   'commercetools/ui/content/showcase': Showcase,

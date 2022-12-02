@@ -1,7 +1,7 @@
 {
   "tasticType": "commercetools/ui/header/logo",
-  "name": "commercetools UI header: Logo",
-  "icon": "menu",
+  "name": "Logo",
+  "icon": "perm_media",
   "category": "Header and footer",
   "schema": [
     {
@@ -18,6 +18,13 @@
           "field": "logoLink",
           "type": "reference",
           "required": true
+        },
+        {
+          "label": "Background Color",
+          "field": "bgColor",
+          "translatable": false,
+          "required": false,
+          "type": "string"
         }
       ]
     }
