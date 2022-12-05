@@ -16,7 +16,7 @@ const UserBarTastic: React.FC<Props> = ({ data }) => {
   const organization = data.organization?.dataSource?.organization;
 
   return (
-    <div className={`bg-${data.bgColor}-400`}>
+    <div className={`flex h-full flex-row items-center justify-end bg-${data.bgColor}-400`}>
       <span>
         {account?.firstName
           ? formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) + account?.firstName
@@ -25,13 +25,15 @@ const UserBarTastic: React.FC<Props> = ({ data }) => {
           : formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) +
             formatAccountMessage({ id: 'user', defaultMessage: 'User ' })}
       </span>
-      <BusinessUnitRole organization={data.organization?.dataSource?.organization} />
-      <AccountButton
-        account={account}
-        accountLink={data.links?.accountLink}
-        organization={organization}
-        businessUnitLink={data.links?.businessUnitLink}
-      />
+      <span className="inline-flex items-center px-2">
+        <BusinessUnitRole organization={data.organization?.dataSource?.organization} />
+        <AccountButton
+          account={account}
+          accountLink={data.links?.accountLink}
+          organization={organization}
+          businessUnitLink={data.links?.businessUnitLink}
+        />
+      </span>
       <span className="inline-flex items-center px-2">
         <GlobeIcon className="mt-2 mr-1 inline h-4 w-4 text-accent-400" />
         <span className="mt-2">US</span>
