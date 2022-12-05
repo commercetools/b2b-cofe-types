@@ -8,9 +8,11 @@ import ListItem from './list-item';
 interface Props {
   products: Product[];
   filtering?: boolean;
+  isPreview?: boolean;
+  previewURL?: string;
 }
 
-const List: React.FC<Props> = ({ products, filtering }) => {
+const List: React.FC<Props> = ({ products, filtering, isPreview, previewURL }) => {
   //i18n messages
   const { formatMessage: formatProductMessage } = useFormat({ name: 'product' });
   const { data } = useCart();
@@ -23,7 +25,10 @@ const List: React.FC<Props> = ({ products, filtering }) => {
           filtering ? '3' : '4'
         } xl:gap-x-8`}
       >
-        {!!data && products?.map((product) => <ListItem product={product} key={product.productId} />)}
+        {!!data &&
+          products?.map((product) => (
+            <ListItem product={product} key={product.productId} isPreview={isPreview} previewURL={previewURL} />
+          ))}
       </div>
     </div>
   );

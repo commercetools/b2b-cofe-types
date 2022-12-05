@@ -10,9 +10,11 @@ import Image from 'frontastic/lib/image';
 
 interface Props {
   product: Product;
+  isPreview?: boolean;
+  previewURL?: string;
 }
 
-const ListItem: React.FC<Props> = ({ product }) => {
+const ListItem: React.FC<Props> = ({ product, isPreview, previewURL }) => {
   const { formatMessage: formatProductMessage } = useFormat({ name: 'product' });
   const {
     addItem,
@@ -35,7 +37,7 @@ const ListItem: React.FC<Props> = ({ product }) => {
 
   return (
     <div className="my-10">
-      <NextLink href={product._url}>
+      <NextLink href={isPreview ? `${previewURL}${product._url}` : product._url}>
         <a className="group">
           <div className="bg-white-200 aspect-w-1 aspect-h-1 m-auto w-2/3 rounded-lg transition-shadow hover:shadow-xl xl:aspect-w-7 xl:aspect-h-8">
             <Image

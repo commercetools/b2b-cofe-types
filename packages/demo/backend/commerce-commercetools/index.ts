@@ -60,12 +60,29 @@ export default {
       } as DynamicPageSuccessResult;
     }
 
+    // Identify Product Preview
+    if (ProductRouter.identifyPreviewFrom(request)) {
+      return ProductRouter.loadPreviewFor(request, context.frontasticContext).then((product: Product) => {
+        if (product) {
+          return {
+            dynamicPageType: 'frontastic/product-detail-page',
+            dataSourcePayload: {
+              product: product,
+            },
+            pageMatchingPayload: {
+              product: product,
+            },
+          };
+        }
+
+        // FIXME: Return proper error result
+        return null;
+      });
+    }
+
     // Identify Product
     if (ProductRouter.identifyFrom(request)) {
       return ProductRouter.loadFor(request, context.frontasticContext).then((product: Product) => {
-        console.log('PRODU');
-        console.log(product);
-
         if (product) {
           return {
             dynamicPageType: 'frontastic/product-detail-page',
@@ -95,6 +112,38 @@ export default {
             },
             pageMatchingPayload: {
               query: result.query,
+            },
+          };
+        }
+
+        // FIXME: Return proper error result
+        return null;
+      });
+    }
+
+    // Identify preview list
+    if (CategoryRouter.identifyPreviewFrom(request)) {
+      return CategoryRouter.loadPreviewFor(request, context.frontasticContext).then((result: Result) => {
+        if (result) {
+          return {
+            dynamicPageType: 'frontastic/category',
+            dataSourcePayload: {
+              totalItems: result.total,
+              items: result.items,
+              facets: result.facets,
+              previousCursor: result.previousCursor,
+              nextCursor: result.nextCursor,
+              category: getPath(request),
+              isPreview: true,
+            },
+            pageMatchingPayload: {
+              totalItems: result.total,
+              items: result.items,
+              facets: result.facets,
+              previousCursor: result.previousCursor,
+              nextCursor: result.nextCursor,
+              category: getPath(request),
+              isPreview: true,
             },
           };
         }

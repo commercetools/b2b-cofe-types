@@ -26,6 +26,14 @@ export class ProductRouter {
     return false;
   }
 
+  static identifyPreviewFrom(request: Request) {
+    if (getPath(request)?.match(/\/preview\/.+\/p\/([^\/]+)/)) {
+      return true;
+    }
+
+    return false;
+  }
+
   static loadFor = async (request: Request, frontasticContext: Context): Promise<Product> => {
     const productApi = new ProductApi(frontasticContext, getLocale(request));
 
@@ -44,6 +52,30 @@ export class ProductRouter {
         additionalQueryArgs.priceChannel = distributionChannelId;
       }
 
+      return productApi.getProduct(productQuery, additionalQueryArgs);
+    }
+
+    return null;
+  };
+
+  static loadPreviewFor = async (request: Request, frontasticContext: Context): Promise<Product> => {
+    const productApi = new ProductApi(frontasticContext, getLocale(request));
+
+    const urlMatches = getPath(request)?.match(/\/preview\/.+\/p\/([^\/]+)/);
+
+    if (urlMatches) {
+      const productQuery: ProductQuery = {
+        skus: [urlMatches[1]],
+      };
+
+      const additionalQueryArgs = { staged: true };
+      const distributionChannelId =
+        request.query?.['distributionChannelId'] || request.sessionData?.organization?.distributionChannel?.id;
+
+      if (distributionChannelId) {
+        // @ts-ignore
+        additionalQueryArgs.priceChannel = distributionChannelId;
+      }
       return productApi.getProduct(productQuery, additionalQueryArgs);
     }
 

@@ -3,20 +3,26 @@ import { getLocale } from './utils/Request';
 import { ProductApi } from './apis/ProductApi';
 import { ProductQueryFactory } from './utils/ProductQueryFactory';
 import { BusinessUnitApi } from './apis/BusinessUnitApi';
+
+function productQueryFromContext(context: DataSourceContext, config: DataSourceConfiguration) {
+  const productApi = new ProductApi(context.frontasticContext, context.request ? getLocale(context.request) : null);
+  const additionalQueryArgs = {};
+  const distributionChannelId =
+    context.request.query?.['distributionChannelId'] ||
+    context.request.sessionData?.organization?.distributionChannel?.id;
+
+  if (distributionChannelId) {
+    // @ts-ignore
+    additionalQueryArgs.priceChannel = distributionChannelId;
+  }
+
+  const productQuery = ProductQueryFactory.queryFromParams(context?.request, config);
+  return { productApi, productQuery, additionalQueryArgs };
+}
+
 export default {
   'frontastic/product-list': async (config: DataSourceConfiguration, context: DataSourceContext) => {
-    const distributionChannelId =
-      context.request.query?.['distributionChannelId'] ||
-      context.request.sessionData?.organization?.distributionChannel?.id;
-    const productApi = new ProductApi(context.frontasticContext, context.request ? getLocale(context.request) : null);
-
-    const additionalQueryArgs = {};
-    if (distributionChannelId) {
-      // @ts-ignore
-      additionalQueryArgs.priceChannel = distributionChannelId;
-    }
-
-    const productQuery = ProductQueryFactory.queryFromParams(context?.request, config);
+    const { productApi, productQuery, additionalQueryArgs } = productQueryFromContext(context, config);
 
     return await productApi.query(productQuery, additionalQueryArgs).then((queryResult) => {
       return {
@@ -47,21 +53,9 @@ export default {
   },
 
   'frontastic/product': async (config: DataSourceConfiguration, context: DataSourceContext) => {
-    const productApi = new ProductApi(context.frontasticContext, context.request ? getLocale(context.request) : null);
+    const { productApi, productQuery, additionalQueryArgs } = productQueryFromContext(context, config);
 
-    const additionalQueryArgs = {};
-    const distributionChannelId =
-      context.request.query?.['distributionChannelId'] ||
-      context.request.sessionData?.organization?.distributionChannel?.id;
-
-    if (distributionChannelId) {
-      // @ts-ignore
-      additionalQueryArgs.priceChannel = distributionChannelId;
-    }
-
-    const productQuery = ProductQueryFactory.queryFromParams(context?.request, config);
-
-    return await productApi.getProduct(productQuery).then((queryResult) => {
+    return await productApi.getProduct(productQuery, additionalQueryArgs).then((queryResult) => {
       return {
         dataSourcePayload: {
           product: queryResult,

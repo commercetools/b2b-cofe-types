@@ -18,9 +18,20 @@ export interface Props {
   category: string;
   facets: Facet[];
   totalProducts: number;
+  isPreview?: boolean;
+  previewURL?: string;
 }
 
-export default function ProductList({ products, totalProducts, previousCursor, nextCursor, category, facets }: Props) {
+export default function ProductList({
+  products,
+  totalProducts,
+  previousCursor,
+  nextCursor,
+  category,
+  facets,
+  isPreview,
+  previewURL,
+}: Props) {
   const [isFiltering, setIsFiltering] = useState<boolean>(true);
   const [previousPageURL, setPreviousPageURL] = useState<string>('/');
   const [nextPageURL, setNextPageURL] = useState<string>('/');
@@ -88,14 +99,14 @@ export default function ProductList({ products, totalProducts, previousCursor, n
           </div>
           <div className="lg:col-span-2">
             {products.length > 0 ? (
-              <List products={products} filtering={isFiltering} />
+              <List products={products} filtering={isFiltering} isPreview={isPreview} previewURL={previewURL} />
             ) : (
               <p>{formatProductMessage({ id: 'noProductsFound', defaultMessage: 'No products found.' })}</p>
             )}
           </div>
         </div>
       ) : (
-        <List products={products} />
+        <List products={products} isPreview={isPreview} previewURL={previewURL} />
       )}
 
       <nav

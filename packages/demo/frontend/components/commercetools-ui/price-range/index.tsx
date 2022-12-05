@@ -51,7 +51,7 @@ const PriceRange: FC<PriceRangeProps> = ({ products, facets, updatePriceFilterin
         } else updateValues([minConverted, maxConverted]);
 
         // Setting currency
-        setCurrency(products?.[0].variants[0].price.currencyCode);
+        setCurrency(products?.[0]?.variants?.[0]?.price.currencyCode);
       }
     };
 
