@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 import { ShippingMethod } from '@Types/cart/ShippingMethod';
 import toast from 'react-hot-toast';
 import Address from 'components/commercetools-ui/adyen-checkout/panels/address';
@@ -27,8 +28,9 @@ export type FormData = {
 };
 
 const AdyenCheckout = ({ termsLink, cancellationLink, privacyLink }) => {
-  const { data: cartList, updateCart, setShippingMethod } = useCart();
+  const { data: cartList, updateCart, setShippingMethod, orderCart } = useCart();
   const { formatMessage } = useFormat({ name: 'cart' });
+  const router = useRouter();
   const { formatMessage: formatCheckoutMessage } = useFormat({ name: 'checkout' });
   const containerRef = useRef();
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -37,6 +39,8 @@ const AdyenCheckout = ({ termsLink, cancellationLink, privacyLink }) => {
   const [currentShippingMethod, setCurrentShippingMethod] = useState<ShippingMethod>();
   const [dataIsValid, setDataIsValid] = useState<boolean>(false);
   const [isQuoteRequest, setIsQuoteRequest] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [data, setData] = useState<FormData>({
     firstName: '',
     lastName: '',
@@ -61,6 +65,21 @@ const AdyenCheckout = ({ termsLink, cancellationLink, privacyLink }) => {
     setBillingIsSameAsShipping(!billingIsSameAsShipping);
   };
 
+  const handleOrder = async () => {
+    setIsLoading(true);
+    await orderCart();
+    setIsLoading(false);
+    router.replace(
+      {
+        pathname: '/thank-you',
+      },
+      undefined,
+      {
+        shallow: false,
+      },
+    );
+  };
+
   const generateStepTag = (index: number) => (
     <div
       className={`mx-auto flex h-10 w-10 items-center rounded-full text-lg  text-white ${
@@ -80,6 +99,11 @@ const AdyenCheckout = ({ termsLink, cancellationLink, privacyLink }) => {
   const gotToNextStep = () => {
     if (currentStepIndex == 0) {
       updateCartData();
+    }
+
+    if (currentStepIndex == 2) {
+      handleOrder();
+      return;
     }
 
     setCurrentStepIndex(currentStepIndex + 1);
@@ -116,7 +140,8 @@ const AdyenCheckout = ({ termsLink, cancellationLink, privacyLink }) => {
   };
 
   const submitButtonLabel = [
-    formatMessage({ id: 'goToOverview', defaultMessage: 'Go to overview' }),
+    formatMessage({ id: 'gotToShipping', defaultMessage: 'Go to shipping' }),
+    formatMessage({ id: 'goToOverview', defaultMessage: 'Go to overview & payment' }),
     formatMessage({ id: 'ContinueAndPay', defaultMessage: 'Continue and pay' }),
   ];
 
@@ -133,7 +158,7 @@ const AdyenCheckout = ({ termsLink, cancellationLink, privacyLink }) => {
       ),
     },
     {
-      name: formatMessage({ id: 'overview', defaultMessage: 'Overview' }),
+      name: formatMessage({ id: 'shipping', defaultMessage: 'Shipping' }),
       component: (
         <Overview
           shippingMethods={cartList?.availableShippingMethods}
@@ -209,9 +234,10 @@ const AdyenCheckout = ({ termsLink, cancellationLink, privacyLink }) => {
         <OrderSummary
           cart={cartList}
           submitButtonLabel={submitButtonLabel[currentStepIndex]}
-          disableSubmitButton={disableSubmitButton}
+          disableSubmitButton={disableSubmitButton || isLoading}
           showDiscountsForm={!isQuoteRequest && currentStepIndex < 2}
-          showSubmitButton={currentStepIndex < 2}
+          showSubmitButton={true}
+          submitLoading={isLoading}
           onSubmit={gotToNextStep}
           termsLink={termsLink}
           cancellationLink={cancellationLink}

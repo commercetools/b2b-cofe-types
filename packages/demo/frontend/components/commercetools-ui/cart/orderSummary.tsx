@@ -22,6 +22,7 @@ interface Props {
   termsLink?: Reference;
   cancellationLink?: Reference;
   privacyLink?: Reference;
+  submitLoading?: boolean;
 }
 
 const OrderSummary = ({
@@ -36,6 +37,7 @@ const OrderSummary = ({
   privacyLink,
   currentStep,
   isQuoteRequestDisabled,
+  submitLoading,
 }: Props) => {
   //i18n messages
   const { formatMessage: formatCartMessage } = useFormat({ name: 'cart' });
@@ -49,7 +51,7 @@ const OrderSummary = ({
 
   const submitButtonClassName = `${disableSubmitButton ? 'opacity-75 pointer-events-none' : ''} ${
     !showDiscountsForm ? 'mt-7' : ''
-  } w-full rounded-md border border-transparent py-3 px-4 text-base shadow-sm font-medium text-white bg-accent-400 hover:bg-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-gray-50`;
+  } w-full rounded-md border border-transparent py-3 px-4 text-base shadow-sm font-medium text-white bg-accent-400 hover:bg-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-gray-50 flex flex row items-center justify-center`;
 
   const interpolatedComponents = [
     <ReferenceLink key={0} className="cursor-pointer font-medium text-accent-500 hover:underline" target={termsLink} />,
@@ -225,6 +227,7 @@ const OrderSummary = ({
             <>
               <button type="submit" onClick={onSubmit} className={submitButtonClassName}>
                 {submitButtonLabel || formatCartMessage({ id: 'checkout', defaultMessage: 'Checkout' })}
+                {submitLoading && <LoadingIcon className="ml-2 h-4 w-4 animate-spin" />}
               </button>
               {currentStep === 'cart' && !isQuoteRequestDisabled && (
                 <button className="mt-4" type="button" onClick={handleQuoteRequest}>
