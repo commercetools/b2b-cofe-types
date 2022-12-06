@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { Variant } from '@Types/product/Variant';
+import { LineItem } from '@Types/wishlist/LineItem';
 import { Wishlist } from '@Types/wishlist/Wishlist';
 import { Reference } from 'helpers/reference';
-import { useWishlist } from 'frontastic';
+import { useCart, useWishlist } from 'frontastic';
 import { LoadingIcon } from '../icons/loading';
 import EmptyWishlist from '../wishlist/empty_wishlist';
-
 export interface Props {
   pageTitle?: string;
   emptyStateImage?: { media: any } | any;
@@ -25,10 +26,24 @@ const Wishlists: React.FC<Props> = ({
   emptyStateCTALink,
 }) => {
   const { getAllWishlists } = useWishlist();
+  const { addItems } = useCart();
   const router = useRouter();
 
   const [wishlists, setWishlists] = useState<Wishlist[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAdding, setIsAdding] = useState<boolean[]>([]);
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  const addItemsToCart = async (lineitems: LineItem[], i: number) => {
+    setIsAdding(isAdding.map((_, index) => index === i));
+    await addItems(lineitems.map((item) => ({ variant: item.variant as Variant, quantity: item.count })));
+    setIsAdding(isAdding.map(() => false));
+    router.push('/checkout');
+  };
+
+  useEffect(() => {
+    setIsDisabled(isAdding.some((item) => item));
+  }, [isAdding]);
 
   useEffect(() => {
     (async () => {
@@ -36,13 +51,16 @@ const Wishlists: React.FC<Props> = ({
       const lists = await getAllWishlists();
       setWishlists(lists);
       setIsLoading(false);
+      setIsAdding(Array.from(lists, () => false));
     })();
   }, []);
 
   if (isLoading) {
     return (
-      <div className="mx-auto my-0 w-full">
-        <LoadingIcon className="h-4 w-4 animate-spin" />
+      <div className="text-center">
+        <div className="mt-4 inline-block">
+          <LoadingIcon className="h-4 w-4 animate-spin" />
+        </div>
       </div>
     );
   }
@@ -66,8 +84,11 @@ const Wishlists: React.FC<Props> = ({
       </h1>
       <div>
         <ol>
-          {wishlists.map((wishlist) => (
-            <li key={wishlist.wishlistId} className="cursor-pointer border-b-2 py-1">
+          {wishlists.map((wishlist, i) => (
+            <li
+              key={wishlist.wishlistId}
+              className="flex cursor-pointer flex-row items-end justify-between border-b-2 py-1"
+            >
               <Link href={`/wishlist/${wishlist.wishlistId}`}>
                 <div>
                   <p>
@@ -89,6 +110,19 @@ const Wishlists: React.FC<Props> = ({
                   </p>
                 </div>
               </Link>
+              <div className="text-right">
+                <Link href={`/wishlist/${wishlist.wishlistId}`}>
+                  <span className="rounded-md bg-accent-400 px-4 py-3 text-sm text-white">View purchase list</span>
+                </Link>
+                <button
+                  onClick={() => addItemsToCart(wishlist.lineItems, i)}
+                  disabled={isDisabled || wishlist.lineItems?.length === 0}
+                  className="button button-primary flex flex-row items-center"
+                >
+                  Order purchase list
+                  {isAdding[i] && <LoadingIcon className="ml-4 h-4 w-4 animate-spin" />}
+                </button>
+              </div>
             </li>
           ))}
         </ol>

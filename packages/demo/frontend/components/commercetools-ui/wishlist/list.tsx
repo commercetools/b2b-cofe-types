@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { Variant } from '@Types/product/Variant';
 import { LineItem } from '@Types/wishlist/LineItem';
 import { DateHelpers } from 'helpers/dateHelpers';
 import { useFormat } from 'helpers/hooks/useFormat';
 import useMediaQuery from 'helpers/hooks/useMediaQuery';
 import { mobile } from 'helpers/utils/screensizes';
+import { useCart } from 'frontastic';
 import Image from 'frontastic/lib/image';
+import { LoadingIcon } from '../icons/loading';
 import Spinner from '../spinner';
 
 export interface Props {
@@ -16,13 +19,25 @@ export interface Props {
 const List: React.FC<Props> = ({ items, removeLineItem }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [isLargerThanMobile] = useMediaQuery(mobile);
-
+  const [isAdding, setIsAdding] = useState<boolean[]>(Array.from(items, () => false));
+  const [isDisabled, setIsDisabled] = useState(false);
   //i18n messages
   const { formatMessage } = useFormat({ name: 'common' });
 
   const router = useRouter();
+  const { addItem } = useCart();
 
   const goToProductPage = (itemUrl: string) => router.push(itemUrl);
+
+  const handleAddToCart = async (item: LineItem, i) => {
+    setIsAdding(isAdding.map((_, index) => index === i));
+    await addItem(item.variant as Variant, 1);
+    setIsAdding(isAdding.map(() => false));
+  };
+
+  useEffect(() => {
+    setIsDisabled(isAdding.some((item) => item));
+  }, [isAdding]);
 
   useEffect(() => {
     if (items) {
@@ -38,14 +53,14 @@ const List: React.FC<Props> = ({ items, removeLineItem }) => {
         </div>
       ) : (
         <ul role="list" className="divide-y divide-gray-200 border-y border-gray-200">
-          {items.map((item) => (
+          {items.map((item, i) => (
             <li key={item.lineItemId} className="flex py-6">
               <div className="shrink-0  cursor-pointer">
                 <Image
                   alt="Front side of charcoal cotton t-shirt."
-                  width={100}
-                  height={13}
-                  className="h-24 w-24 rounded-md object-scale-down object-center sm:h-32 sm:w-32"
+                  width={60}
+                  height={60}
+                  className="h-18 w-18 rounded-md object-scale-down object-center sm:h-20 sm:w-20"
                   src={item.variant.images[0]}
                   onClick={() => goToProductPage(item._url)}
                 />
@@ -61,12 +76,9 @@ const List: React.FC<Props> = ({ items, removeLineItem }) => {
                         {item.name}
                       </p>
                     </h4>
-                    {isLargerThanMobile ? (
-                      <p className="ml-4 text-sm font-medium text-gray-900 dark:text-light-100">{item.variant.sku}</p>
-                    ) : null}
                   </div>
                   {isLargerThanMobile ? (
-                    <p className="mt-1 text-sm text-gray-500 dark:text-light-100">{item.lineItemId}</p>
+                    <p className="text-xs font-light text-gray-900 dark:text-light-100">{item.variant.sku}</p>
                   ) : null}
                 </div>
 
@@ -92,7 +104,15 @@ const List: React.FC<Props> = ({ items, removeLineItem }) => {
                       {DateHelpers.formatDate(item.addedAt)}
                     </span>
                   </p>
-                  <div className="ml-4">
+                  <div className="ml-4 flex flex-row items-center">
+                    <button
+                      onClick={() => handleAddToCart(item, i)}
+                      disabled={isDisabled}
+                      className="mr-4 flex flex-row items-center rounded-md bg-accent-400 px-4 py-2 text-sm text-white disabled:bg-gray-300"
+                    >
+                      Add to cart
+                      {isAdding[i] && <LoadingIcon className="ml-4 h-4 w-4 animate-spin" />}
+                    </button>
                     <button
                       type="button"
                       onClick={() => removeLineItem(item)}

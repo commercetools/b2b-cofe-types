@@ -156,7 +156,12 @@ export const DynamicCart: React.FC = () => {
 
   const getVariantName = (attributes: Record<string, any>) => {
     return Object.keys(attributes)
-      .map((key) => `${key}: ${attributes[key]}`)
+      .map((key) => {
+        if (typeof attributes[key] === 'object') {
+          return `${key}: ${attributes[key].label}`;
+        }
+        return `${key}: ${attributes[key]}`;
+      })
       .join(', ');
   };
 

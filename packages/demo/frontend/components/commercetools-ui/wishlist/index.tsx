@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { Variant } from '@Types/product/Variant';
 import { LineItem } from '@Types/wishlist/LineItem';
 import { Wishlist } from '@Types/wishlist/Wishlist';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { Reference } from 'helpers/reference';
-import { useWishlist } from 'frontastic';
+import { useCart, useWishlist } from 'frontastic';
 import { LoadingIcon } from '../icons/loading';
 import EmptyWishlist from './empty_wishlist';
 import List from './list';
@@ -29,12 +31,23 @@ const WishList: React.FC<Props> = ({
 }) => {
   const { getWishlist, removeLineItem } = useWishlist();
   const { formatMessage: formatWishlistMessage } = useFormat({ name: 'wishlist' });
+  const { addItems } = useCart();
+  const router = useRouter();
+
   const [error, setError] = useState('');
-  const [items, setItems] = useState<Wishlist>(null);
+  const [wishlist, setWishlist] = useState<Wishlist>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAddingAll, setIsAddingAll] = useState(false);
 
   const handleRemoveLineItem = (lineItem: LineItem) => {
     return removeLineItem(wishlistId, lineItem.lineItemId);
+  };
+
+  const addItemsToCart = async () => {
+    setIsAddingAll(true);
+    await addItems(wishlist.lineItems?.map((item) => ({ variant: item.variant as Variant, quantity: item.count })));
+    setIsAddingAll(false);
+    router.push('/checkout');
   };
 
   useEffect(() => {
@@ -42,7 +55,7 @@ const WishList: React.FC<Props> = ({
       setIsLoading(true);
       try {
         const list = await getWishlist(wishlistId);
-        setItems(list);
+        setWishlist(list);
       } catch (e) {
         setError(e.message);
       } finally {
@@ -53,21 +66,25 @@ const WishList: React.FC<Props> = ({
 
   if (isLoading) {
     return (
-      <div className="mx-auto my-0 w-full">
-        <LoadingIcon className="h-4 w-4 animate-spin" />
+      <div className="text-center">
+        <div className="mt-4 inline-block">
+          <LoadingIcon className="h-4 w-4 animate-spin" />
+        </div>
       </div>
     );
   }
 
   if (!!error) {
     return (
-      <div className="mx-auto my-0 mt-4 w-full">
-        <p className="text-center font-medium text-red-400">{error}</p>
+      <div className="text-center">
+        <div className="mt-4 inline-block">
+          <p className="text-center font-medium text-red-400">{error}</p>
+        </div>
       </div>
     );
   }
 
-  if (!items?.lineItems?.length)
+  if (!wishlist?.lineItems?.length)
     return (
       <EmptyWishlist
         pageTitle={pageTitle}
@@ -84,7 +101,38 @@ const WishList: React.FC<Props> = ({
       <h1 className="pb-12 text-center text-3xl font-extrabold tracking-tight text-gray-900 dark:text-light-100 sm:text-4xl">
         {formatWishlistMessage({ id: 'wishlist.items', defaultMessage: 'Wishlist Items' })}
       </h1>
-      {items?.lineItems && <List items={items.lineItems} removeLineItem={handleRemoveLineItem} />}
+      <div className="mx-auto max-w-2xl bg-gray-100 p-5 lg:max-w-3xl">
+        <div>
+          <p>
+            <span className="text-sm font-bold">Purchase list name: </span>
+            <span>{wishlist.name}</span>
+          </p>
+          <p>
+            <span className="text-sm font-bold">Description: </span>
+            <span>{wishlist.description}</span>
+          </p>
+          <p>
+            <span className="text-sm font-bold">Store: </span>
+            {!!wishlist.store && <span>{wishlist.store.key}</span>}
+            {!wishlist.store?.key && <span>N/A</span>}
+          </p>
+          <p>
+            <span className="text-sm font-bold">Items: </span>
+            <span>{wishlist.lineItems.length}</span>
+          </p>
+        </div>
+        <button
+          onClick={addItemsToCart}
+          type="button"
+          disabled={isAddingAll}
+          className="button button-primary flex flex-row items-center"
+        >
+          Order purchase list
+          {isAddingAll && <LoadingIcon className="ml-4 h-4 w-4 animate-spin" />}
+        </button>
+      </div>
+
+      {wishlist?.lineItems && <List items={wishlist.lineItems} removeLineItem={handleRemoveLineItem} />}
     </main>
   );
 };
