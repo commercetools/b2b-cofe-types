@@ -3,6 +3,7 @@ import { getLocale } from './utils/Request';
 import { ProductApi } from './apis/ProductApi';
 import { ProductQueryFactory } from './utils/ProductQueryFactory';
 import { BusinessUnitApi } from './apis/BusinessUnitApi';
+import { CategoryQuery } from '@Types/query/CategoryQuery';
 
 function productQueryFromContext(context: DataSourceContext, config: DataSourceConfiguration) {
   const productApi = new ProductApi(context.frontasticContext, context.request ? getLocale(context.request) : null);
@@ -21,6 +22,21 @@ function productQueryFromContext(context: DataSourceContext, config: DataSourceC
 }
 
 export default {
+  'frontastic/categories': async (config: DataSourceConfiguration, context: DataSourceContext) => {
+    const productApi = new ProductApi(context.frontasticContext, context.request ? getLocale(context.request) : null);
+
+    const categoryQuery: CategoryQuery = {
+      limit: 500,
+    };
+
+    return await productApi.queryCategories(categoryQuery).then(({ items }) => {
+      return {
+        dataSourcePayload: {
+          categories: items,
+        },
+      };
+    });
+  },
   'frontastic/product-list': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     const { productApi, productQuery, additionalQueryArgs } = productQueryFromContext(context, config);
 

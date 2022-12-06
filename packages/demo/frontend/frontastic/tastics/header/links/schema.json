@@ -55,6 +55,17 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Data source",
+      "fields": [
+        {
+          "label": "Categories",
+          "field": "categories",
+          "type": "dataSource",
+          "dataSourceType": "frontastic/categories"
+        }
+      ]
     }
   ]
 }
