@@ -29,9 +29,9 @@ const UserBarTastic: React.FC<Props> = ({ data }) => {
         <BusinessUnitRole organization={data.organization?.dataSource?.organization} />
         <AccountButton
           account={account}
-          accountLink={data.links?.accountLink}
+          accountLink={data.accountLink}
           organization={organization}
-          businessUnitLink={data.links?.businessUnitLink}
+          businessUnitLink={data.businessUnitLink}
         />
       </span>
       <span className="inline-flex items-center px-2">
