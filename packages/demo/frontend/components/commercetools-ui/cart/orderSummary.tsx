@@ -148,11 +148,13 @@ const OrderSummary = ({
   return (
     <section
       aria-labelledby="summary-heading"
-      className="rounded-lg bg-gray-50 py-6 px-4 dark:bg-primary-200 sm:col-span-8 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
+      className="rounded-lg bg-gray-50 py-6 px-4 dark:bg-primary-200 sm:col-span-8 sm:p-6 lg:col-span-4 lg:mt-0 lg:p-8"
     >
-      <h2 id="summary-heading" className="text-lg font-medium text-gray-900 dark:text-light-100">
-        {formatCartMessage({ id: 'order.summary', defaultMessage: 'Order Summary' })}
-      </h2>
+      <header>
+        <h2 id="summary-heading" className="text-lg font-medium text-gray-900 dark:text-light-100">
+          {formatCartMessage({ id: 'order.summary', defaultMessage: 'Order Summary' })}
+        </h2>
+      </header>
 
       <dl className="mt-6 space-y-4">
         <div className="flex items-center justify-between">

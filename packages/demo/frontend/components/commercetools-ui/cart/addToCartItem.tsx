@@ -109,8 +109,7 @@ const AddToCartItem: React.FC<Props> = ({ goToProductPage }) => {
   };
 
   return (
-    <tr className="line-item dynamic-cart-item">
-      <td></td>
+    <tr className="dynamic-cart-item bg-gray-100">
       {!lineItem.selectedVariant && (
         <td colSpan={6} className="relative">
           <input
@@ -152,46 +151,47 @@ const AddToCartItem: React.FC<Props> = ({ goToProductPage }) => {
       )}
       {!!lineItem.selectedVariant && (
         <>
-          <td>{lineItem.selectedVariant.sku}</td>
-
-          <td className="text-sm">
-            <p className="line-item__name" onClick={() => goToProductPage(lineItem.selectedProduct._url)}>
-              {lineItem.selectedProduct.name}
-            </p>
+          <td className="">
+            <table className="inner-table">
+              <tbody>
+                <td className="td-line-item__details">
+                  <p className="td__name" onClick={() => goToProductPage(lineItem._url)}>
+                    {lineItem.selectedProduct.name}
+                  </p>
+                  <p className="td-other-details td-details__sku">
+                    <label>Sku:</label> {lineItem.selectedVariant.sku}
+                  </p>
+                  <p className="td-other-details td-details__other-buttons">
+                  <button className="button button-primary--small" type="button" onClick={addItemToCart}>
+                    {!isLoading && <ShoppingCartIcon className="h-4 w-4 text-white"></ShoppingCartIcon>}
+                    {isLoading && <LoadingIcon className="h-4 w-4 animate-spin text-gray-400" />}
+                  </button>
+                  <button
+                    className="button button-primary--small ml-2"
+                    type="button"
+                    onClick={() => setLineItem(getInitialLineItem())}
+                  >
+                    <TrashIcon className="h-4 w-4 text-white"></TrashIcon>
+                  </button>
+                  </p>
+                </td>
+              </tbody>
+            </table>
           </td>
-          <td>
+          <td className="p-1">
+
             <input
               value={lineItem.selectedVariant.availability?.availableQuantity || 0}
               disabled
               className="input input-primary disabled"
             />
+            <p className="td-other-details td-details__availability">
+              <label>In Stock:</label> {lineItem.selectedVariant.availability.availableQuantity}
+            </p>
           </td>
-          <td className="relative">
-            <input
-              id={`item-quantity_${lineItem.id}`}
-              ref={lineItemQuantityRef}
-              placeholder={formatMessage({ id: 'quantity', defaultMessage: 'Quantity' })}
-              type="number"
-              defaultValue={1}
-              className="dynamic-cart-item__quantity input input-primary"
-              onChange={updateItemQuantity}
-              onKeyDown={handleQuantityKeyPress}
-            />
-          </td>
-          <td>{CurrencyHelpers.formatForCurrency(lineItem.selectedVariant.price)}</td>
-          <td>
-            <button className="button button-primary--small" type="button" onClick={addItemToCart}>
-              {!isLoading && <ShoppingCartIcon className="h-4 w-4 text-white"></ShoppingCartIcon>}
-              {isLoading && <LoadingIcon className="h-4 w-4 animate-spin text-gray-400" />}
-            </button>
-            <button
-              className="button button-primary--small ml-2"
-              type="button"
-              onClick={() => setLineItem(getInitialLineItem())}
-            >
-              <TrashIcon className="h-4 w-4 text-white"></TrashIcon>
-            </button>
-          </td>
+          <td className="p-1 p-1_text">{CurrencyHelpers.formatForCurrency(lineItem.selectedVariant.price)}</td>
+          <td className="p-1 p-1_text">{CurrencyHelpers.formatForCurrency(lineItem.selectedVariant.totalPrice)}</td>
+
         </>
       )}
     </tr>

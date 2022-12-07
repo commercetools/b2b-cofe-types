@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { XIcon } from '@heroicons/react/solid';
+import Image from 'frontastic/lib/image';
 import { LineItem } from '@Types/cart/LineItem';
 import debounce from 'lodash.debounce';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
@@ -59,55 +60,68 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem, isModif
   return (
     <>
       <tr
-        className={`line-item border-b-2 ${isLoading ? 'disabled' : ''} ${
+        className={`line-item border-b-1 ${isLoading ? 'disabled' : ''} ${
           lineItem.variant?.attributes?.['narcotic'] ? 'bg-red-100' : ''
         }`}
       >
-        <td className="p-2">{lineItem.variant.sku}</td>
-        <td className="p-1 text-sm">
-          <p className="line-item__name" onClick={() => goToProductPage(lineItem._url)}>
-            {lineItem.name}
-          </p>
+        <td className="">
+          <table className="inner-table">
+            <tbody>
+              <td className="td-line-item__image">
+                <Image
+                  src={lineItem.variant.images[0]}
+                  alt={lineItem.name}
+                  className="h-20 w-20 flex-none rounded-md bg-gray-200 object-cover object-center"
+                />
+              </td>
+              <td className="td-line-item__details">
+                <p className="td__name" onClick={() => goToProductPage(lineItem._url)}>
+                  {lineItem.name}
+                </p>
+                <p className="td-other-details td-details__sku">
+                  <label>Sku:</label> {lineItem.variant.sku}
+                </p>
+                <p className="td-other-details td-details__other-buttons">
+                    <button
+                      type="button"
+                      className={`button mt-1 mr-1 rounded-full p-1 drop-shadow-md ${isSplitted ? 'bg-green-300' : 'bg-white'}`}
+                      onClick={() => setIsSplitModalOpen(true)}
+                      title="split quantity to different shipping addresses"
+                    >
+                      Split Shipping
+                    </button>
+                    <button
+                      type="button"
+                      className="button mt-1 mr-1 rounded-full bg-white p-1 drop-shadow-md"
+                      onClick={handleRemoveItem}
+                      disabled={isModificationForbidden}
+                    >
+                      Remove
+                    </button>
+                </p>
+              </td>
+            </tbody>
+          </table>
         </td>
+
         {!isPreBuyCart && (
-          <td className="p-1">
-            <input
-              value={lineItem.variant.availability?.availableQuantity}
-              className="input input-primary disabled"
-              disabled
-            />
-          </td>
-        )}
         <td className="p-1">
           <input
-            value={count}
-            type="number"
+            value={lineItem.variant.availability?.availableQuantity}
+            type="text"
             disabled={isLoading}
             readOnly={isModificationForbidden}
             onChange={(e) => handleChange(e.target.value)}
             className="input input-primary"
           />
+          <p className="td-other-details td-details__availability">
+            <label>{isPreBuyCart}In Stock:</label> {lineItem.variant.availability.availableQuantity}
+          </p>
         </td>
-        <td className="p-1">{CurrencyHelpers.formatForCurrency(lineItem.price)}</td>
-        <td className="p-1">{CurrencyHelpers.formatForCurrency(lineItem.totalPrice)}</td>
-        <td>
-          <button
-            type="button"
-            className={`button mt-1 mr-1 rounded-full p-1 drop-shadow-md ${isSplitted ? 'bg-green-300' : 'bg-white'}`}
-            onClick={() => setIsSplitModalOpen(true)}
-            title="split quantity to different shipping addresses"
-          >
-            <SplitIcon className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            className="button mt-1 mr-1 rounded-full bg-white p-1 drop-shadow-md"
-            onClick={handleRemoveItem}
-            disabled={isModificationForbidden}
-          >
-            <XIcon className="h-4 w-4"></XIcon>
-          </button>
-        </td>
+        )}
+        <td className="p-1 p-1_text">{CurrencyHelpers.formatForCurrency(lineItem.price)}</td>
+        <td className="p-1 p-1_text">{CurrencyHelpers.formatForCurrency(lineItem.totalPrice)}</td>
+
         {isLoading && (
           <div className="line-item__loading">
             <LoadingIcon className="mt-1/2 h-4 w-4 animate-spin text-black" />
