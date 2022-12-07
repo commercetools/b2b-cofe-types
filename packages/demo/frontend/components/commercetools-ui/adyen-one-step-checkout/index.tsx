@@ -110,6 +110,11 @@ const AdyenOneStepCheckout = ({ termsLink, cancellationLink, privacyLink }) => {
     goToTopOfPage();
   };
 
+  const submitCheckout = () => {
+    handleOrder();
+    return;
+  };
+
   const updateData = (data: FormData) => {
     setData(data);
   };
@@ -213,23 +218,8 @@ const AdyenOneStepCheckout = ({ termsLink, cancellationLink, privacyLink }) => {
   }, [cartList?.availableShippingMethods]);
 
   return (
-    <div className="mx-auto max-w-4xl md:mt-4">
-      <div>
-        <div className="mx-auto py-6">
-          <div className="relative flex justify-between py-6 px-5 shadow-md md:px-12" id="ProgressStepper">
-            <div className="absolute top-0 left-0 flex h-full w-full items-center justify-between py-6 px-12 ">
-              <div className="top-2/4 h-2 w-full bg-green-100"></div>
-            </div>
-            {steps.map(({ name }, index) => (
-              <button key={index} className="relative rounded bg-white p-2" onClick={() => changeStep(index)}>
-                {generateStepTag(index)}
-                <div className="text-center text-xs 2xl:text-base">{name}</div>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
       <div className="lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16" ref={containerRef}>
+        <div className="sm:col-span-7 sm:p-6 lg:col-span-12 lg:mt-0 lg:p-8">
         <h2>1. Choose An Address</h2> <br />
         <Address
           data={data}
@@ -237,26 +227,30 @@ const AdyenOneStepCheckout = ({ termsLink, cancellationLink, privacyLink }) => {
           billingIsSameAsShipping={billingIsSameAsShipping}
           toggleBillingAddressOption={toggleBillingAddressOption}
         />
+        </div>
+        <div className="sm:col-span-8 sm:p-6 lg:col-span-12 lg:mt-0 lg:p-8">
         <h2>2. Choose Shipping</h2>
         <Overview
           shippingMethods={cartList?.availableShippingMethods}
           currentShippingMethod={currentShippingMethod}
           onSelectShippingMethod={updatecurrentShippingMethod}
         />
+        </div>
+        <div className="sm:col-span-8 sm:p-6 lg:col-span-12 lg:mt-0 lg:p-8">
         <OrderSummary
           cart={cartList}
-          submitButtonLabel={submitButtonLabel[currentStepIndex]}
+          submitButtonLabel={submitButtonLabel[2]}
           disableSubmitButton={disableSubmitButton || isLoading}
           showDiscountsForm={!isQuoteRequest && currentStepIndex < 2}
           showSubmitButton={true}
           submitLoading={isLoading}
-          onSubmit={gotToNextStep}
+          onSubmit={submitCheckout}
           termsLink={termsLink}
           cancellationLink={cancellationLink}
           privacyLink={privacyLink}
         />
+        </div>
       </div>
-    </div>
   );
 };
 
