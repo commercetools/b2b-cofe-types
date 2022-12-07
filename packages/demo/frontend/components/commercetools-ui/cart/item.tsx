@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { XIcon } from '@heroicons/react/solid';
-import Image from 'frontastic/lib/image';
 import { LineItem } from '@Types/cart/LineItem';
 import debounce from 'lodash.debounce';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useCart } from 'frontastic';
+import Image from 'frontastic/lib/image';
 import { LoadingIcon } from '../icons/loading';
 import { SplitIcon } from '../icons/split';
 import SplitItemModal from './split-item';
@@ -82,22 +82,24 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem, isModif
                   <label>Sku:</label> {lineItem.variant.sku}
                 </p>
                 <p className="td-other-details td-details__other-buttons">
-                    <button
-                      type="button"
-                      className={`button mt-1 mr-1 rounded-full p-1 drop-shadow-md ${isSplitted ? 'bg-green-300' : 'bg-white'}`}
-                      onClick={() => setIsSplitModalOpen(true)}
-                      title="split quantity to different shipping addresses"
-                    >
-                      Split Shipping
-                    </button>
-                    <button
-                      type="button"
-                      className="button mt-1 mr-1 rounded-full bg-white p-1 drop-shadow-md"
-                      onClick={handleRemoveItem}
-                      disabled={isModificationForbidden}
-                    >
-                      Remove
-                    </button>
+                  <button
+                    type="button"
+                    className={`button mt-1 mr-1 rounded-full p-1 drop-shadow-md ${
+                      isSplitted ? 'bg-green-300' : 'bg-white'
+                    }`}
+                    onClick={() => setIsSplitModalOpen(true)}
+                    title="split quantity to different shipping addresses"
+                  >
+                    Split Shipping
+                  </button>
+                  <button
+                    type="button"
+                    className="button mt-1 mr-1 rounded-full bg-white p-1 drop-shadow-md"
+                    onClick={handleRemoveItem}
+                    disabled={isModificationForbidden}
+                  >
+                    Remove
+                  </button>
                 </p>
               </td>
             </tbody>
@@ -105,22 +107,22 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem, isModif
         </td>
 
         {!isPreBuyCart && (
-        <td className="p-1">
-          <input
-            value={lineItem.variant.availability?.availableQuantity}
-            type="text"
-            disabled={isLoading}
-            readOnly={isModificationForbidden}
-            onChange={(e) => handleChange(e.target.value)}
-            className="input input-primary"
-          />
-          <p className="td-other-details td-details__availability">
-            <label>In Stock:</label> {lineItem.variant.availability?.availableQuantity}
-          </p>
-        </td>
+          <td className="p-1">
+            <input
+              value={lineItem.variant.availability?.availableQuantity}
+              type="text"
+              disabled={isLoading}
+              readOnly={isModificationForbidden}
+              onChange={(e) => handleChange(e.target.value)}
+              className="input input-primary"
+            />
+            <p className="td-other-details td-details__availability">
+              <label>In Stock:</label> {lineItem.variant.availability?.availableQuantity}
+            </p>
+          </td>
         )}
-        <td className="p-1 p-1_text">{CurrencyHelpers.formatForCurrency(lineItem.price)}</td>
-        <td className="p-1 p-1_text">{CurrencyHelpers.formatForCurrency(lineItem.totalPrice)}</td>
+        <td className="p-1_text p-1">{CurrencyHelpers.formatForCurrency(lineItem.price)}</td>
+        <td className="p-1_text p-1">{CurrencyHelpers.formatForCurrency(lineItem.totalPrice)}</td>
 
         {isLoading && (
           <div className="line-item__loading">

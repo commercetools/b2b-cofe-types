@@ -40,7 +40,7 @@ const ItemList: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = ({
                 {formatCartMessage({ id: 'product-availability', defaultMessage: 'AQ' })}
               </th>
             )}
-            
+
             <th className="cart-table__header-price">
               {formatCartMessage({ id: 'product-price', defaultMessage: 'Price' })}
             </th>

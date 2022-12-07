@@ -155,31 +155,28 @@ const AddToCartItem: React.FC<Props> = ({ goToProductPage }) => {
             <table className="inner-table">
               <tbody>
                 <td className="td-line-item__details">
-                  <p className="td__name" onClick={() => goToProductPage(lineItem._url)}>
-                    {lineItem.selectedProduct.name}
-                  </p>
+                  <p className="td__name">{lineItem.selectedProduct.name}</p>
                   <p className="td-other-details td-details__sku">
                     <label>Sku:</label> {lineItem.selectedVariant.sku}
                   </p>
                   <p className="td-other-details td-details__other-buttons">
-                  <button className="button button-primary--small" type="button" onClick={addItemToCart}>
-                    {!isLoading && <ShoppingCartIcon className="h-4 w-4 text-white"></ShoppingCartIcon>}
-                    {isLoading && <LoadingIcon className="h-4 w-4 animate-spin text-gray-400" />}
-                  </button>
-                  <button
-                    className="button button-primary--small ml-2"
-                    type="button"
-                    onClick={() => setLineItem(getInitialLineItem())}
-                  >
-                    <TrashIcon className="h-4 w-4 text-white"></TrashIcon>
-                  </button>
+                    <button className="button button-primary--small" type="button" onClick={addItemToCart}>
+                      {!isLoading && <ShoppingCartIcon className="h-4 w-4 text-white"></ShoppingCartIcon>}
+                      {isLoading && <LoadingIcon className="h-4 w-4 animate-spin text-gray-400" />}
+                    </button>
+                    <button
+                      className="button button-primary--small ml-2"
+                      type="button"
+                      onClick={() => setLineItem(getInitialLineItem())}
+                    >
+                      <TrashIcon className="h-4 w-4 text-white"></TrashIcon>
+                    </button>
                   </p>
                 </td>
               </tbody>
             </table>
           </td>
           <td className="p-1">
-
             <input
               value={lineItem.selectedVariant.availability?.availableQuantity || 0}
               disabled
@@ -189,9 +186,8 @@ const AddToCartItem: React.FC<Props> = ({ goToProductPage }) => {
               <label>In Stock:</label> {lineItem.selectedVariant.availability.availableQuantity}
             </p>
           </td>
-          <td className="p-1 p-1_text">{CurrencyHelpers.formatForCurrency(lineItem.selectedVariant.price)}</td>
-          <td className="p-1 p-1_text">{CurrencyHelpers.formatForCurrency(lineItem.selectedVariant.totalPrice)}</td>
-
+          <td className="p-1_text p-1">{CurrencyHelpers.formatForCurrency(lineItem.selectedVariant.price)}</td>
+          <td className="p-1_text p-1">{CurrencyHelpers.formatForCurrency(lineItem.selectedVariant.totalPrice)}</td>
         </>
       )}
     </tr>
