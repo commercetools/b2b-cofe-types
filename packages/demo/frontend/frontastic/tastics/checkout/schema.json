@@ -27,7 +27,24 @@
           "label": "Privacy policy link",
           "field": "privacyLink",
           "type": "reference"
-        }
+        },
+        {
+          "label": "Checkout Type",
+          "field": "checkoutType",
+          "type": "enum",
+          "required": false,
+          "values": [
+              {
+                  "value": "multi",
+                  "name": "Multistep"
+              },
+              {
+                  "value": "one",
+                  "name": "One Page"
+              }
+          ],
+          "default": "multi"
+        },
       ]
     }
   ]
