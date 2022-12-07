@@ -5,6 +5,7 @@ import { ProductQueryFactory } from '../utils/ProductQueryFactory';
 import { ProductQuery } from '@Types/query/ProductQuery';
 import { CategoryQuery } from '@Types/query/CategoryQuery';
 import { getLocale } from '../utils/Request';
+import { FilterFieldTypes } from '@Types/product/FilterField';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -96,6 +97,32 @@ export const searchableAttributes: ActionHook = async (request: Request, actionC
   const productApi = new ProductApi(actionContext.frontasticContext, getLocale(request));
 
   const result = await productApi.getSearchableAttributes();
+
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(result),
+    sessionData: request.sessionData,
+  };
+
+  return response;
+};
+
+export const rootCategories: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const productApi = new ProductApi(actionContext.frontasticContext, getLocale(request));
+
+  const items = await productApi.getRootcategories();
+
+  const result = [
+    {
+      field: 'categories',
+      type: FilterFieldTypes.ENUM,
+      label: 'Background Color',
+      values: items.map((item) => ({
+        name: item.slug,
+        value: item.categoryId,
+      })),
+    },
+  ];
 
   const response: Response = {
     statusCode: 200,

@@ -20,24 +20,40 @@ export const getProjectSettings: ActionHook = async (request: Request, actionCon
 };
 
 export const colors: ActionHook = async (request: Request) => {
-  const colors = [
+  const colorList = [
     {
       field: 'bgColor',
       type: FilterFieldTypes.ENUM,
       label: 'Background Color',
-      values: ['primary', 'accent', 'secondary', 'neutral', 'white', 'gray'],
+      values: [
+        { value: 'bg-primary-400', name: 'primary' },
+        { value: 'bg-accent-400', name: 'accent' },
+        { value: 'bg-secondary-400', name: 'secondary' },
+        { value: 'bg-neutral-400', name: 'neutral' },
+        { value: 'bg-white', name: 'white' },
+        { value: 'bg-black', name: 'black' },
+        { value: 'bg-gray-400', name: 'gray' },
+      ],
     },
     {
       field: 'textColor',
       type: FilterFieldTypes.ENUM,
       label: 'Text Color',
-      values: ['primary', 'accent', 'secondary', 'neutral', 'white', 'gray'],
+      values: [
+        { value: 'text-primary-400', name: 'primary' },
+        { value: 'text-accent-400', name: 'accent' },
+        { value: 'text-secondary-400', name: 'secondary' },
+        { value: 'text-neutral-400', name: 'neutral' },
+        { value: 'text-white', name: 'white' },
+        { value: 'text-black', name: 'black' },
+        { value: 'text-gray-400', name: 'gray' },
+      ],
     },
   ];
 
   const response: Response = {
     statusCode: 200,
-    body: JSON.stringify(colors),
+    body: JSON.stringify(colorList),
     sessionData: request.sessionData,
   };
 
