@@ -115,7 +115,7 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem, isModif
             className="input input-primary"
           />
           <p className="td-other-details td-details__availability">
-            <label>{isPreBuyCart}In Stock:</label> {lineItem.variant.availability.availableQuantity}
+            <label>In Stock:</label> {lineItem.variant.availability?.availableQuantity}
           </p>
         </td>
         )}
