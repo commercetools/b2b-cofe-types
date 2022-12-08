@@ -986,35 +986,6 @@ export class CartApi extends BaseApi {
     }
   };
 
-  addBusinessUnit: (cart: Cart, id: string) => Promise<void> = async (cart: Cart, id: string) => {
-    try {
-      console.log('BUS');
-      console.log(id);
-
-      await this.getApiForProject()
-        .carts()
-        .withId({ ID: cart.cartId })
-        .post({
-          body: {
-            version: +cart.cartVersion,
-            actions: [
-              {
-                // @ts-ignore
-                action: 'setBusinessUnit',
-                businessUnit: {
-                  id,
-                  typeId: 'business-unit',
-                },
-              },
-            ],
-          },
-        })
-        .execute();
-    } catch (e) {
-      throw `cannot set business unit ${e}`;
-    }
-  };
-
   addItemShippingAddress: (originalCart: Cart, address: AddressDraft) => Promise<any> = async (
     originalCart: Cart,
     address: AddressDraft,

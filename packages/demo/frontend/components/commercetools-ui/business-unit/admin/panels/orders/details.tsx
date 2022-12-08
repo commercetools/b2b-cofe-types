@@ -3,7 +3,9 @@ import { DuplicateIcon, ReceiptRefundIcon } from '@heroicons/react/outline';
 import { Order } from '@Types/cart/Order';
 import { OrderItems } from 'components/commercetools-ui/account/details/sections/order-items';
 import OrderReturns from 'components/commercetools-ui/account/details/sections/order-returns';
+import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
+import ReorderModal from './reorder-modal';
 import OrderReturnModal from './return-modal';
 
 interface Props {
@@ -12,6 +14,8 @@ interface Props {
 
 const OrderDetails: React.FC<Props> = ({ order }) => {
   const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
+  const [isReorderModalOpen, setIsReorderModalOpen] = useState(false);
+
   if (!order) {
     return null;
   }
@@ -46,7 +50,11 @@ const OrderDetails: React.FC<Props> = ({ order }) => {
           <div className="flex pt-6 sm:block sm:pt-0">
             <div className="flex flex-row">
               <DuplicateIcon className="mr-2 mt-1 h-4 w-4" />
-              <button type="button" className="mb-2 text-gray-900 underline">
+              <button
+                type="button"
+                className="mb-2 text-gray-900 underline"
+                onClick={() => setIsReorderModalOpen(true)}
+              >
                 Reorder
               </button>
             </div>
@@ -58,17 +66,6 @@ const OrderDetails: React.FC<Props> = ({ order }) => {
             </div>
           </div>
         </dl>
-
-        {/* <a
-                      href={order.orderId}
-                      className="mt-6 flex w-full items-center justify-center rounded-md border border-accent-400 bg-white py-2 px-4 text-sm font-medium text-accent-400 shadow-sm hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto"
-                    >
-                      {formatAccountMessage({
-                        id: 'orders.view.invoice',
-                        defaultMessage: 'View invoice',
-                      })}
-                      <span className="sr-only">for order {order.orderId}</span>
-                    </a> */}
       </div>
       <div className="mt-8 flex-auto space-y-6 divide-y divide-gray-200 px-4 text-sm text-gray-600 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:space-y-0 sm:divide-y-0 lg:gap-x-8">
         <div className="flex pt-6 sm:block sm:pt-0">
@@ -96,6 +93,9 @@ const OrderDetails: React.FC<Props> = ({ order }) => {
       <OrderItems lineItems={order.lineItems}></OrderItems>
       {isReturnModalOpen && (
         <OrderReturnModal onClose={() => setIsReturnModalOpen(false)} open={isReturnModalOpen} order={order} />
+      )}
+      {isReorderModalOpen && (
+        <ReorderModal onClose={() => setIsReorderModalOpen(false)} open={isReorderModalOpen} order={order} />
       )}
     </div>
   );

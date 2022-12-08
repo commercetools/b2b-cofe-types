@@ -455,35 +455,30 @@ export const removeDiscount: ActionHook = async (request: Request, actionContext
 export const replicateCart: ActionHook = async (request: Request, actionContext: ActionContext) => {
   const cartApi = new CartApi(actionContext.frontasticContext, getLocale(request));
   const orderId = request.query?.['orderId'];
-  if (orderId) {
-    const cart = await cartApi.replicateCart(orderId);
-    await cartApi.addBusinessUnit(cart, request.sessionData?.organization?.businessUnit?.id);
-    console.log('CARTID');
-    console.log(cart.cartId);
-
-    if (request.sessionData?.cartId) {
-      await cartApi
-        .getById(request.sessionData?.cartId)
-        .then((tempCart) => cartApi.deleteCart(tempCart.cartId, +tempCart.cartVersion));
+  try {
+    if (orderId) {
+      const cart = await cartApi.replicateCart(orderId);
+      const order = await cartApi.order(cart);
+      const response: Response = {
+        statusCode: 200,
+        body: JSON.stringify(order),
+        sessionData: {
+          ...request.sessionData,
+        },
+      };
+      return response;
     }
-
+  } catch (e) {
     const response: Response = {
-      statusCode: 200,
-      body: JSON.stringify(cart),
-      sessionData: {
-        ...request.sessionData,
-        cartId: cart.cartId,
-      },
+      statusCode: 400,
+      sessionData: request.sessionData,
+      // @ts-ignore
+      error: e?.message,
+      errorCode: 500,
     };
 
     return response;
   }
-  const response: Response = {
-    statusCode: 500,
-    sessionData: request.sessionData,
-  };
-
-  return response;
 };
 
 export const splitLineItem: ActionHook = async (request: Request, actionContext: ActionContext) => {

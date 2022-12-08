@@ -3,7 +3,9 @@ import { EyeIcon, DuplicateIcon } from '@heroicons/react/outline';
 import { Order } from '@Types/cart/Order';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { mapAddressToString } from 'helpers/utils/addressUtil';
+import { useBusinessUnitDetailsStateContext } from '../../provider';
 import OrderDetailsModal from './details-modal';
+import ReorderModal from './reorder-modal';
 
 interface Props {
   orders: Order[];
@@ -11,16 +13,29 @@ interface Props {
 
 const OrderList: React.FC<Props> = ({ orders }) => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [isReorderModalOpen, setIsReorderModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const { reloadTree } = useBusinessUnitDetailsStateContext();
 
-  const handleOpen = (order) => {
+  const handleOpenDetailModal = (order) => {
     setSelectedOrder(order);
     setIsDetailsModalOpen(true);
   };
 
-  const handleClose = () => {
+  const handleCloseDetailModal = () => {
     setSelectedOrder(null);
     setIsDetailsModalOpen(false);
+  };
+
+  const handleOpenReorderModal = (order) => {
+    setSelectedOrder(order);
+    setIsReorderModalOpen(true);
+  };
+
+  const handleCloseReorderModal = () => {
+    reloadTree();
+    setSelectedOrder(null);
+    setIsReorderModalOpen(false);
   };
   return (
     <div>
@@ -53,10 +68,10 @@ const OrderList: React.FC<Props> = ({ orders }) => {
                 <td>{order.lineItems?.reduce((prev, curr) => prev + curr.count, 0)}</td>
                 <td>{CurrencyHelpers.formatForCurrency(order.sum)}</td>
                 <td className="mt-1 flex flex-row">
-                  <button onClick={() => handleOpen(order)}>
+                  <button title="Details" onClick={() => handleOpenDetailModal(order)}>
                     <EyeIcon className="h-4 w-4" />
                   </button>
-                  <button onClick={() => null} disabled>
+                  <button title="Reorder" onClick={() => handleOpenReorderModal(order)}>
                     <DuplicateIcon className="h-4 w-4" />
                   </button>
                 </td>
@@ -72,7 +87,10 @@ const OrderList: React.FC<Props> = ({ orders }) => {
         </tbody>
       </table>
       {isDetailsModalOpen && (
-        <OrderDetailsModal onClose={handleClose} order={selectedOrder} open={isDetailsModalOpen} />
+        <OrderDetailsModal onClose={handleCloseDetailModal} order={selectedOrder} open={isDetailsModalOpen} />
+      )}
+      {isReorderModalOpen && (
+        <ReorderModal onClose={handleCloseReorderModal} open={isReorderModalOpen} order={selectedOrder} />
       )}
     </div>
   );
