@@ -210,6 +210,64 @@ export class ProductApi extends BaseApi {
     }
   };
 
+  getRootCategories: () => Promise<Category[]> = async () => {
+    try {
+      const locale = await this.getCommercetoolsLocal();
+
+      const methodArgs = {
+        queryArgs: {
+          limit: 200,
+          where: 'parent is not defined',
+        },
+      };
+
+      return await this.getApiForProject()
+        .categories()
+        .get(methodArgs)
+        .execute()
+        .then((response) => {
+          const items = response.body.results.map((category) =>
+            ProductMapper.commercetoolsCategoryToCategory(category, locale),
+          );
+
+          return items;
+        })
+        .catch((error) => {
+          throw error;
+        });
+    } catch (error) {
+      //TODO: better error, get status code etc...
+      throw new Error(`queryCategories failed. ${error}`);
+    }
+  };
+
+  getNavigationCategories: () => Promise<Category[]> = async () => {
+    const { items }: { items: any[] } = await this.queryCategories({ limit: 500 });
+
+    const categories: Category[] = items.filter((item: Category) => !item.ancestors?.length);
+    const subCategories: Category[] = items
+      .filter((item: Category) => !!item.ancestors?.length)
+      .sort((a, b) => b.depth - a.depth);
+
+    while (subCategories.length) {
+      const [currentSubCategory] = subCategories.splice(0, 1);
+      const lastAncestor = currentSubCategory.ancestors[currentSubCategory.ancestors.length - 1];
+      const subCategoryIdx = subCategories.findIndex((item) => item.categoryId === lastAncestor.id);
+      if (subCategoryIdx !== -1) {
+        subCategories[subCategoryIdx].children = [
+          ...(subCategories[subCategoryIdx].children || []),
+          currentSubCategory,
+        ];
+      } else {
+        const categoryIdx = categories.findIndex((item) => item.categoryId === lastAncestor.id);
+        if (categoryIdx !== -1) {
+          categories[categoryIdx].children = [...(categories[categoryIdx].children || []), currentSubCategory];
+        }
+      }
+    }
+    return categories as Category[];
+  };
+
   queryCategories: (categoryQuery: CategoryQuery) => Promise<Result> = async (categoryQuery: CategoryQuery) => {
     try {
       const locale = await this.getCommercetoolsLocal();

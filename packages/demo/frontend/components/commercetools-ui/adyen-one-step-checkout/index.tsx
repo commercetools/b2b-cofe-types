@@ -218,8 +218,8 @@ const AdyenOneStepCheckout = ({ termsLink, cancellationLink, privacyLink }) => {
   }, [cartList?.availableShippingMethods]);
 
   return (
-      <div className="lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16" ref={containerRef}>
-        <div className="sm:col-span-7 sm:p-6 lg:col-span-12 lg:mt-0 lg:p-8">
+    <div className="lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16" ref={containerRef}>
+      <div className="sm:col-span-7 sm:p-6 lg:col-span-12 lg:mt-0 lg:p-8">
         <h2>1. Choose An Address</h2> <br />
         <Address
           data={data}
@@ -227,16 +227,16 @@ const AdyenOneStepCheckout = ({ termsLink, cancellationLink, privacyLink }) => {
           billingIsSameAsShipping={billingIsSameAsShipping}
           toggleBillingAddressOption={toggleBillingAddressOption}
         />
-        </div>
-        <div className="sm:col-span-8 sm:p-6 lg:col-span-12 lg:mt-0 lg:p-8">
+      </div>
+      <div className="sm:col-span-8 sm:p-6 lg:col-span-12 lg:mt-0 lg:p-8">
         <h2>2. Choose Shipping</h2>
         <Overview
           shippingMethods={cartList?.availableShippingMethods}
           currentShippingMethod={currentShippingMethod}
           onSelectShippingMethod={updatecurrentShippingMethod}
         />
-        </div>
-        <div className="sm:col-span-8 sm:p-6 lg:col-span-12 lg:mt-0 lg:p-8">
+      </div>
+      <div className="sm:col-span-8 sm:p-6 lg:col-span-12 lg:mt-0 lg:p-8">
         <OrderSummary
           cart={cartList}
           submitButtonLabel={submitButtonLabel[2]}
@@ -249,8 +249,8 @@ const AdyenOneStepCheckout = ({ termsLink, cancellationLink, privacyLink }) => {
           cancellationLink={cancellationLink}
           privacyLink={privacyLink}
         />
-        </div>
       </div>
+    </div>
   );
 };
 
