@@ -23,6 +23,7 @@ import Header from './header';
 import HeaderContext from './header/context-bar';
 import HeaderIcon from './header/icon-bar';
 import HeaderLinks from './header/links';
+import HeaderNavigation from './header/navigation';
 import HeaderLogo from './header/logo';
 import HeaderSearch from './header/search-bar';
 import HeaderUser from './header/user-bar';
@@ -63,6 +64,7 @@ export const tastics = {
   'commercetools/ui/header/context-bar': HeaderContext,
   'commercetools/ui/header/icon-bar': HeaderIcon,
   'commercetools/ui/header/links': HeaderLinks,
+  'commercetools/ui/header/navigation': HeaderNavigation,
   'commercetools/ui/header/logo': HeaderLogo,
   'commercetools/ui/header/search-bar': HeaderSearch,
   'commercetools/ui/header/user-bar': HeaderUser,

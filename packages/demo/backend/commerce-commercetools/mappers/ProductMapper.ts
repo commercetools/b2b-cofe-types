@@ -173,6 +173,7 @@ export class ProductMapper {
   ) => {
     return {
       categoryId: commercetoolsCategory.id,
+      ancestors: commercetoolsCategory.ancestors?.length ? commercetoolsCategory.ancestors : undefined,
       name: commercetoolsCategory.name?.[locale.language] ?? undefined,
       slug: commercetoolsCategory.slug?.[locale.language] ?? undefined,
       depth: commercetoolsCategory.ancestors.length,

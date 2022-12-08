@@ -1,96 +1,42 @@
 import React from 'react';
 import NextLink from 'next/link';
 import Typography from 'components/commercetools-ui/typography';
-import { useFormat } from 'helpers/hooks/useFormat';
 
 const MegaMenuContent = ({ category, categoryIdx }) => {
   //i18n messages
-  const { formatMessage } = useFormat({ name: 'common' });
+  if (!category.children?.length) {
+    return null;
+  }
 
   return (
-    <div className="relative bg-white">
-      <div className="mx-auto max-w-7xl px-8">
-        <div className="grid grid-cols-2 items-start gap-x-8 gap-y-10 pt-10 pb-12">
+    <div className="relative top-10 bg-white">
+      <div className="mx-auto max-w-7xl px-12">
+        <div className="mx-1 grid grid-cols-2 items-start gap-x-8 gap-y-10 px-8 pt-10 pb-12 shadow-md">
           <div className="grid grid-cols-2 gap-x-8 gap-y-10">
-            <div>
-              <p id={`desktop-featured-heading-${categoryIdx}`} className="font-medium text-gray-900">
-                {formatMessage({ id: 'featured', defaultMessage: 'Featured' })}
-              </p>
-              <ul
-                role="list"
-                aria-labelledby={`desktop-featured-heading-${categoryIdx}`}
-                className="mt-6 space-y-6 sm:mt-4 sm:space-y-4"
-              >
-                {category.featured.map((item) => (
-                  <li key={item.name} className="flex">
-                    <NextLink href={item.href}>
-                      <a className="hover:text-gray-800">
-                        <Typography>{item.name}</Typography>
-                      </a>
-                    </NextLink>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <p id="desktop-categories-heading" className="font-medium text-gray-900">
-                {formatMessage({ id: 'categories', defaultMessage: 'Categories' })}
-              </p>
-              <ul
-                role="list"
-                aria-labelledby="desktop-categories-heading"
-                className="mt-6 space-y-6 sm:mt-4 sm:space-y-4"
-              >
-                {category.categories.map((item) => (
-                  <li key={item.name} className="flex">
-                    <NextLink href={item.href}>
-                      <a className="hover:text-gray-800">
-                        <Typography>{item.name}</Typography>
-                      </a>
-                    </NextLink>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-x-8 gap-y-10">
-            <div>
-              <p id="desktop-collection-heading" className="font-medium text-gray-900">
-                {formatMessage({ id: 'collection', defaultMessage: 'Collection' })}
-              </p>
-              <ul
-                role="list"
-                aria-labelledby="desktop-collection-heading"
-                className="mt-6 space-y-6 sm:mt-4 sm:space-y-4"
-              >
-                {category.collection.map((item) => (
-                  <li key={item.name} className="flex">
-                    <NextLink href={item.href}>
-                      <a className="hover:text-gray-800">
-                        <Typography>{item.name}</Typography>
-                      </a>
-                    </NextLink>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <p id="desktop-brand-heading" className="font-medium text-gray-900">
-                {formatMessage({ id: 'brands', defaultMessage: 'Brands' })}
-              </p>
-              <ul role="list" aria-labelledby="desktop-brand-heading" className="mt-6 space-y-6 sm:mt-4 sm:space-y-4">
-                {category.brands.map((item) => (
-                  <li key={item.name} className="flex">
-                    <NextLink href={item.href}>
-                      <a className="hover:text-gray-800">
-                        <Typography>{item.name}</Typography>
-                      </a>
-                    </NextLink>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {category.children.map((subCategory) => (
+              <div key={subCategory.categoryId}>
+                <NextLink href={subCategory.slug}>
+                  <p id={`heading-${categoryIdx}`} className="cursor-pointer font-medium text-gray-900">
+                    {subCategory.name}
+                  </p>
+                </NextLink>
+                <ul
+                  role="list"
+                  aria-labelledby={`heading-${categoryIdx}`}
+                  className="mt-6 space-y-6 sm:mt-4 sm:space-y-4"
+                >
+                  {subCategory.children.map((item) => (
+                    <li key={item.name} className="flex">
+                      <NextLink href={item.slug}>
+                        <a className="hover:text-gray-800">
+                          <Typography>{item.name}</Typography>
+                        </a>
+                      </NextLink>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
       </div>

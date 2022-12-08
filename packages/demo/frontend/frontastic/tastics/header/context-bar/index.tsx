@@ -11,7 +11,7 @@ const ContextBarTastic: React.FC<Props> = ({ data }) => {
   const organization = data.organization?.dataSource?.organization;
   const organizationTree = data.tree?.dataSource?.tree;
   return (
-    <div className={`bg-${data.bgColor}-400 h-full text-right`}>
+    <div className={`${data.bgColor} h-full text-right`}>
       {!!account && (
         <div className="pt-4">
           {/* check styles on both when one is hidden */}

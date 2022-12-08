@@ -25,17 +25,20 @@ export default {
   'frontastic/categories': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     const productApi = new ProductApi(context.frontasticContext, context.request ? getLocale(context.request) : null);
 
-    const categoryQuery: CategoryQuery = {
-      limit: 500,
-    };
-
-    return await productApi.queryCategories(categoryQuery).then(({ items }) => {
+    try {
+      const categories = await productApi.getNavigationCategories();
       return {
         dataSourcePayload: {
-          categories: items,
+          categories,
         },
       };
-    });
+    } catch {
+      return {
+        dataSourcePayload: {
+          categories: [],
+        },
+      };
+    }
   },
   'frontastic/product-list': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     const { productApi, productQuery, additionalQueryArgs } = productQueryFromContext(context, config);

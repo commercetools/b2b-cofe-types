@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors');
+
 module.exports = {
   mode: 'jit',
   darkMode: 'class',
@@ -61,6 +63,7 @@ module.exports = {
         light: {
           100: 'var(--light-100)',
         },
+        red: colors.red,
       },
       letterSpacing: {
         modest: '0.01em',

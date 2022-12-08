@@ -6,7 +6,6 @@ import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { Organization } from '@Types/organization/organization';
 import Typography from 'components/commercetools-ui/typography';
 import { useFormat } from 'helpers/hooks/useFormat';
-import { headerNavigation } from 'helpers/mocks/mockData';
 import { Reference, ReferenceLink } from 'helpers/reference';
 import Image, { NextFrontasticImage } from 'frontastic/lib/image';
 import BusinessUnitDropdownTree from '../business-unit/dropdown-tree';
@@ -16,7 +15,6 @@ import AccountButton from './account-button';
 import CartButton from './cart-button';
 import { FlyingCartButton } from './flying-cart-button';
 import HeaderMenu from './header-menu';
-import MegaMenuContent from './mega-menu-content';
 import SearchButton from './search-button';
 import WishListButton from './wishlist-button';
 
@@ -66,7 +64,7 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <div className="fixed-screen-width lg:relative-width">
       {/* Mobile menu */}
-      <HeaderMenu open={open} setOpen={setOpen} links={links} navigation={headerNavigation} />
+      <HeaderMenu open={open} setOpen={setOpen} links={links} navigation={{ categories: [] }} />
 
       <header className="relative">
         {tagline && (
@@ -145,44 +143,6 @@ const Header: React.FC<HeaderProps> = ({
               {!!account && (
                 <Popover.Group className="hidden lg:block lg:flex-1 lg:self-stretch">
                   <div className="flex h-full items-end space-x-8">
-                    {headerNavigation.categories.map((category, categoryIdx) => (
-                      <Popover key={category.name} className="flex">
-                        {({ open }) => (
-                          <>
-                            <div className="relative flex">
-                              <Popover.Button
-                                className={classNames(
-                                  open
-                                    ? 'border-indigo-600 text-indigo-600'
-                                    : 'border-transparent text-gray-700 hover:text-gray-800',
-                                  'relative z-10 -mb-px flex items-center border-b-2 pt-px text-sm font-medium transition-colors duration-200 ease-out',
-                                )}
-                              >
-                                <Typography>{category.name}</Typography>
-                              </Popover.Button>
-                            </div>
-
-                            <Transition
-                              as={Fragment}
-                              enter="transition ease-out duration-200"
-                              enterFrom="opacity-0"
-                              enterTo="opacity-100"
-                              leave="transition ease-in duration-150"
-                              leaveFrom="opacity-100"
-                              leaveTo="opacity-0"
-                            >
-                              <Popover.Panel className="absolute inset-x-0 top-full z-10 text-gray-500 sm:text-sm">
-                                {/* Presentational element used to render the bottom shadow, if we put the shadow on the actual panel it pokes out the top, so we use this shorter element to hide the top of the shadow */}
-                                <div className="absolute inset-0 top-1/2 bg-white shadow" aria-hidden="true" />
-
-                                <MegaMenuContent category={category} categoryIdx={categoryIdx} />
-                              </Popover.Panel>
-                            </Transition>
-                          </>
-                        )}
-                      </Popover>
-                    ))}
-
                     {links.map((link, id) => (
                       <ReferenceLink
                         key={id}

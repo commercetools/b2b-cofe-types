@@ -107,29 +107,3 @@ export const searchableAttributes: ActionHook = async (request: Request, actionC
 
   return response;
 };
-
-export const rootCategories: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const productApi = new ProductApi(actionContext.frontasticContext, getLocale(request));
-
-  const items = await productApi.getRootCategories();
-
-  const result = [
-    {
-      field: 'categories',
-      type: FilterFieldTypes.ENUM,
-      label: 'Background Color',
-      values: items.map((item: Category) => ({
-        name: item.slug,
-        value: item.categoryId,
-      })),
-    },
-  ];
-
-  const response: Response = {
-    statusCode: 200,
-    body: JSON.stringify(result),
-    sessionData: request.sessionData,
-  };
-
-  return response;
-};

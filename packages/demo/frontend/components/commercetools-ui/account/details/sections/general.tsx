@@ -1,7 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { useFormat } from 'helpers/hooks/useFormat';
-import { account as accountMock } from 'helpers/mocks/mockData';
 import { mapLocaleToMeaningfulFormat } from 'helpers/utils/i18n';
 import { useAccount } from 'frontastic';
 import Editable from '../editable';
@@ -27,7 +26,7 @@ const General = () => {
       fields: [
         {
           label: formatMessage({ id: 'firstName', defaultMessage: 'First Name' }),
-          value: account ? account?.firstName : accountMock.firstName,
+          value: account?.firstName,
           type: 'text',
           options: [],
           defaultValue: '',
@@ -39,7 +38,7 @@ const General = () => {
         },
         {
           label: formatMessage({ id: 'lastName', defaultMessage: 'Last Name' }),
-          value: account ? account?.lastName : accountMock.lastName,
+          value: account?.lastName,
           type: 'text',
           options: [],
           defaultValue: '',
@@ -51,7 +50,7 @@ const General = () => {
         },
         {
           label: formatMessage({ id: 'email', defaultMessage: 'Email' }),
-          value: account ? account?.email : accountMock.email,
+          value: account?.email,
           type: 'email',
           options: [],
           defaultValue: '',

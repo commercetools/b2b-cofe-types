@@ -3,7 +3,6 @@ import { CheckIcon } from '@heroicons/react/solid';
 import { Variant } from '@Types/product/Variant';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
-import { variant } from 'helpers/mocks/mockData';
 import { StringHelpers } from 'helpers/stringHelpers';
 import { useCart } from 'frontastic';
 import { UIProduct } from '..';

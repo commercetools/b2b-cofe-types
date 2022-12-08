@@ -16,7 +16,7 @@ const UserBarTastic: React.FC<Props> = ({ data }) => {
   const organization = data.organization?.dataSource?.organization;
 
   return (
-    <div className={`flex h-full flex-row items-center justify-end bg-${data.bgColor}-400`}>
+    <div className={`flex h-full flex-row items-center justify-end ${data.bgColor}`}>
       <span>
         {account?.firstName
           ? formatAccountMessage({ id: 'welcome', defaultMessage: 'Welcome, ' }) + account?.firstName

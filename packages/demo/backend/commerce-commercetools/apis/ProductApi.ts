@@ -210,37 +210,6 @@ export class ProductApi extends BaseApi {
     }
   };
 
-  getRootCategories: () => Promise<Category[]> = async () => {
-    try {
-      const locale = await this.getCommercetoolsLocal();
-
-      const methodArgs = {
-        queryArgs: {
-          limit: 200,
-          where: 'parent is not defined',
-        },
-      };
-
-      return await this.getApiForProject()
-        .categories()
-        .get(methodArgs)
-        .execute()
-        .then((response) => {
-          const items = response.body.results.map((category) =>
-            ProductMapper.commercetoolsCategoryToCategory(category, locale),
-          );
-
-          return items;
-        })
-        .catch((error) => {
-          throw error;
-        });
-    } catch (error) {
-      //TODO: better error, get status code etc...
-      throw new Error(`queryCategories failed. ${error}`);
-    }
-  };
-
   getNavigationCategories: () => Promise<Category[]> = async () => {
     const { items }: { items: any[] } = await this.queryCategories({ limit: 500 });
 

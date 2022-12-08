@@ -5,7 +5,6 @@ import { XIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
 import Typography from 'components/commercetools-ui/typography';
 import { useFormat } from 'helpers/hooks/useFormat';
-import { ReferenceLink } from 'helpers/reference';
 import { useDarkMode } from 'frontastic';
 import { Link } from './index';
 
@@ -97,66 +96,16 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ open, setOpen, navigation, link
                             aria-labelledby={`mobile-featured-heading-${categoryIdx}`}
                             className="mt-6 space-y-6"
                           >
-                            {category.featured.map((item) => (
-                              <li key={item.name} className="flex">
-                                <NextLink href={item.href}>
-                                  <a className="text-gray-500 dark:text-light-100" onClick={closeMenu}>
-                                    <Typography>{item.name}</Typography>
-                                  </a>
-                                </NextLink>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <p id="mobile-categories-heading" className="font-medium text-gray-900 dark:text-light-100">
-                            {formatMessage({ id: 'categories', defaultMessage: 'Categories' })}
-                          </p>
-                          <ul role="list" aria-labelledby="mobile-categories-heading" className="mt-6 space-y-6">
-                            {category.categories.map((item) => (
-                              <li key={item.name} className="flex">
-                                <NextLink href={item.href}>
-                                  <a className="text-gray-500 dark:text-light-100" onClick={closeMenu}>
-                                    <Typography>{item.name}</Typography>
-                                  </a>
-                                </NextLink>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-1 gap-x-6 gap-y-10">
-                        <div>
-                          <p id="mobile-collection-heading" className="font-medium text-gray-900 dark:text-light-100">
-                            {formatMessage({ id: 'collection', defaultMessage: 'Collection' })}
-                          </p>
-                          <ul role="list" aria-labelledby="mobile-collection-heading" className="mt-6 space-y-6">
-                            {category.collection.map((item) => (
-                              <li key={item.name} className="flex">
-                                <NextLink href={item.href}>
-                                  <a className="text-gray-500 dark:text-light-100" onClick={closeMenu}>
-                                    <Typography>{item.name}</Typography>
-                                  </a>
-                                </NextLink>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        <div>
-                          <p id="mobile-brand-heading" className="font-medium text-gray-900 dark:text-light-100">
-                            {formatMessage({ id: 'brands', defaultMessage: 'Brands' })}
-                          </p>
-                          <ul role="list" aria-labelledby="mobile-brand-heading" className="mt-6 space-y-6">
-                            {category.brands.map((item) => (
-                              <li key={item.name} className="flex">
-                                <NextLink href={item.href}>
-                                  <a className="text-gray-500 dark:text-light-100" onClick={closeMenu}>
-                                    <Typography>{item.name}</Typography>
-                                  </a>
-                                </NextLink>
-                              </li>
-                            ))}
+                            {!!category.children?.length &&
+                              category.children.map((item) => (
+                                <li key={item.name} className="flex">
+                                  <NextLink href={item.path}>
+                                    <a className="text-gray-500 dark:text-light-100" onClick={closeMenu}>
+                                      <Typography>{item.name}</Typography>
+                                    </a>
+                                  </NextLink>
+                                </li>
+                              ))}
                           </ul>
                         </div>
                       </div>
@@ -165,19 +114,6 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ open, setOpen, navigation, link
                 ))}
               </Tab.Panels>
             </Tab.Group>
-
-            <div className="space-y-6 border-t border-gray-200 py-6 px-4">
-              {links.map((link) => (
-                <div key={link.name} className="flow-root" onClick={closeMenu}>
-                  <ReferenceLink
-                    target={link.reference}
-                    className="-m-2 block p-2 font-medium text-gray-900 dark:text-light-100"
-                  >
-                    <Typography>{link.name}</Typography>
-                  </ReferenceLink>
-                </div>
-              ))}
-            </div>
           </div>
         </Transition.Child>
       </Dialog>

@@ -16,7 +16,7 @@ const IconBarTastic: React.FC<Props> = ({ data }) => {
   const organization = data.organization?.dataSource?.organization;
   const organizationTree = data.tree?.dataSource?.tree;
   return (
-    <div className={`flex h-full flex-row items-center justify-end bg-${data.bgColor}-400`}>
+    <div className={`flex h-full flex-row items-center justify-end ${data.bgColor}`}>
       {!!account && (
         <>
           <div className="flex flex-col">
@@ -28,7 +28,7 @@ const IconBarTastic: React.FC<Props> = ({ data }) => {
             </span>
           </div>
 
-          <CartButton cartLink={data.cartLink} cartItemCount={calculateCartCount(cart.lineItems)} />
+          <CartButton cartLink={data.cartLink} cartItemCount={calculateCartCount(cart?.lineItems)} />
         </>
       )}
     </div>
