@@ -106,21 +106,26 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem, isModif
           </table>
         </td>
 
-        {!isPreBuyCart && (
-          <td className="p-1">
-            <input
-              value={lineItem.variant.availability?.availableQuantity}
-              type="text"
-              disabled={isLoading}
-              readOnly={isModificationForbidden}
-              onChange={(e) => handleChange(e.target.value)}
-              className="input input-primary"
-            />
-            <p className="td-other-details td-details__availability">
-              <label>In Stock:</label> {lineItem.variant.availability?.availableQuantity}
-            </p>
-          </td>
-        )}
+        <td className="p-1">
+          <input
+            value={count}
+            type="text"
+            disabled={isLoading}
+            readOnly={isModificationForbidden}
+            onChange={(e) => handleChange(e.target.value)}
+            className="input input-primary"
+          />
+
+          <p className="td-other-details td-details__availability">
+            {!isPreBuyCart && (
+              <>
+                <label>In Stock:</label> {lineItem.variant.availability?.availableQuantity}
+              </>
+            )}
+            {isPreBuyCart && <>&nbsp;</>}
+          </p>
+        </td>
+
         <td className="p-1_text p-1">{CurrencyHelpers.formatForCurrency(lineItem.price)}</td>
         <td className="p-1_text p-1">{CurrencyHelpers.formatForCurrency(lineItem.totalPrice)}</td>
 

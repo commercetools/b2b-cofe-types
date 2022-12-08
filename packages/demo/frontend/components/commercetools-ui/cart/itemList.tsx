@@ -34,13 +34,9 @@ const ItemList: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = ({
             <th className="cart-table__header-sku">
               {formatCartMessage({ id: 'product-item', defaultMessage: 'Item' })}
             </th>
-
-            {!cart.isPreBuyCart && (
-              <th className="cart-table__header-available-quantity">
-                {formatCartMessage({ id: 'product-availability', defaultMessage: 'AQ' })}
-              </th>
-            )}
-
+            <th className="cart-table__header-quantity">
+              {formatCartMessage({ id: 'product-quantity', defaultMessage: 'Quantity' })}
+            </th>
             <th className="cart-table__header-price">
               {formatCartMessage({ id: 'product-price', defaultMessage: 'Price' })}
             </th>
