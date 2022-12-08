@@ -99,7 +99,7 @@ const Cart = ({
             goToProductPage={goToProductPage}
             removeItem={(lineItemId: string) => removeItem(lineItemId)}
             isModificationForbidden={isQuoteRequestDisabled}
-            className="mb-8 lg:col-span-12"
+            className="mb-8 lg:col-span-8"
           />
           <OrderSummary
             cart={cart}
