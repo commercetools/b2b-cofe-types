@@ -15,6 +15,7 @@ function classNames(...classes) {
 }
 
 export interface Props {
+  isPreview: boolean;
   product: UIProduct;
   productFeaturesAttributes: string[];
   variant: Variant;
@@ -45,7 +46,13 @@ interface UIDetail {
   items: string[];
 }
 
-export default function ProductDetail({ product, variant, onChangeVariantIdx, productFeaturesAttributes }: Props) {
+export default function ProductDetail({
+  product,
+  variant,
+  onChangeVariantIdx,
+  productFeaturesAttributes,
+  isPreview,
+}: Props) {
   const [added, setAdded] = useState<boolean>(false);
 
   const isAttributeAvailable = (attribute: string) => {
@@ -84,6 +91,11 @@ export default function ProductDetail({ product, variant, onChangeVariantIdx, pr
             </Breadcrumb>
           )}
         </div>
+        {isPreview && (
+          <span className="mt-2 inline-block rounded-sm bg-orange-300 p-2 text-sm font-light text-white">
+            Displaying product in preview/staging mode.
+          </span>
+        )}
         <div className="mt-8 lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
           {/* Image gallery */}
           <ImageGallery product={product} />

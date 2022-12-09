@@ -62,7 +62,11 @@ export default function ProductList({
   return (
     <div className="mt-10 px-1 sm:px-3 lg:px-6">
       {category && <Breadcrumb Separator="/">{category.split('/').filter((item) => !!item)}</Breadcrumb>}
-
+      {isPreview && (
+        <span className="mt-2 inline-block rounded-sm bg-orange-300 p-2 text-sm font-light text-white">
+          Displaying products in preview/staging mode.
+        </span>
+      )}
       <div className="mt-8 gap-16 lg:grid lg:grid-cols-3">
         {isFiltering ? (
           <button onClick={toggleFiltering} className="w-full py-2">

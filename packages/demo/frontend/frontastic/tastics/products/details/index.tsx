@@ -9,7 +9,7 @@ import { useProducts } from 'frontastic';
 function ProductDetailsTastic({ data }) {
   const router = useRouter();
   const { getAttributeGroup } = useProducts();
-  const { product }: { product: Product } = data.data.dataSource;
+  const { product, isPreview }: { product: Product; isPreview: boolean } = data.data.dataSource;
 
   const [currentVariantIdx, setCurrentVariantIdx] = useState<number>();
   const [variant, setVariant] = useState<Variant>(product.variants[0]);
@@ -66,6 +66,7 @@ function ProductDetailsTastic({ data }) {
 
   return (
     <ProductDetails
+      isPreview={isPreview}
       product={prod}
       productFeaturesAttributes={productFeaturesAttributes}
       variant={variant}

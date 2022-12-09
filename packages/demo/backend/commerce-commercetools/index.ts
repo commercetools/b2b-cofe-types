@@ -68,9 +68,11 @@ export default {
             dynamicPageType: 'frontastic/product-detail-page',
             dataSourcePayload: {
               product: product,
+              isPreview: true,
             },
             pageMatchingPayload: {
               product: product,
+              isPreview: true,
             },
           };
         }
