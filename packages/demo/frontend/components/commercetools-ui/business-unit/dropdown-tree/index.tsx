@@ -27,6 +27,7 @@ const BusinessUnitDropdownTree = ({ tree }) => {
 
   return (
     <span>
+      <span className="inline-block text-xs">BU:</span>
       <select
         defaultValue={businessUnit.key}
         onChange={setBusinessUnit}

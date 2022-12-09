@@ -34,6 +34,7 @@ const StorePicker: React.FC<Props> = ({ organization }) => {
 
   return (
     <span>
+      <span className="inline-block text-xs">Store:</span>
       <select
         defaultValue={organization.store.key}
         onChange={setStore}
