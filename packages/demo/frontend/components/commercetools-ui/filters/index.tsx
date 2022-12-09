@@ -8,6 +8,7 @@ import { updateURLParams, URLParam } from 'helpers/utils/updateURLParams';
 import PriceFilterDisclosure from './PriceFilterDisclosure';
 import PublishedDisclosure from './PublishedDisclosure';
 import SortingDisclosure from './SortingDisclosure';
+import CategoriesDisclosure from './CategoriesDisclosure';
 
 type FiltersProps = {
   facets: Facet[];
@@ -19,6 +20,7 @@ const Filters: FC<FiltersProps> = ({ facets, products }) => {
   const { formatMessage } = useFormat({ name: 'product' });
   const [priceFilteringParams, setPriceFilteringParams] = useState<URLParam[]>([]);
   const [publishedParams, setPublishedParams] = useState<URLParam[]>();
+  const [categoriesParams, setCategoriesParams] = useState<URLParam[]>();
   const [sortingParam, setSortingParam] = useState<URLParam>();
 
   const isPublishedFacetAvailable = facets.some((facet) => facet.identifier === 'published');
@@ -32,6 +34,10 @@ const Filters: FC<FiltersProps> = ({ facets, products }) => {
 
   const updateSortingParams = (param: URLParam) => {
     setSortingParam(param);
+  };
+
+  const updateCategories = (params: URLParam[]) => {
+    setCategoriesParams(params);
   };
 
   const handleFiltersSubmit = (e) => {
@@ -51,6 +57,10 @@ const Filters: FC<FiltersProps> = ({ facets, products }) => {
       params.push(...publishedParams);
     }
 
+    if (categoriesParams) {
+      params.push(...categoriesParams);
+    }
+
     if (sortingParam) {
       params.push(sortingParam);
     }
@@ -64,6 +74,7 @@ const Filters: FC<FiltersProps> = ({ facets, products }) => {
     <form onSubmit={handleFiltersSubmit}>
       <SortingDisclosure updateSortingParams={updateSortingParams} />
       {isPublishedFacetAvailable && <PublishedDisclosure updatePublished={updatePublished} />}
+      <CategoriesDisclosure products={products} facets={facets} updateCategories={updateCategories} />
       <PriceFilterDisclosure
         products={products}
         facets={facets}

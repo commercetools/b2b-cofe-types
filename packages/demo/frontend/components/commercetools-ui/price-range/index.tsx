@@ -5,6 +5,7 @@ import { Facet } from '@Types/result/Facet';
 import { RangeFacet } from '@Types/result/RangeFacet';
 import { TwoThumbInputRange } from 'react-two-thumb-input-range';
 import { URLParam } from 'helpers/utils/updateURLParams';
+import { CurrencyHelpers } from 'helpers/currencyHelpers';
 
 type RangeInputValues = [number, number];
 
@@ -21,7 +22,6 @@ const PriceRange: FC<PriceRangeProps> = ({ products, facets, updatePriceFilterin
   const [minPrice, setMinPrice] = useState<number>(null);
   const [maxPrice, setMaxPrice] = useState<number>(null);
   const [values, setValues] = useState<RangeInputValues>([minPrice, maxPrice]);
-  const [currency, setCurrency] = useState('');
 
   const updateValues = (updatedValues: RangeInputValues) => {
     if (updatedValues[1] <= updatedValues[0]) return;
@@ -49,9 +49,6 @@ const PriceRange: FC<PriceRangeProps> = ({ products, facets, updatePriceFilterin
           const maxSelectedConverted = convertCents(maxSelected);
           updateValues([minSelectedConverted, maxSelectedConverted]);
         } else updateValues([minConverted, maxConverted]);
-
-        // Setting currency
-        setCurrency(products?.[0]?.variants?.[0]?.price.currencyCode);
       }
     };
 
@@ -69,14 +66,10 @@ const PriceRange: FC<PriceRangeProps> = ({ products, facets, updatePriceFilterin
   }, [values]);
 
   return (
-    <div className="grid w-full gap-4">
-      <div className="flex justify-between" ref={widthRef}>
-        <h6 className="text-gray-500">
-          {values[0]} {currency}
-        </h6>
-        <h6 className="text-gray-500">
-          {values[1]} {currency}
-        </h6>
+    <div className="w-full">
+      <div className="mb-4 flex justify-between" ref={widthRef}>
+        <h6 className="text-gray-500">{CurrencyHelpers.formatForCurrency(values[0] * 100)}</h6>
+        <h6 className="text-gray-500">{CurrencyHelpers.formatForCurrency(values[1] * 100)}</h6>
       </div>
       {minPrice && (
         <TwoThumbInputRange

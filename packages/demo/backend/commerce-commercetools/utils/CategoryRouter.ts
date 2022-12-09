@@ -49,7 +49,13 @@ export class CategoryRouter {
         additionalQueryArgs.priceChannel = distributionChannelId;
       }
 
-      return await productApi.query(productQuery, additionalQueryArgs);
+      const additionalFacets = [
+        {
+          attributeId: 'categories.id'
+        },
+      ];
+
+      return await productApi.query(productQuery, additionalQueryArgs, additionalFacets);
     }
 
     return null;
@@ -88,6 +94,9 @@ export class CategoryRouter {
         {
           attributeId: 'published',
           attributeType: 'boolean',
+        },
+        {
+          attributeId: 'categories.id'
         },
       ];
 

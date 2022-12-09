@@ -20,7 +20,7 @@ import {
   replicateCart,
   returnItems,
 } from '../../actions/cart';
-import { query, getAttributeGroup } from '../../actions/product';
+import { query, getAttributeGroup, getCategories } from '../../actions/product';
 import { getMyQuoteRequests, getBusinessUserQuoteRequests, updateQuoteState } from '../../actions/quotes';
 import { getStoresByKey } from '../../actions/stores';
 import {
@@ -53,6 +53,7 @@ export const getFrontasticState = (): FrontasticState => {
     useProducts: {
       query,
       getAttributeGroup,
+      categories: getCategories(),
     },
     useCart: {
       ...cartItems(),
