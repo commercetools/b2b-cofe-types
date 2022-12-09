@@ -418,11 +418,15 @@ export class CartApi extends BaseApi {
   order: (cart: Cart) => Promise<Order> = async (cart: Cart) => {
     try {
       const locale = await this.getCommercetoolsLocal();
+      const date = new Date();
 
       const orderFromCartDraft: OrderFromCartDraft = {
         id: cart.cartId,
         version: +cart.cartVersion,
-        orderNumber: Guid.newGuid(),
+        orderNumber: `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}-${String(Date.now()).slice(
+          -6,
+          -1,
+        )}`,
         orderState: cart.isPreBuyCart ? 'Open' : 'Confirmed',
       };
 
