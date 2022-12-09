@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Order } from '@Types/cart/Order';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
+import useFilters from 'helpers/hooks/useFilters';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useBusinessUnitStateContext } from 'frontastic/provider/BusinessUnitState';
 import { useBusinessUnitDetailsStateContext } from '../../provider';
@@ -14,6 +15,30 @@ const OrdersPanel = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [orderList, setOrderList] = useState<Order[]>([]);
   const [showAllChildOrders, setShowAllChildOrders] = useState(false);
+
+  const { FiltersUI, filteredItems } = useFilters<Order>(
+    [
+      {
+        label: 'Pre orders',
+        key: 'pre-orders',
+        value: false,
+        predicate: (order: Order) => order.isPreBuyCart,
+      },
+      {
+        label: 'Pending orders',
+        key: 'pending-orders',
+        value: false,
+        predicate: (order: Order) => order.orderState === 'Open',
+      },
+      {
+        label: 'Returned orders',
+        key: 'returned-orders',
+        value: false,
+        predicate: (order: Order) => order.returnInfo?.length > 0,
+      },
+    ],
+    orderList,
+  );
 
   useEffect(() => {
     if (businessUnit) {
@@ -67,7 +92,17 @@ const OrdersPanel = () => {
       <div className="flex items-stretch justify-center py-10">
         {isLoading && <LoadingIcon className="h-8 w-8 text-gray-500" />}
         {!isLoading && !orderList?.length && <div>No orders yet!</div>}
-        {!isLoading && !!orderList?.length && <OrderList orders={orderList} />}
+        {!isLoading && !!orderList?.length && (
+          <div>
+            <div className="mb-4 border-y-2 py-2">
+              <p className="mb-2">Filters</p>
+              <div className="flex flex-row flex-wrap">
+                <FiltersUI />
+              </div>
+            </div>
+            <OrderList orders={filteredItems} />
+          </div>
+        )}
       </div>
       <div className="flex flex-row items-center">
         <input

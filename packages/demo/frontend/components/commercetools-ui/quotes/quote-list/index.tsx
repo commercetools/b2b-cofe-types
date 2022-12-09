@@ -26,18 +26,20 @@ const QuoteList: React.FC<Props> = ({ quoteRequestList }) => {
 
   return (
     <>
-      <table className="table-primary table-fixed border">
+      <table className="table-primary w-full table-fixed border">
         <thead>
           <tr>
             <th>Date</th>
             <th>Buyer</th>
-            <th>Company/Division</th>
+            <th style={{ width: '15%' }}>Company/Division</th>
             <th>Account</th>
-            <th>count</th>
-            <th>Comment</th>
+            <th style={{ width: '5%' }}>Count</th>
+            <th style={{ width: '10%' }} className="text-ellipsis-150">
+              Comment
+            </th>
             <th>Price</th>
             <th>Status</th>
-            <th></th>
+            <th style={{ width: '5%' }}></th>
           </tr>
         </thead>
         <tbody>

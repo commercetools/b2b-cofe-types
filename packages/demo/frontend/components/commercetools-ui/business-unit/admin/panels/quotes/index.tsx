@@ -3,6 +3,7 @@ import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { QuoteRequest } from '@Types/quotes/QuoteRequest';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
 import QuoteList from 'components/commercetools-ui/quotes/quote-list';
+import useFilters from 'helpers/hooks/useFilters';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useQuotes } from 'frontastic';
 import { useBusinessUnitDetailsStateContext } from '../../provider';
@@ -15,6 +16,42 @@ const QuotesPanel = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [quoteList, setQuoteList] = useState<QuoteRequest[]>([]);
   const [showAllChildQuotes, setShowAllChildQuotes] = useState(false);
+
+  const { FiltersUI, filteredItems, reset } = useFilters<QuoteRequest>(
+    [
+      {
+        label: 'Submitted',
+        key: 'submitted',
+        value: false,
+        predicate: (quote: QuoteRequest) => quote.quoteRequestState === 'Submitted',
+      },
+      {
+        label: 'In Progress',
+        key: 'in-progress',
+        value: false,
+        predicate: (quote: QuoteRequest) => quote.quoteRequestState === 'InProgress',
+      },
+      {
+        label: 'Sent',
+        key: 'sent',
+        value: false,
+        predicate: (quote: QuoteRequest) => quote.quoteRequestState === 'Sent',
+      },
+      {
+        label: 'Accepted',
+        key: 'accepted',
+        value: false,
+        predicate: (quote: QuoteRequest) => quote.quoteRequestState === 'Accepted',
+      },
+      {
+        label: 'Declined',
+        key: 'declined',
+        value: false,
+        predicate: (quote: QuoteRequest) => quote.quoteRequestState === 'Declined',
+      },
+    ],
+    quoteList,
+  );
 
   useEffect(() => {
     if (businessUnit) {
@@ -59,6 +96,7 @@ const QuotesPanel = () => {
           setIsLoading(false);
         })();
       }
+      reset();
     }
   }, [showAllChildQuotes]);
 
@@ -83,7 +121,17 @@ const QuotesPanel = () => {
       <div className="flex items-stretch justify-center py-10">
         {isLoading && <LoadingIcon className="h-8 w-8 text-gray-500" />}
         {!isLoading && !quoteList?.length && <div>No quotes yet!</div>}
-        {!isLoading && !!quoteList?.length && <QuoteList quoteRequestList={quoteList} />}
+        {!isLoading && !!quoteList?.length && (
+          <div>
+            <div className="mb-4 border-y-2 py-2">
+              <p className="mb-2">Filters</p>
+              <div className="flex flex-row flex-wrap">
+                <FiltersUI />
+              </div>
+            </div>
+            <QuoteList quoteRequestList={filteredItems} />
+          </div>
+        )}
       </div>
       <div className="flex flex-row items-center">
         <input
