@@ -24,7 +24,7 @@ const CartItems: React.FC<Props> = ({ cart }) => {
               </h3>
               {lineItem.variant.attributes?.color && (
                 <p className="text-gray-500 dark:text-light-100">
-                  {StringHelpers.capitaliseFirstLetter(lineItem.variant.attributes.color.label)}
+                  {StringHelpers.capitaliseFirstLetter(lineItem.variant.attributes?.color?.label || '')}
                 </p>
               )}
               {lineItem.variant.attributes?.size && (

@@ -70,14 +70,14 @@ const DesktopOrderSummary = ({
                 </div>
                 {lineItem.variant.attributes?.color && (
                   <p className="text-gray-500 dark:text-light-100">
-                    {StringHelpers.capitaliseFirstLetter(lineItem.variant.attributes.color.label)}
+                    {StringHelpers.capitaliseFirstLetter(lineItem.variant.attributes?.color?.label || '')}
                   </p>
                 )}
                 {lineItem.variant.attributes?.size && (
                   <p className="text-gray-500 dark:text-light-100">
                     {StringHelpers.isNumeric(lineItem.variant.attributes.size)
                       ? lineItem.variant.attributes.size
-                      : StringHelpers.capitaliseFirstLetter(lineItem.variant.attributes.size)}
+                      : StringHelpers.capitaliseFirstLetter(lineItem.variant.attributes?.size || '')}
                   </p>
                 )}
               </div>

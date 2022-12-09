@@ -73,14 +73,14 @@ const MobileOrderSummary = ({
                           </div>
                           {lineItem.variant.attributes?.color && (
                             <p className="text-gray-500">
-                              {StringHelpers.capitaliseFirstLetter(lineItem.variant.attributes.color.label)}
+                              {StringHelpers.capitaliseFirstLetter(lineItem.variant.attributes?.color?.label || '')}
                             </p>
                           )}
                           {lineItem.variant.attributes?.size && (
                             <p className="text-gray-500">
                               {StringHelpers.isNumeric(lineItem.variant.attributes.size)
                                 ? lineItem.variant.attributes.size
-                                : StringHelpers.capitaliseFirstLetter(lineItem.variant.attributes.size)}
+                                : StringHelpers.capitaliseFirstLetter(lineItem.variant.attributes?.size || '')}
                             </p>
                           )}
                         </div>
