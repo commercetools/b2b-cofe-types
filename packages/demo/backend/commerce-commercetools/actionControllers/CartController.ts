@@ -468,6 +468,7 @@ export const replicateCart: ActionHook = async (request: Request, actionContext:
       };
       return response;
     }
+    throw new Error('Order not found');
   } catch (e) {
     const response: Response = {
       statusCode: 400,
