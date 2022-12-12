@@ -5,6 +5,7 @@ export enum FacetTypes {
 }
 
 export interface Facet {
+  terms?: any[];
   type: FacetTypes.BOOLEAN | FacetTypes.TERM | FacetTypes.RANGE;
   identifier: string;
   label: string;

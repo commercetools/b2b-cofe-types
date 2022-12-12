@@ -5,6 +5,8 @@ import { Product } from '@Types/product/Product';
 import { Facet } from '@Types/result/Facet';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { updateURLParams, URLParam } from 'helpers/utils/updateURLParams';
+import AvailabilityFilterDisclosure from './AvailabilityFilterDisclosure';
+import CategoriesDisclosure from './CategoriesDisclosure';
 import PriceFilterDisclosure from './PriceFilterDisclosure';
 import PublishedDisclosure from './PublishedDisclosure';
 import SortingDisclosure from './SortingDisclosure';
@@ -18,20 +20,32 @@ const Filters: FC<FiltersProps> = ({ facets, products }) => {
   const router = useRouter();
   const { formatMessage } = useFormat({ name: 'product' });
   const [priceFilteringParams, setPriceFilteringParams] = useState<URLParam[]>([]);
+  const [availabilityFilteringParams, setAvailabilityFilteringParams] = useState<URLParam[]>([]);
   const [publishedParams, setPublishedParams] = useState<URLParam[]>();
+  const [categoriesParams, setCategoriesParams] = useState<URLParam[]>();
   const [sortingParam, setSortingParam] = useState<URLParam>();
 
   const isPublishedFacetAvailable = facets.some((facet) => facet.identifier === 'published');
+  const availabilityFacet = facets?.find(({ identifier }) => identifier === 'variants.availability.availableQuantity');
 
   const updatePublished = (params: URLParam[]) => {
     setPublishedParams(params);
   };
+
   const updatePriceFilteringParams = (params: URLParam[]) => {
     setPriceFilteringParams(params);
   };
 
+  const updateAvailabilityFilteringParams = (params: URLParam[]) => {
+    setAvailabilityFilteringParams(params);
+  };
+
   const updateSortingParams = (param: URLParam) => {
     setSortingParam(param);
+  };
+
+  const updateCategories = (params: URLParam[]) => {
+    setCategoriesParams(params);
   };
 
   const handleFiltersSubmit = (e) => {
@@ -47,8 +61,16 @@ const Filters: FC<FiltersProps> = ({ facets, products }) => {
       params.push(...priceFilteringParams);
     }
 
+    if (availabilityFilteringParams) {
+      params.push(...availabilityFilteringParams);
+    }
+
     if (publishedParams) {
       params.push(...publishedParams);
+    }
+
+    if (categoriesParams) {
+      params.push(...categoriesParams);
     }
 
     if (sortingParam) {
@@ -64,6 +86,15 @@ const Filters: FC<FiltersProps> = ({ facets, products }) => {
     <form onSubmit={handleFiltersSubmit}>
       <SortingDisclosure updateSortingParams={updateSortingParams} />
       {isPublishedFacetAvailable && <PublishedDisclosure updatePublished={updatePublished} />}
+      <CategoriesDisclosure products={products} facets={facets} updateCategories={updateCategories} />
+      {!!availabilityFacet && (
+        <AvailabilityFilterDisclosure
+          products={products}
+          facets={facets}
+          availabilityFacet={availabilityFacet}
+          updateAvailabilityFilteringParams={updateAvailabilityFilteringParams}
+        />
+      )}
       <PriceFilterDisclosure
         products={products}
         facets={facets}

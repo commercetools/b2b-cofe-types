@@ -86,22 +86,22 @@ export default function ProductList({
               </h6>
             </div>
 
-            <h6 className="col-span-2 block text-right dark:text-light-100 lg:hidden">
+            <h6 className="col-span-3 block text-right dark:text-light-100 lg:hidden">
               {`${products?.length} ${formatProductMessage({ id: 'items', defaultMessage: 'Items' })}`}
             </h6>
           </button>
         )}
-        <h6 className="col-span-2 hidden text-right dark:text-light-100 lg:block">
+        <h6 className="col-span-3 hidden text-right dark:text-light-100 lg:block">
           {`${products?.length} ${formatProductMessage({ id: 'items', defaultMessage: 'Items' })} ${totalProducts}`}
         </h6>
       </div>
 
       {isFiltering ? (
-        <div className="mt-2 grid gap-16 lg:grid-cols-3">
+        <div className="mt-2 grid gap-16 lg:grid-cols-4">
           <div className="">
             <Filters facets={facets} products={products} />
           </div>
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             {products.length > 0 ? (
               <List products={products} filtering={isFiltering} isPreview={isPreview} previewURL={previewURL} />
             ) : (
