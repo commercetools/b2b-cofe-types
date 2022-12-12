@@ -9,7 +9,8 @@ import { useProducts } from 'frontastic';
 function ProductDetailsTastic({ data }) {
   const router = useRouter();
   const { getAttributeGroup } = useProducts();
-  const { product, isPreview }: { product: Product; isPreview: boolean } = data.data.dataSource;
+  const { product: dataSourceProduct, isPreview }: { product: Product; isPreview: boolean } = data.data.dataSource;
+  const [product, setProduct] = useState(dataSourceProduct);
 
   const [currentVariantIdx, setCurrentVariantIdx] = useState<number>();
   const [variant, setVariant] = useState<Variant>(product.variants[0]);
@@ -17,6 +18,11 @@ function ProductDetailsTastic({ data }) {
   const [productFeaturesAttributes, setProductFeaturesAttributes] = useState<string[]>([]);
 
   if (!product || !variant) return null;
+
+  useEffect(() => {
+    setProduct(dataSourceProduct);
+    setVariant(dataSourceProduct?.variants[0]);
+  }, [dataSourceProduct]);
 
   useEffect(() => {
     if (typeof currentVariantIdx !== 'undefined') {
