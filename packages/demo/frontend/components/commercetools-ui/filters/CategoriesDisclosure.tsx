@@ -1,12 +1,12 @@
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Disclosure } from '@headlessui/react';
 import { MinusSmIcon, PlusSmIcon } from '@heroicons/react/solid';
-import { URLParam } from 'helpers/utils/updateURLParams';
 import { Product } from '@Types/product/Product';
 import { Facet } from '@Types/result/Facet';
-import React, { useEffect, useState } from 'react';
-import { useProducts } from 'frontastic';
 import { GiThermometerCold } from 'react-icons/gi';
+import { URLParam } from 'helpers/utils/updateURLParams';
+import { useProducts } from 'frontastic';
 
 type CategoriesDisclosureProps = {
   updateCategories: (params: URLParam[]) => void;

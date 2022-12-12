@@ -51,9 +51,15 @@ export class CategoryRouter {
 
       const additionalFacets = [
         {
-          attributeId: 'categories.id'
+          attributeId: 'categories.id',
         },
       ];
+
+      if (distributionChannelId) {
+        additionalFacets.push({
+          attributeId: `variants.availability.availableQuantity`,
+        });
+      }
 
       return await productApi.query(productQuery, additionalQueryArgs, additionalFacets);
     }
@@ -96,7 +102,7 @@ export class CategoryRouter {
           attributeType: 'boolean',
         },
         {
-          attributeId: 'categories.id'
+          attributeId: 'categories.id',
         },
       ];
 

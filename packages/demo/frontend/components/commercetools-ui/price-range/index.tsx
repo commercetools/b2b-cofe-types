@@ -4,8 +4,8 @@ import { Product } from '@Types/product/Product';
 import { Facet } from '@Types/result/Facet';
 import { RangeFacet } from '@Types/result/RangeFacet';
 import { TwoThumbInputRange } from 'react-two-thumb-input-range';
-import { URLParam } from 'helpers/utils/updateURLParams';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
+import { URLParam } from 'helpers/utils/updateURLParams';
 
 type RangeInputValues = [number, number];
 
