@@ -55,17 +55,21 @@ export class StoreApi extends BaseApi {
     }
   };
 
-  query: (where: string) => Promise<any> = async (where: string): Promise<Store[]> => {
+  query: (where?: string) => Promise<any> = async (where: string): Promise<Store[]> => {
     const locale = await this.getCommercetoolsLocal();
     const config = this.frontasticContext?.project?.configuration?.preBuy;
+
+    const queryArgs = where
+      ? {
+          where,
+        }
+      : {};
 
     try {
       return this.getApiForProject()
         .stores()
         .get({
-          queryArgs: {
-            where,
-          },
+          queryArgs,
         })
         .execute()
         .then((response) => {

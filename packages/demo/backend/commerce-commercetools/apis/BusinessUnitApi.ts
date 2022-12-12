@@ -1,12 +1,44 @@
 import { BaseApi } from './BaseApi';
 import { BusinessUnit, BusinessUnitPagedQueryResponse } from '@Types/business-unit/BusinessUnit';
-import { AssociateRole } from '@Types/associate/Associate';
-import { mapReferencedAssociates } from '../mappers/BusinessUnitMappers';
+import {
+  addBUsinessUnitAdminFlags,
+  isUserAdminInBusinessUnit,
+  mapReferencedAssociates,
+  mapStoreRefs,
+} from '../mappers/BusinessUnitMappers';
 import { BusinessUnit as CommercetoolsBusinessUnit } from '@commercetools/platform-sdk';
+import { StoreApi } from './StoreApi';
 
 const MAX_LIMIT = 50;
 
 export class BusinessUnitApi extends BaseApi {
+  getOrganizationByBusinessUnit = async (businessUnit: BusinessUnit): Promise<Record<string, object>> => {
+    const organization: Record<string, object> = {};
+    organization.businessUnit = businessUnit;
+    const storeApi = new StoreApi(this.frontasticContext, this.locale);
+    // @ts-ignore
+    const store = await storeApi.get(businessUnit.stores?.[0].key);
+    // @ts-ignore
+    organization.store = store;
+    if (store?.distributionChannels?.length) {
+      organization.distributionChannel = store.distributionChannels[0];
+    }
+    return organization;
+  };
+
+  getOrganization: (accountId: string) => Promise<Record<string, object>> = async (
+    accountId: string,
+  ): Promise<Record<string, object>> => {
+    const organization: Record<string, object> = {};
+    if (accountId) {
+      const businessUnit: BusinessUnit = await this.getMe(accountId);
+      if (businessUnit?.key) {
+        return this.getOrganizationByBusinessUnit(businessUnit);
+      }
+    }
+
+    return organization;
+  };
   getAll: () => Promise<BusinessUnit[]> = async (): Promise<BusinessUnit[]> => {
     try {
       return this.getApiForProject()
@@ -99,18 +131,6 @@ export class BusinessUnitApi extends BaseApi {
     }
   };
 
-  private isUserAdminInBusinessUnit = (businessUnit: BusinessUnit, accountId: string): boolean => {
-    const currentUserAssociate = businessUnit.associates.find((associate) => associate.customer.id === accountId);
-    return currentUserAssociate?.roles.some((role) => role === AssociateRole.Admin);
-  };
-
-  private isUserRootAdminInBusinessUnit = (businessUnit: BusinessUnit, accountId: string): boolean => {
-    if (this.isUserAdminInBusinessUnit(businessUnit, accountId)) {
-      return !businessUnit.parentUnit;
-    }
-    return false;
-  };
-
   getHighestNodesWithAssociation: (
     businessUnits: BusinessUnit[],
     accountId: string,
@@ -119,8 +139,6 @@ export class BusinessUnitApi extends BaseApi {
     if (!businessUnits.length) {
       return [];
     }
-    console.log('BU');
-    console.log(businessUnits);
 
     const rootNode = businessUnits.find((bu) => !bu.parentUnit);
     if (rootNode) {
@@ -134,39 +152,45 @@ export class BusinessUnitApi extends BaseApi {
       });
 
     return filterAdmin
-      ? justParents.filter((bu) => this.isUserAdminInBusinessUnit(bu, accountId))
+      ? justParents.filter((bu) => isUserAdminInBusinessUnit(bu, accountId))
       : justParents
           // sort by Admin first
           .sort((a, b) =>
-            this.isUserAdminInBusinessUnit(a, accountId) ? -1 : this.isUserAdminInBusinessUnit(b, accountId) ? 1 : 0,
+            isUserAdminInBusinessUnit(a, accountId) ? -1 : isUserAdminInBusinessUnit(b, accountId) ? 1 : 0,
           );
   };
 
   getMe: (accountId: string) => Promise<any> = async (accountId: string) => {
     try {
+      const storeApi = new StoreApi(this.frontasticContext, this.locale);
+      const allStores = await storeApi.query();
       const response = await this.query(`associates(customer(id="${accountId}"))`, 'associates[*].customer');
       const highestNodes = this.getHighestNodesWithAssociation(response.results, accountId);
 
       if (highestNodes.length) {
-        const businessUnit = mapReferencedAssociates(highestNodes[0] as CommercetoolsBusinessUnit);
-        businessUnit.isAdmin = this.isUserAdminInBusinessUnit(businessUnit, accountId);
-        businessUnit.isRootAdmin = this.isUserRootAdminInBusinessUnit(businessUnit, accountId);
-        return businessUnit;
+        const businessUnit = mapStoreRefs(
+          mapReferencedAssociates(highestNodes[0] as CommercetoolsBusinessUnit),
+          allStores,
+        );
+        return addBUsinessUnitAdminFlags(businessUnit, accountId);
       }
+      return response;
       return response;
     } catch (e) {
       throw e;
     }
   };
 
-  get: (key: string) => Promise<BusinessUnit> = async (key: string) => {
+  get: (key: string, accountId?: string) => Promise<BusinessUnit> = async (key: string, accountId?: string) => {
+    const storeApi = new StoreApi(this.frontasticContext, this.locale);
+    const allStores = await storeApi.query();
     try {
       return this.getApiForProject()
         .businessUnits()
         .withKey({ key })
         .get()
         .execute()
-        .then((res) => res.body);
+        .then((res) => addBUsinessUnitAdminFlags(mapStoreRefs(res.body, allStores), accountId));
     } catch (e) {
       throw e;
     }
@@ -174,6 +198,8 @@ export class BusinessUnitApi extends BaseApi {
 
   getTree: (accoundId: string) => Promise<BusinessUnit[]> = async (accountId: string) => {
     let tree: BusinessUnit[] = [];
+    const storeApi = new StoreApi(this.frontasticContext, this.locale);
+    const allStores = await storeApi.query();
     if (accountId) {
       const response = await this.query(`associates(customer(id="${accountId}"))`, 'associates[*].customer');
       tree = this.getHighestNodesWithAssociation(response.results, accountId, true).map((bu) => ({
@@ -202,6 +228,7 @@ export class BusinessUnitApi extends BaseApi {
         }
       }
     }
-    return tree.map((bu) => mapReferencedAssociates(bu as CommercetoolsBusinessUnit));
+
+    return tree.map((bu) => mapStoreRefs(mapReferencedAssociates(bu as CommercetoolsBusinessUnit), allStores));
   };
 }

@@ -6,7 +6,7 @@ import { Address } from '@Types/account/Address';
 import { CartFetcher } from '../utils/CartFetcher';
 import { getLocale } from '../utils/Request';
 import { EmailApi } from '../apis/EmailApi';
-import { ChannelApi } from '../apis/ChannelApi';
+import { BusinessUnitApi } from '../apis/BusinessUnitApi';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -37,13 +37,13 @@ type AccountChangePasswordBody = {
 
 async function loginAccount(request: Request, actionContext: ActionContext, account: Account, reverify = false) {
   const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request));
-  const channelApi = new ChannelApi(actionContext.frontasticContext, getLocale(request));
+  const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
 
   const cart = await CartFetcher.fetchCart(request, actionContext);
 
   try {
     const accountRes = await accountApi.login(account, cart, reverify);
-    const organization = await channelApi.fetch(accountRes.accountId);
+    const organization = await businessUnitApi.getOrganization(accountRes.accountId);
 
     return { account: accountRes, organization };
   } catch (e) {

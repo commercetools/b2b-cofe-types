@@ -5,7 +5,6 @@ import { BusinessUnitApi } from '../apis/BusinessUnitApi';
 import { getLocale } from '../utils/Request';
 import { AccountRegisterBody } from './AccountController';
 import { Store, StoreKeyReference } from '@Types/store/store';
-import { ChannelApi } from '../apis/ChannelApi';
 import { CustomerApi } from '../apis/CustomerApi';
 import { WithError } from '@Types/general/WithError';
 import { CartApi } from '../apis/CartApi';
@@ -27,11 +26,10 @@ export const getMe: ActionHook = async (request: Request, actionContext: ActionC
 
   if (request.sessionData?.account?.accountId && !businessUnit) {
     const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
-    const channelApi = new ChannelApi(actionContext.frontasticContext, getLocale(request));
     businessUnit = await businessUnitApi.getMe(request.sessionData?.account?.accountId);
 
     if (businessUnit) {
-      organization = await channelApi.getOrganizationByBusinessUnit(businessUnit);
+      organization = await businessUnitApi.getOrganizationByBusinessUnit(businessUnit);
     }
   }
 
@@ -47,11 +45,10 @@ export const getMe: ActionHook = async (request: Request, actionContext: ActionC
 
 export const setMe: ActionHook = async (request: Request, actionContext: ActionContext) => {
   const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
-  const channelApi = new ChannelApi(actionContext.frontasticContext, getLocale(request));
   const data = JSON.parse(request.body);
 
-  const businessUnit = await businessUnitApi.get(data.key);
-  const organization = await channelApi.getOrganizationByBusinessUnit(businessUnit);
+  const businessUnit = await businessUnitApi.get(data.key, request.sessionData?.account?.accountId);
+  const organization = await businessUnitApi.getOrganizationByBusinessUnit(businessUnit);
   const response: Response = {
     statusCode: 200,
     body: JSON.stringify(businessUnit),

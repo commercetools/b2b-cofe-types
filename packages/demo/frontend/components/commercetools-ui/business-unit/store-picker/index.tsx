@@ -42,7 +42,7 @@ const StorePicker: React.FC<Props> = ({ organization }) => {
       >
         {organization.businessUnit.stores.map((item) => (
           <option key={item.key} value={item.key}>
-            {item.key}
+            {item.name ?? item.key}
           </option>
         ))}
       </select>

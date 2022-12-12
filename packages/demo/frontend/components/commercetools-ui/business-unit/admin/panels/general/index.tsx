@@ -191,7 +191,7 @@ const GeneralPanel: React.FC = () => {
               {!!stores.length && (
                 <ol className="list-decimal pl-6">
                   {stores.map((store) => (
-                    <li key={store.id}>{store.name}</li>
+                    <li key={store.id}>{store.name ?? store.key}</li>
                   ))}
                 </ol>
               )}

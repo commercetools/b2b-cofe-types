@@ -13,7 +13,7 @@ import { Result } from '@Types/product/Result';
 import { CategoryRouter } from './utils/CategoryRouter';
 import dataSources from './dataSources';
 import { actions } from './actionControllers';
-import { ChannelApi } from './apis/ChannelApi';
+import { BusinessUnitApi } from './apis/BusinessUnitApi';
 
 export default {
   'dynamic-page-handler': async (
@@ -37,8 +37,8 @@ export default {
     if (b2bPageMatch) {
       let organization = request.sessionData?.organization;
       if (!organization.businessUnit && request.sessionData?.account?.accountId) {
-        const channelApi = new ChannelApi(context.frontasticContext, getLocale(request));
-        organization = await channelApi.fetch(request.sessionData.account.accountId);
+        const businessUnitApi = new BusinessUnitApi(context.frontasticContext, getLocale(request));
+        organization = await businessUnitApi.getOrganization(request.sessionData.account.accountId);
       }
       return {
         dynamicPageType: `b2b${b2bPageMatch[0]}`,
