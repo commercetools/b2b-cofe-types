@@ -1,5 +1,5 @@
 import { BaseApi } from './BaseApi';
-import { BusinessUnit, BusinessUnitPagedQueryResponse } from '@Types/business-unit/BusinessUnit';
+import { BusinessUnit, BusinessUnitPagedQueryResponse, StoreMode } from '@Types/business-unit/BusinessUnit';
 import {
   addBUsinessUnitAdminFlags,
   isUserAdminInBusinessUnit,
@@ -15,14 +15,17 @@ export class BusinessUnitApi extends BaseApi {
   getOrganizationByBusinessUnit = async (businessUnit: BusinessUnit): Promise<Record<string, object>> => {
     const organization: Record<string, object> = {};
     organization.businessUnit = businessUnit;
-    const storeApi = new StoreApi(this.frontasticContext, this.locale);
-    // @ts-ignore
-    const store = await storeApi.get(businessUnit.stores?.[0].key);
-    // @ts-ignore
-    organization.store = store;
-    if (store?.distributionChannels?.length) {
-      organization.distributionChannel = store.distributionChannels[0];
+    if (businessUnit.stores?.[0]) {
+      const storeApi = new StoreApi(this.frontasticContext, this.locale);
+      // @ts-ignore
+      const store = await storeApi.get(businessUnit.stores?.[0].key);
+      // @ts-ignore
+      organization.store = store;
+      if (store?.distributionChannels?.length) {
+        organization.distributionChannel = store.distributionChannels[0];
+      }
     }
+
     return organization;
   };
 
@@ -172,9 +175,8 @@ export class BusinessUnitApi extends BaseApi {
           mapReferencedAssociates(highestNodes[0] as CommercetoolsBusinessUnit),
           allStores,
         );
-        return addBUsinessUnitAdminFlags(businessUnit, accountId);
+        return this.setStoresByBusinessUnit(addBUsinessUnitAdminFlags(businessUnit, accountId));
       }
-      return response;
       return response;
     } catch (e) {
       throw e;
@@ -190,10 +192,35 @@ export class BusinessUnitApi extends BaseApi {
         .withKey({ key })
         .get()
         .execute()
-        .then((res) => addBUsinessUnitAdminFlags(mapStoreRefs(res.body, allStores), accountId));
+        .then((res) => addBUsinessUnitAdminFlags(mapStoreRefs(res.body, allStores), accountId))
+        .then((res) => this.setStoresByBusinessUnit(res));
     } catch (e) {
       throw e;
     }
+  };
+
+  setStoresByBusinessUnit: (businessUnit: BusinessUnit) => Promise<BusinessUnit> = async (
+    businessUnit: BusinessUnit,
+  ) => {
+    if (businessUnit.storeMode === StoreMode.Explicit) {
+      return businessUnit;
+    }
+    let parentBU: BusinessUnit = { ...businessUnit };
+    while (parentBU.storeMode === StoreMode.FromParent && !!parentBU.parentUnit) {
+      const { body } = await this.getApiForProject()
+        .businessUnits()
+        .withKey({ key: parentBU.parentUnit.key })
+        .get()
+        .execute();
+      parentBU = body;
+    }
+    if (parentBU.storeMode === StoreMode.Explicit) {
+      return {
+        ...businessUnit,
+        stores: parentBU.stores,
+      };
+    }
+    return businessUnit;
   };
 
   getTree: (accoundId: string) => Promise<BusinessUnit[]> = async (accountId: string) => {

@@ -39,16 +39,27 @@ async function fetchWishlist(request: Request, wishlistApi: WishlistApi) {
 }
 
 export const getStoreWishlists: ActionHook = async (request, actionContext) => {
-  const account = fetchAccountFromSessionEnsureLoggedIn(request);
-  const wishlistApi = getWishlistApi(request, actionContext);
-  const storeKey = fetchStoreFromSession(request);
-  const wishlists = await wishlistApi.getForAccountStore(account.accountId, storeKey);
+  try {
+    const account = fetchAccountFromSessionEnsureLoggedIn(request);
+    const wishlistApi = getWishlistApi(request, actionContext);
+    const storeKey = fetchStoreFromSession(request);
+    const wishlists = await wishlistApi.getForAccountStore(account.accountId, storeKey);
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify(wishlists),
-    sessionData: request.sessionData,
-  };
+    return {
+      statusCode: 200,
+      body: JSON.stringify(wishlists),
+      sessionData: request.sessionData,
+    };
+  } catch (e) {
+    const response: Response = {
+      statusCode: 400,
+      // @ts-ignore
+      error: e,
+      errorCode: 400,
+    };
+
+    return response;
+  }
 };
 
 export const getAllWishlists: ActionHook = async (request, actionContext) => {

@@ -6,7 +6,12 @@ export const getAllWishlists = async () => {
 };
 
 export const getStoreWishlists = async () => {
-  return fetchApiHub(`/action/wishlist/getStoreWishlists`, { method: 'GET' });
+  try {
+    const lists = await fetchApiHub(`/action/wishlist/getStoreWishlists`);
+    return lists;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const addToNewWishlist = async (wishlist: WishlistDraft, sku: string, count = 1) => {
