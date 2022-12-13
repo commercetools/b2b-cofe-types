@@ -19,8 +19,12 @@ export const cartItems = () => {
 };
 
 export const getCart = async () => {
-  const res = await fetchApiHub('/action/cart/getCart', { method: 'GET' });
-  mutate('/action/cart/getCart', res);
+  try {
+    const res = await fetchApiHub('/action/cart/getCart', { method: 'GET' });
+    mutate('/action/cart/getCart', res);
+  } catch {
+    mutate('/action/cart/getCart', undefined);
+  }
 };
 
 export const addItem = async (variant: Variant, quantity: number) => {
@@ -94,9 +98,13 @@ export const removeItem = async (lineItemId: string) => {
 };
 
 export const getShippingMethods = async () => {
-  const res = await fetchApiHub('/action/cart/getShippingMethods');
-  mutate('/action/cart/getShippingMethods', res);
-  return res;
+  try {
+    const res = await fetchApiHub('/action/cart/getShippingMethods');
+    mutate('/action/cart/getShippingMethods', res);
+    return res;
+  } catch {
+    mutate('/action/cart/getShippingMethods', undefined);
+  }
 };
 
 export const shippingMethods = () => {

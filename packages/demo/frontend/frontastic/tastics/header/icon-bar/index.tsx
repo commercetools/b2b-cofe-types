@@ -28,7 +28,11 @@ const IconBarTastic: React.FC<Props> = ({ data }) => {
             </span>
           </div>
 
-          <CartButton cartLink={data.cartLink} cartItemCount={calculateCartCount(cart?.lineItems)} />
+          <CartButton
+            cartLink={data.cartLink}
+            cartItemCount={calculateCartCount(cart?.lineItems)}
+            isCartDisabled={typeof cart === 'undefined'}
+          />
         </>
       )}
     </div>

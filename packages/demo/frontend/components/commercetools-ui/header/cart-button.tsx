@@ -6,15 +6,19 @@ import { Reference, ReferenceLink } from 'helpers/reference';
 interface CartButtonProps {
   cartItemCount?: number;
   cartLink?: Reference;
+  isCartDisabled?: boolean;
 }
 
-const CartButton: React.FC<CartButtonProps> = ({ cartItemCount, cartLink }) => {
+const CartButton: React.FC<CartButtonProps> = ({ cartItemCount, cartLink, isCartDisabled }) => {
   //i18n messages
   const { formatMessage: formatCartMessage } = useFormat({ name: 'cart' });
 
   return (
-    <ReferenceLink target={cartLink} className="group relative flex items-center px-2">
-      <ShoppingCartIcon className="h-8 w-8 shrink-0 text-black" aria-hidden="true" />
+    <ReferenceLink
+      target={cartLink}
+      className={`group relative flex items-center px-2 cart-button${isCartDisabled ? '--disabled' : ''}`}
+    >
+      <ShoppingCartIcon className={`h-8 w-8 shrink-0 text-black`} aria-hidden="true" />
       {cartItemCount > 0 && (
         <>
           <span className="absolute -top-0 -right-1 rounded-full bg-accent-400 px-1 hover:bg-accent-500">

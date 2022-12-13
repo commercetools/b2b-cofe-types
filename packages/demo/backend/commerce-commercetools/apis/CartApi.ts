@@ -137,7 +137,7 @@ export class CartApi extends BaseApi {
       return this.buildCartWithAvailableShippingMethods(commercetoolsCart.body, locale);
     } catch (error) {
       //TODO: better error, get status code etc...
-      throw new Error(`getAnonymous failed. ${error}`);
+      throw error;
     }
   };
 

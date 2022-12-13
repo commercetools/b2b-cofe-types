@@ -21,10 +21,7 @@ const DropdownVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElem
   onChangeVariantIdx,
   className,
 }) => {
-  const {
-    addItem,
-    data: { isPreBuyCart },
-  } = useCart();
+  const { addItem, data: cart } = useCart();
   const { formatMessage: formatProductMessage } = useFormat({ name: 'product' });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -136,10 +133,10 @@ const DropdownVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElem
           </Combobox>
         </div>
       )}
-      {!isPreBuyCart && variant.isOnStock && (
+      {!cart?.isPreBuyCart && variant.isOnStock && (
         <p className="text-sm text-gray-400">{`Available Qty: ${variant?.availability?.availableQuantity || 0}`}</p>
       )}
-      {!isPreBuyCart && !variant.isOnStock && (
+      {!cart?.isPreBuyCart && !variant.isOnStock && (
         <>
           <p className="text-sm text-gray-400">
             {formatProductMessage({ id: 'outOfStock', defaultMessage: 'Out of stock' })}
@@ -149,7 +146,7 @@ const DropdownVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElem
           )}
         </>
       )}
-      {!isPreBuyCart && (
+      {!cart?.isPreBuyCart && (
         <button
           type="button"
           onClick={() => handleAddToCart(variant, 1)}
@@ -168,7 +165,7 @@ const DropdownVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElem
           {!isLoading && added && <CheckIcon className="h-6 w-6" />}
         </button>
       )}
-      {isPreBuyCart && (
+      {cart?.isPreBuyCart && (
         <button
           type="button"
           onClick={() => handleAddToCart(variant, 1)}
