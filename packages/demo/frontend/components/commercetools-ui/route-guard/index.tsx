@@ -14,9 +14,9 @@ const RouteGuard: React.FC<{ children }> = ({ children }): ReactElement => {
     debounce(async (isLoggedIn) => {
       const path = router.asPath.split('?')[0];
 
-      const publicPaths = ['/login', '/register'];
+      const publicPaths = ['/login', '/register', /\/__preview\/.*/g];
 
-      if (!isLoggedIn && !publicPaths.includes(path)) {
+      if (!isLoggedIn && !publicPaths.some((p) => path.match(p))) {
         await router.push({
           pathname: '/login',
           query: { returnUrl: router.asPath },
