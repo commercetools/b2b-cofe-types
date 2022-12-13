@@ -107,7 +107,7 @@ const OrderStatusWidget = () => {
         </div>
       </div>
       {isLoading && <LoadingIcon className="my-0 mx-auto h-6 w-6 animate-spin" />}
-      {!isLoading && !data.length && <p className="text-base font-bold">No orders yet!</p>}
+      {!isLoading && !data.length && <p className="pt-2 text-center text-base font-bold">No orders yet!</p>}
       {!isLoading && !!data.length && (
         <div className="flex w-full flex-row items-center">
           <PieChart

@@ -31,7 +31,41 @@ export const getMyDashboard: ActionHook = async (request: Request, actionContext
           id: accountId,
           typeId: 'customer',
         },
-        widgets: [],
+        widgets: [
+          {
+            id: 'OrderList',
+            layout: {
+              i: 'OrderList',
+              x: 0,
+              y: 2,
+              w: 12,
+              h: 3,
+              isDraggable: undefined,
+            },
+          },
+          {
+            id: 'OrderStatus',
+            layout: {
+              i: 'OrderStatus',
+              x: 0,
+              y: 0,
+              w: 5,
+              h: 2,
+              isDraggable: undefined,
+            },
+          },
+          {
+            id: 'RecentPurchase',
+            layout: {
+              i: 'RecentPurchase',
+              x: 6,
+              y: 0,
+              w: 6,
+              h: 2,
+              isDraggable: undefined,
+            },
+          },
+        ],
       },
     });
   }

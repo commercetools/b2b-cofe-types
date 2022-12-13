@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Organization } from '@Types/organization/organization';
 import { Widget, WidgetLayout } from '@Types/widget/Widget';
 import GridLayout from 'react-grid-layout';
@@ -12,7 +12,7 @@ interface Props {
   organization: Organization;
 }
 
-const Dashboard: React.FC<Props> = ({ organization }) => {
+const Dashboard: React.FC<Props> = () => {
   const { isLoading, widgets, setWidgets } = useDashboardStateContext();
 
   const onDrop = useCallback(
@@ -37,11 +37,12 @@ const Dashboard: React.FC<Props> = ({ organization }) => {
   );
 
   const onLayoutChange = useCallback(
-    (_, oldItem, newItem) => {
+    (newWidgets) => {
       const newWidgetArr = widgets ? [...widgets] : [];
-      newWidgetArr.forEach((x) => {
-        if (x.id === oldItem.i) {
-          x.layout = newItem;
+      newWidgetArr.forEach((widget) => {
+        const found = newWidgets.find((item) => item.i === widget.id);
+        if (!!found) {
+          widget.layout = found;
         }
       });
       setWidgets(newWidgetArr);
