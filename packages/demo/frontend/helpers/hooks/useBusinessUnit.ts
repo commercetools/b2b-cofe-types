@@ -185,7 +185,11 @@ export const useBusinessUnit = (): UseBusinessUnit => {
     if (account?.accountId) {
       (async () => {
         const business = await getMyBusinessUnit();
-        setBusinessUnit(business);
+        const fullBusinessUnit = await fetchApiHub(`/action/business-unit/getByKey?key=${business.key}`);
+        setBusinessUnit({
+          ...fullBusinessUnit,
+          ...business,
+        });
       })();
     }
   }, [account]);

@@ -3,6 +3,36 @@ import { BusinessUnit as CommercetoolsBusinessUnit } from '@commercetools/platfo
 import { Store } from '@Types/store/store';
 import { AssociateRole } from '@Types/associate/Associate';
 
+export const mapBusinessUnitToBusinessUnit = (
+  businessUnit: CommercetoolsBusinessUnit,
+  allStores: Store[],
+  accountId?: string,
+): BusinessUnit => {
+  const businessUnitWithAssociates = mapReferencedAssociates(businessUnit);
+
+  const businessUnitWithStores = mapStoreRefs(businessUnitWithAssociates, allStores);
+
+  const businessUnitWithFlags = accountId
+    ? addBUsinessUnitAdminFlags(businessUnitWithStores, accountId)
+    : businessUnitWithStores;
+
+  return trimBusinessUnit(businessUnitWithFlags);
+};
+
+const trimBusinessUnit = (businessUnit: BusinessUnit): BusinessUnit => {
+  return {
+    key: businessUnit.key,
+    stores: businessUnit.stores,
+    name: businessUnit.name,
+    isRootAdmin: businessUnit.isRootAdmin,
+    isAdmin: businessUnit.isAdmin,
+    associates: businessUnit.associates.map((associate) => ({
+      roles: associate.roles,
+      customer: { id: associate.customer.id },
+    })),
+  };
+};
+
 export const isUserAdminInBusinessUnit = (businessUnit: BusinessUnit, accountId: string): boolean => {
   const currentUserAssociate = businessUnit.associates.find((associate) => associate.customer.id === accountId);
   return currentUserAssociate?.roles.some((role) => role === AssociateRole.Admin);

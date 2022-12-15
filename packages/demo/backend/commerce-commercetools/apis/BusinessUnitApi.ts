@@ -1,8 +1,8 @@
 import { BaseApi } from './BaseApi';
 import { BusinessUnit, BusinessUnitPagedQueryResponse, StoreMode } from '@Types/business-unit/BusinessUnit';
 import {
-  addBUsinessUnitAdminFlags,
   isUserAdminInBusinessUnit,
+  mapBusinessUnitToBusinessUnit,
   mapReferencedAssociates,
   mapStoreRefs,
 } from '../mappers/BusinessUnitMappers';
@@ -42,21 +42,6 @@ export class BusinessUnitApi extends BaseApi {
 
     return organization;
   };
-  getAll: () => Promise<BusinessUnit[]> = async (): Promise<BusinessUnit[]> => {
-    try {
-      return this.getApiForProject()
-        .businessUnits()
-        .get({
-          queryArgs: {
-            limit: MAX_LIMIT,
-          },
-        })
-        .execute()
-        .then((res) => res.body.results);
-    } catch (e) {
-      throw e;
-    }
-  };
 
   create: (data: any) => Promise<any> = async (data: any) => {
     try {
@@ -74,7 +59,7 @@ export class BusinessUnitApi extends BaseApi {
 
   delete: (key: string) => Promise<any> = async (key: string) => {
     try {
-      return this.get(key).then((bu) => {
+      return this.getByKey(key).then((bu) => {
         return this.getApiForProject()
           .businessUnits()
           .withKey({ key })
@@ -93,7 +78,7 @@ export class BusinessUnitApi extends BaseApi {
 
   update: (key: string, actions: any[]) => Promise<any> = async (key: string, actions: any[]) => {
     try {
-      return this.get(key).then((res) => {
+      return this.getByKey(key).then((res) => {
         return this.getApiForProject()
           .businessUnits()
           .withKey({ key })
@@ -171,13 +156,24 @@ export class BusinessUnitApi extends BaseApi {
       const highestNodes = this.getHighestNodesWithAssociation(response.results, accountId);
 
       if (highestNodes.length) {
-        const businessUnit = mapStoreRefs(
-          mapReferencedAssociates(highestNodes[0] as CommercetoolsBusinessUnit),
-          allStores,
+        return this.setStoresByBusinessUnit(
+          mapBusinessUnitToBusinessUnit(highestNodes[0] as CommercetoolsBusinessUnit, allStores, accountId),
         );
-        return this.setStoresByBusinessUnit(addBUsinessUnitAdminFlags(businessUnit, accountId));
       }
       return response;
+    } catch (e) {
+      throw e;
+    }
+  };
+
+  getByKey: (key: string) => Promise<CommercetoolsBusinessUnit> = async (key: string) => {
+    try {
+      return this.getApiForProject()
+        .businessUnits()
+        .withKey({ key })
+        .get()
+        .execute()
+        .then((res) => res.body);
     } catch (e) {
       throw e;
     }
@@ -192,8 +188,11 @@ export class BusinessUnitApi extends BaseApi {
         .withKey({ key })
         .get()
         .execute()
-        .then((res) => addBUsinessUnitAdminFlags(mapStoreRefs(res.body, allStores), accountId))
-        .then((res) => this.setStoresByBusinessUnit(res));
+        .then((res) =>
+          this.setStoresByBusinessUnit(
+            mapBusinessUnitToBusinessUnit(res.body as CommercetoolsBusinessUnit, allStores, accountId),
+          ),
+        );
     } catch (e) {
       throw e;
     }

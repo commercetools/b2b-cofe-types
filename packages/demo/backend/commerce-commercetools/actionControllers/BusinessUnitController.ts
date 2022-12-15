@@ -36,10 +36,6 @@ export const getMe: ActionHook = async (request: Request, actionContext: ActionC
   return {
     statusCode: 200,
     body: JSON.stringify(businessUnit),
-    sessionData: {
-      ...request.sessionData,
-      organization,
-    },
   };
 };
 
@@ -209,10 +205,24 @@ export const update: ActionHook = async (request: Request, actionContext: Action
     sessionData: {
       ...request.sessionData,
       organization: {
+        // TODO
         ...request.sessionData?.organization,
         businessUnit,
       },
     },
+  };
+
+  return response;
+};
+
+export const getByKey: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
+  const businessUnit = await businessUnitApi.getByKey(request.query?.['key']);
+
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(businessUnit),
+    sessionData: request.sessionData,
   };
 
   return response;

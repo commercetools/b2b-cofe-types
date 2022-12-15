@@ -7,7 +7,7 @@ export enum AssociateRole {
 
 interface AssociateCustomerReference extends Partial<Account> {
   id: string;
-  typeId: string;
+  typeId?: string;
 }
 
 export interface Associate {
