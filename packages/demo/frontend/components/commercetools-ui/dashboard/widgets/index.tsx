@@ -1,7 +1,3 @@
-import React, { Suspense, useState } from 'react';
-import { TrashIcon } from '@heroicons/react/solid';
-import { Widget } from '@Types/widget/Widget';
-import { useDashboardStateContext } from '../provider';
 export const WIDGETS = [
   {
     name: 'Delivery Schedule',
@@ -52,38 +48,3 @@ export const WIDGETS = [
     layout: { i: 'OrderList', x: 0, y: 0, w: 12, h: 3 },
   },
 ];
-
-const loadWidget = (widgetId) => {
-  const [widget] = WIDGETS.filter((wid) => wid.id === widgetId);
-  if (widget) {
-    return widget.component;
-  }
-  return null;
-};
-
-interface Props {
-  widget: Widget;
-}
-
-// eslint-disable-next-line react/display-name
-export const DashboardWidget = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
-  const { widget } = props;
-  const [WidgetComponent] = useState<any>(React.lazy(loadWidget(widget.id)));
-  const { setWidgets, widgets } = useDashboardStateContext();
-
-  const handleRemoveWidget = () => {
-    setWidgets(widgets.filter((wid) => wid.id !== widget.id));
-  };
-
-  return (
-    <div ref={ref} {...props} className="relative">
-      <button className="absolute right-1 bottom-1 z-40 text-red-300" onClick={handleRemoveWidget} title="remove">
-        <TrashIcon className="h-4 w-4" />
-      </button>
-      <Suspense fallback={<>Loading</>}>
-        <WidgetComponent />
-        {props.children}
-      </Suspense>
-    </div>
-  );
-});
