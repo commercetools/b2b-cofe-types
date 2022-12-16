@@ -217,15 +217,26 @@ export const update: ActionHook = async (request: Request, actionContext: Action
 
 export const getByKey: ActionHook = async (request: Request, actionContext: ActionContext) => {
   const businessUnitApi = new BusinessUnitApi(actionContext.frontasticContext, getLocale(request));
-  const businessUnit = await businessUnitApi.getByKey(request.query?.['key']);
+  try {
+    const businessUnit = await businessUnitApi.getByKey(request.query?.['key']);
 
-  const response: Response = {
-    statusCode: 200,
-    body: JSON.stringify(businessUnit),
-    sessionData: request.sessionData,
-  };
+    const response: Response = {
+      statusCode: 200,
+      body: JSON.stringify(businessUnit),
+      sessionData: request.sessionData,
+    };
 
-  return response;
+    return response;
+  } catch {
+    const response: Response = {
+      statusCode: 400,
+      // @ts-ignore
+      error: new Error('Business unit not found'),
+      errorCode: 400,
+    };
+
+    return response;
+  }
 };
 
 export const remove: ActionHook = async (request: Request, actionContext: ActionContext) => {

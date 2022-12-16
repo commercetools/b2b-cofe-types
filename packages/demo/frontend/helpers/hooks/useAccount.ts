@@ -86,15 +86,20 @@ export const useAccount = (): UseAccount => {
   const register = async (account: RegisterAccount): Promise<Account> => {
     const host = typeof window !== 'undefined' ? window.location.origin : '';
     const acc = { ...account, host };
+    let sameBusinessUnit = null;
     try {
+      const suggestedBUName = `business_unit_${account.company.toLowerCase().replace(/ /g, '_')}`;
+      sameBusinessUnit = await fetchApiHub(`/action/business-unit/getByKey?key=${suggestedBUName}`, {
+        method: 'GET',
+      });
+    } catch {
       const response = await fetchApiHub('/action/account/register', { method: 'POST' }, acc);
-
       const store = await createStore(account);
       fetchApiHub('/action/business-unit/create', { method: 'POST' }, { account, customer: response, store });
-
       return response;
-    } catch (e) {
-      throw e;
+    }
+    if (!!sameBusinessUnit) {
+      throw new Error(`An account for the company ${account.company} already exists`);
     }
   };
 
