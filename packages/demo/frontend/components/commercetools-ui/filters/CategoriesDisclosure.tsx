@@ -24,19 +24,21 @@ const CategoriesDisclosure: React.FC<CategoriesDisclosureProps> = ({ updateCateg
   const [terms, setTerms] = useState<any[]>(facetCategories?.terms);
 
   useEffect(() => {
-    const tempTerms = [...terms];
+    if (terms?.length) {
+      const tempTerms = [...terms];
 
-    for (let i = 0; i < terms.length; i++) {
-      const identifier = router?.query[`facets[categiries.id][terms][${i}]`];
-      if (!!identifier) {
-        const item = tempTerms.find((tempItem) => tempItem.identifier === identifier);
-        if (item) {
-          item.selected = true;
+      for (let i = 0; i < terms.length; i++) {
+        const identifier = router?.query[`facets[categiries.id][terms][${i}]`];
+        if (!!identifier) {
+          const item = tempTerms.find((tempItem) => tempItem.identifier === identifier);
+          if (item) {
+            item.selected = true;
+          }
         }
       }
-    }
 
-    setTerms(tempTerms);
+      setTerms(tempTerms);
+    }
   }, [router?.query]);
 
   const updateSelected = (i: number) => {

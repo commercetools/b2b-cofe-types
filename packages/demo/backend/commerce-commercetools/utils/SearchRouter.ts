@@ -21,12 +21,20 @@ export class SearchRouter {
     const urlMatches = getPath(request)?.match(/\/search/);
 
     const additionalQueryArgs = {};
+    const additionalFacets = [
+      {
+        attributeId: 'categories.id',
+      },
+    ];
     const distributionChannelId =
       request.query?.['distributionChannelId'] || request.sessionData?.organization?.distributionChannel?.id;
 
     if (distributionChannelId) {
       // @ts-ignore
       additionalQueryArgs.priceChannel = distributionChannelId;
+      additionalFacets.push({
+        attributeId: `variants.availability.availableQuantity`,
+      });
     }
 
     if (urlMatches) {
@@ -34,7 +42,7 @@ export class SearchRouter {
         ...request,
         query: { ...request.query, query: request.query.query || request.query.q },
       });
-      return productApi.query(productQuery, additionalQueryArgs);
+      return productApi.query(productQuery, additionalQueryArgs, additionalFacets);
     }
 
     return null;

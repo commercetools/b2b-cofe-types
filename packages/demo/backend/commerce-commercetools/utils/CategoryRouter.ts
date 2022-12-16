@@ -44,11 +44,6 @@ export class CategoryRouter {
       const distributionChannelId =
         request.query?.['distributionChannelId'] || request.sessionData?.organization?.distributionChannel?.id;
 
-      if (distributionChannelId) {
-        // @ts-ignore
-        additionalQueryArgs.priceChannel = distributionChannelId;
-      }
-
       const additionalFacets = [
         {
           attributeId: 'categories.id',
@@ -56,6 +51,8 @@ export class CategoryRouter {
       ];
 
       if (distributionChannelId) {
+        // @ts-ignore
+        additionalQueryArgs.priceChannel = distributionChannelId;
         additionalFacets.push({
           attributeId: `variants.availability.availableQuantity`,
         });

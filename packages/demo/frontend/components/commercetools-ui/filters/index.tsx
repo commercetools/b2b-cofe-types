@@ -27,6 +27,7 @@ const Filters: FC<FiltersProps> = ({ facets, products }) => {
 
   const isPublishedFacetAvailable = facets.some((facet) => facet.identifier === 'published');
   const availabilityFacet = facets?.find(({ identifier }) => identifier === 'variants.availability.availableQuantity');
+  const isCategoriesAvailable = facets.some((facet) => facet.identifier === 'categories.id');
 
   const updatePublished = (params: URLParam[]) => {
     setPublishedParams(params);
@@ -86,7 +87,9 @@ const Filters: FC<FiltersProps> = ({ facets, products }) => {
     <form onSubmit={handleFiltersSubmit}>
       <SortingDisclosure updateSortingParams={updateSortingParams} />
       {isPublishedFacetAvailable && <PublishedDisclosure updatePublished={updatePublished} />}
-      <CategoriesDisclosure products={products} facets={facets} updateCategories={updateCategories} />
+      {isCategoriesAvailable && (
+        <CategoriesDisclosure products={products} facets={facets} updateCategories={updateCategories} />
+      )}
       {!!availabilityFacet && (
         <AvailabilityFilterDisclosure
           products={products}

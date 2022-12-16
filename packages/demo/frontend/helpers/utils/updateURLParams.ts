@@ -17,7 +17,7 @@ export const updateURLParams: updateURLParamsProps = (params) => {
     nextURLParams.set(key, value);
   });
   unusedParams.map((key) => {
-    nextURLParams.delete(key);
+    key !== 'query' && nextURLParams.delete(key);
   });
 
   const updatedURL = `${url.pathname}?${nextURLParams.toString()}`;

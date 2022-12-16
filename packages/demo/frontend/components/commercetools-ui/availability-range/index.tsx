@@ -42,15 +42,15 @@ const AvailabilityRange: FC<AvailabilityRangeProps> = ({
     const setDefaults = () => {
       // Setting defaults for min and max price
       if (availabilityFacet) {
-        const { max, minSelected, maxSelected } = availabilityFacet as RangeFacet;
+        const { min, max, minSelected, maxSelected } = availabilityFacet as RangeFacet;
 
-        setAvailability([0, max]);
+        setAvailability([Math.max(0, min), max]);
 
         // Setting default values
         if (typeof minSelected !== 'undefined' && typeof maxSelected !== 'undefined') {
           updateValues([minSelected, maxSelected]);
         } else {
-          updateValues([0, max]);
+          updateValues([Math.max(0, min), max]);
         }
       }
     };
