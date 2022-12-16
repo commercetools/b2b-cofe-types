@@ -156,9 +156,8 @@ export class BusinessUnitApi extends BaseApi {
       const highestNodes = this.getHighestNodesWithAssociation(response.results, accountId);
 
       if (highestNodes.length) {
-        return this.setStoresByBusinessUnit(
-          mapBusinessUnitToBusinessUnit(highestNodes[0] as CommercetoolsBusinessUnit, allStores, accountId),
-        );
+        const bu = await this.setStoresByBusinessUnit(highestNodes[0] as CommercetoolsBusinessUnit);
+        return mapBusinessUnitToBusinessUnit(bu as CommercetoolsBusinessUnit, allStores, accountId);
       }
       return response;
     } catch (e) {
@@ -183,28 +182,25 @@ export class BusinessUnitApi extends BaseApi {
     const storeApi = new StoreApi(this.frontasticContext, this.locale);
     const allStores = await storeApi.query();
     try {
-      return this.getApiForProject()
+      const bu = await this.getApiForProject()
         .businessUnits()
         .withKey({ key })
         .get()
         .execute()
-        .then((res) =>
-          this.setStoresByBusinessUnit(
-            mapBusinessUnitToBusinessUnit(res.body as CommercetoolsBusinessUnit, allStores, accountId),
-          ),
-        );
+        .then((res) => this.setStoresByBusinessUnit(res.body));
+      return mapBusinessUnitToBusinessUnit(bu as CommercetoolsBusinessUnit, allStores, accountId);
     } catch (e) {
       throw e;
     }
   };
 
-  setStoresByBusinessUnit: (businessUnit: BusinessUnit) => Promise<BusinessUnit> = async (
-    businessUnit: BusinessUnit,
+  setStoresByBusinessUnit: (businessUnit: CommercetoolsBusinessUnit) => Promise<CommercetoolsBusinessUnit> = async (
+    businessUnit: CommercetoolsBusinessUnit,
   ) => {
     if (businessUnit.storeMode === StoreMode.Explicit) {
       return businessUnit;
     }
-    let parentBU: BusinessUnit = { ...businessUnit };
+    let parentBU: CommercetoolsBusinessUnit = { ...businessUnit };
     while (parentBU.storeMode === StoreMode.FromParent && !!parentBU.parentUnit) {
       const { body } = await this.getApiForProject()
         .businessUnits()
