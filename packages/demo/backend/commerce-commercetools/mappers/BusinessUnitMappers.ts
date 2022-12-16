@@ -26,6 +26,8 @@ const trimBusinessUnit = (businessUnit: BusinessUnit): BusinessUnit => {
     name: businessUnit.name,
     isRootAdmin: businessUnit.isRootAdmin,
     isAdmin: businessUnit.isAdmin,
+    parentUnit: businessUnit.parentUnit,
+    storeMode: businessUnit.storeMode,
     associates: businessUnit.associates.map((associate) => ({
       roles: associate.roles,
       customer: { id: associate.customer.id },
