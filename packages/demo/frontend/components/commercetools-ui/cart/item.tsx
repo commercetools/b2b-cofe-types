@@ -1,12 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { XIcon } from '@heroicons/react/solid';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { LineItem } from '@Types/cart/LineItem';
 import debounce from 'lodash.debounce';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useCart } from 'frontastic';
 import Image from 'frontastic/lib/image';
 import { LoadingIcon } from '../icons/loading';
-import { SplitIcon } from '../icons/split';
 import SplitItemModal from './split-item';
 interface Props {
   lineItem: LineItem;

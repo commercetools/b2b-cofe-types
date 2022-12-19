@@ -16,10 +16,7 @@ interface Props {
 
 const ListItem: React.FC<Props> = ({ product, isPreview, previewURL }) => {
   const { formatMessage: formatProductMessage } = useFormat({ name: 'product' });
-  const {
-    addItem,
-    data: { isPreBuyCart },
-  } = useCart();
+  const { addItem, data: cart } = useCart();
 
   const [count, setCount] = useState(1);
   const [isLoading, setisLoading] = useState(false);
@@ -54,8 +51,8 @@ const ListItem: React.FC<Props> = ({ product, isPreview, previewURL }) => {
           </p>
         </a>
       </NextLink>
-      <div className={`flex flex-row ${isPreBuyCart ? 'justify-center' : 'justify-between'}`}>
-        {product.variants[0].availability?.availableQuantity > 0 && !isPreBuyCart && (
+      <div className={`flex flex-row ${cart?.isPreBuyCart ? 'justify-center' : 'justify-between'}`}>
+        {product.variants[0].availability?.availableQuantity > 0 && !cart?.isPreBuyCart && (
           <div className="text-sm text-gray-400">
             {formatProductMessage({ id: 'available-quantity', defaultMessage: 'Available qty: ' })}
             <span>{product.variants[0].availability?.availableQuantity}</span>
@@ -63,7 +60,7 @@ const ListItem: React.FC<Props> = ({ product, isPreview, previewURL }) => {
         )}
         {(!product.variants[0].availability?.availableQuantity ||
           product.variants[0].availability?.availableQuantity <= 0) &&
-          !isPreBuyCart && (
+          !cart?.isPreBuyCart && (
             <div className="text-sm text-gray-400">
               {formatProductMessage({ id: 'outOfStock', defaultMessage: 'Out of stock' })}
             </div>
@@ -73,11 +70,11 @@ const ListItem: React.FC<Props> = ({ product, isPreview, previewURL }) => {
             className="mr-2 items-center rounded-md border border-transparent bg-transparent text-center text-sm font-medium text-white transition-colors duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2"
             type="button"
             onClick={() => setCount(count - 1)}
-            disabled={count <= 1 || isLoading || (!product.variants?.[0].isOnStock && !isPreBuyCart)}
+            disabled={count <= 1 || isLoading || (!product.variants?.[0].isOnStock && !cart?.isPreBuyCart)}
           >
             <MinusCircleIcon
               className={`h-4 w-4 ${
-                count <= 1 || isLoading || (!product.variants?.[0].isOnStock && !isPreBuyCart)
+                count <= 1 || isLoading || (!product.variants?.[0].isOnStock && !cart?.isPreBuyCart)
                   ? 'text-gray-300'
                   : 'text-accent-400'
               }`}
@@ -87,21 +84,21 @@ const ListItem: React.FC<Props> = ({ product, isPreview, previewURL }) => {
             className="w-10 appearance-none rounded border border-gray-300 px-1 leading-tight text-gray-700 shadow focus:outline-none disabled:bg-gray-400"
             onChange={(e) => setCount(parseInt(e.target.value || '1', 10))}
             value={count}
-            disabled={isLoading || (!product.variants?.[0].isOnStock && !isPreBuyCart)}
+            disabled={isLoading || (!product.variants?.[0].isOnStock && !cart?.isPreBuyCart)}
           ></input>
           <button
             type="button"
             className="ml-2 items-center rounded-md border border-transparent bg-transparent text-center text-sm font-medium text-white transition-colors duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2"
             onClick={() => setCount(count + 1)}
             disabled={
-              (count >= product.variants?.[0].availability?.availableQuantity && !isPreBuyCart) ||
+              (count >= product.variants?.[0].availability?.availableQuantity && !cart?.isPreBuyCart) ||
               isLoading ||
               !product.variants?.[0].isOnStock
             }
           >
             <PlusCircleIcon
               className={`h-4 w-4 ${
-                (count >= product.variants?.[0].availability?.availableQuantity && !isPreBuyCart) ||
+                (count >= product.variants?.[0].availability?.availableQuantity && !cart?.isPreBuyCart) ||
                 isLoading ||
                 !product.variants?.[0].isOnStock
                   ? 'text-gray-300'
@@ -111,7 +108,7 @@ const ListItem: React.FC<Props> = ({ product, isPreview, previewURL }) => {
           </button>
         </div>
       </div>
-      {!isPreBuyCart && (
+      {!cart?.isPreBuyCart && (
         <button
           disabled={
             count > product.variants?.[0].availability?.availableQuantity ||
@@ -127,7 +124,7 @@ const ListItem: React.FC<Props> = ({ product, isPreview, previewURL }) => {
           {isLoading && <LoadingIcon className="ml-2 mt-1 h-4 w-4 animate-spin" />}
         </button>
       )}
-      {isPreBuyCart && (
+      {cart?.isPreBuyCart && (
         <button
           className="mt-4 flex w-full justify-center rounded-md border border-transparent bg-sky-900 py-3 px-8 text-base font-medium text-white focus:ring-offset-2 focus:ring-offset-gray-50 disabled:bg-gray-300"
           type="button"

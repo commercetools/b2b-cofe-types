@@ -54,10 +54,7 @@ const GridVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElement>
   variantSelectors,
   className,
 }) => {
-  const {
-    addItems,
-    data: { isPreBuyCart },
-  } = useCart();
+  const { addItems, data: cart } = useCart();
 
   const [grouped, setGrouped] = useState(groupedVariants(product.variants, variantSelectors));
   const [selectedFirstVariantIdx, setSelectedFirstVariantIdx] = useState(0);
@@ -168,7 +165,7 @@ const GridVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElement>
                     {CurrencyHelpers.formatForCurrency(item.variant.price)}
                     <span className="ml-2 text-xs font-light">Each</span>
                   </div>
-                  {!isPreBuyCart && (
+                  {!cart?.isPreBuyCart && (
                     <p className="text-sm text-gray-400">{`Available Qty: ${
                       item.variant.availability?.availableQuantity || 0
                     }`}</p>
@@ -180,7 +177,7 @@ const GridVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElement>
                     className="input input-primary"
                     type="number"
                     min="0"
-                    disabled={!item.variant.isOnStock && !isPreBuyCart}
+                    disabled={!item.variant.isOnStock && !cart?.isPreBuyCart}
                     value={item.quantity}
                     onChange={(e) => updateQuantity(e.target.value, i, j)}
                   ></input>

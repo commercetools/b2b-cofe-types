@@ -30,10 +30,7 @@ const SingleVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElemen
   hidePrice = false,
   hideWishlistButton = false,
 }) => {
-  const {
-    addItem,
-    data: { isPreBuyCart },
-  } = useCart();
+  const { addItem, data: cart } = useCart();
   const { formatMessage: formatProductMessage } = useFormat({ name: 'product' });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -83,7 +80,6 @@ const SingleVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElemen
       }, 1000);
     }
   }, [added]);
-  console.log(isPreBuyCart);
 
   return (
     <div className={`w-full ${className}`}>
@@ -94,7 +90,7 @@ const SingleVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElemen
         </p>
       )}
       <div className="mt-4">{attributeSelector()}</div>
-      {!hideAddTocartButton && !isPreBuyCart && (
+      {!hideAddTocartButton && !cart?.isPreBuyCart && (
         <button
           type="button"
           onClick={() => handleAddToCart(variant, 1)}
@@ -113,7 +109,7 @@ const SingleVariantSelector: React.FC<Props & React.HTMLAttributes<HTMLDivElemen
           {!isLoading && added && <CheckIcon className="h-6 w-6" />}
         </button>
       )}
-      {!hideAddTocartButton && isPreBuyCart && (
+      {!hideAddTocartButton && cart?.isPreBuyCart && (
         <button
           type="button"
           onClick={() => handleAddToCart(variant, 1)}
