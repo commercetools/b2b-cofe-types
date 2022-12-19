@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { EyeIcon, DuplicateIcon } from '@heroicons/react/outline';
 import { Order } from '@Types/cart/Order';
+import InvoiceButton from 'components/commercetools-ui/invoice-button';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { mapAddressToString } from 'helpers/utils/addressUtil';
 import { useBusinessUnitDetailsStateContext } from '../../provider';
@@ -49,7 +50,7 @@ const OrderList: React.FC<Props> = ({ orders }) => {
             <td>Status</td>
             <td>Items count</td>
             <td>Total price</td>
-            <td style={{ width: '5%' }}></td>
+            <td style={{ width: '7%' }}></td>
           </tr>
         </thead>
         <tbody>
@@ -74,6 +75,7 @@ const OrderList: React.FC<Props> = ({ orders }) => {
                   <button title="Reorder" onClick={() => handleOpenReorderModal(order)}>
                     <DuplicateIcon className="h-4 w-4" />
                   </button>
+                  <InvoiceButton order={order} />
                 </td>
               </tr>
             ))}

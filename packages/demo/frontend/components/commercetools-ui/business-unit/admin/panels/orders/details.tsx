@@ -4,6 +4,7 @@ import { Order } from '@Types/cart/Order';
 import { OrderItems } from 'components/commercetools-ui/account/details/sections/order-items';
 import OrderReturns from 'components/commercetools-ui/account/details/sections/order-returns';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
+import InvoiceButton from 'components/commercetools-ui/invoice-button';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import ReorderModal from './reorder-modal';
 import OrderReturnModal from './return-modal';
@@ -63,6 +64,9 @@ const OrderDetails: React.FC<Props> = ({ order }) => {
               <button type="button" className="mb-2 text-gray-900 underline" onClick={() => setIsReturnModalOpen(true)}>
                 Return
               </button>
+            </div>
+            <div className="flex flex-row">
+              <InvoiceButton order={order}>Invoice</InvoiceButton>
             </div>
           </div>
         </dl>
