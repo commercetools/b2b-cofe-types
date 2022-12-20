@@ -3,11 +3,11 @@ import { Combobox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/solid';
 import { Variant } from '@Types/product/Variant';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
+import WishlistButton from 'components/commercetools-ui/wishlist-button';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useCart } from 'frontastic';
 import { UIProduct } from '..';
-import WishlistButton from '../wishlist-button';
 
 type Props = {
   product: UIProduct;

@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { CheckIcon } from '@heroicons/react/solid';
 import { Variant } from '@Types/product/Variant';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
+import WishlistButton from 'components/commercetools-ui/wishlist-button';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useCart } from 'frontastic';
 import { UIProduct } from '..';
 import ColorSelector from '../attribute-selectors/color-selector';
 import GenericSelector from '../attribute-selectors/generic-selector';
-import WishlistButton from '../wishlist-button';
 
 type Props = {
   product: UIProduct;

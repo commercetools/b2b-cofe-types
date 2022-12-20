@@ -3,11 +3,11 @@ import NextLink from 'next/link';
 import { PlusCircleIcon, MinusCircleIcon } from '@heroicons/react/solid';
 import { Product } from '@Types/product/Product';
 import { LoadingIcon } from 'components/commercetools-ui/icons/loading';
+import WishlistButton from 'components/commercetools-ui/wishlist-button';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useCart } from 'frontastic';
 import Image from 'frontastic/lib/image';
-import WishlistButton from '../product-details/wishlist-button';
 
 interface Props {
   product: Product;
