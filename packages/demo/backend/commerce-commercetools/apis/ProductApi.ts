@@ -174,7 +174,7 @@ export class ProductApi extends BaseApi {
     }
   };
 
-  getSearchableAttributes: (rootCategoryId: string) => Promise<FilterField[]> = async (rootCategoryId) => {
+  getSearchableAttributes: (rootCategoryId?: string) => Promise<FilterField[]> = async (rootCategoryId?) => {
     try {
       const locale = await this.getCommercetoolsLocal();
 
