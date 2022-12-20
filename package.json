@@ -3,8 +3,8 @@
     "version": "1.0.1",
     "license": "MIT",
     "private": true,
-    "main": "build/index.js",
-    "types": "build/index.d.ts",
+    "main": "build/",
+    "types": "build/",
     "files": [
         "build/**/*"
     ],
