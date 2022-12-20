@@ -7,6 +7,7 @@ import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useCart } from 'frontastic';
 import Image from 'frontastic/lib/image';
+import WishlistButton from '../product-details/wishlist-button';
 
 interface Props {
   product: Product;
@@ -134,6 +135,7 @@ const ListItem: React.FC<Props> = ({ product, isPreview, previewURL }) => {
           {isLoading && <LoadingIcon className="ml-2 mt-1 h-4 w-4 animate-spin" />}
         </button>
       )}
+      <WishlistButton isCompact variant={product?.variants?.[0]} />
     </div>
   );
 };
