@@ -13,6 +13,7 @@ export interface SortAttributes {
 
 export interface ProductQuery extends PaginatedQuery {
   category?: string;
+  rootCategoryId?: string;
   productIds?: string[];
   productType?: string;
   skus?: string[];

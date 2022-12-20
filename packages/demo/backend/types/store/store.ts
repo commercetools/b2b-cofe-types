@@ -1,3 +1,4 @@
+import { CustomFields } from '@commercetools/platform-sdk';
 import { ChannelResourceIdentifier } from '../channel/channel';
 
 export interface Store {
@@ -14,4 +15,5 @@ export interface StoreKeyReference {
   id?: string;
   typeId: 'store';
   name?: string;
+  custom?: CustomFields;
 }

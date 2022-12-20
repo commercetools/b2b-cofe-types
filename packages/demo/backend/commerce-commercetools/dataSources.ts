@@ -26,13 +26,14 @@ export default {
     const productApi = new ProductApi(context.frontasticContext, context.request ? getLocale(context.request) : null);
 
     try {
-      const categories = await productApi.getNavigationCategories();
+      const categories = await productApi.getNavigationCategories(context?.request?.sessionData?.rootCategoryId);
       return {
         dataSourcePayload: {
           categories,
         },
       };
-    } catch {
+    } catch(error) {
+      console.log(error);
       return {
         dataSourcePayload: {
           categories: [],
