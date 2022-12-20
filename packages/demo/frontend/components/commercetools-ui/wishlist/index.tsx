@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Variant } from '@Types/product/Variant';
-import { LineItem } from '@Types/wishlist/LineItem';
 import { Wishlist } from '@Types/wishlist/Wishlist';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { Reference } from 'helpers/reference';
@@ -29,7 +28,7 @@ const WishList: React.FC<Props> = ({
   emptyStateCTALink,
   wishlistId,
 }) => {
-  const { getWishlist, removeLineItem } = useWishlist();
+  const { getWishlist } = useWishlist();
   const { formatMessage: formatWishlistMessage } = useFormat({ name: 'wishlist' });
   const { addItems } = useCart();
   const router = useRouter();
@@ -39,10 +38,6 @@ const WishList: React.FC<Props> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isAddingAll, setIsAddingAll] = useState(false);
 
-  const handleRemoveLineItem = (lineItem: LineItem) => {
-    return removeLineItem(wishlistId, lineItem.lineItemId);
-  };
-
   const addItemsToCart = async () => {
     setIsAddingAll(true);
     await addItems(wishlist.lineItems?.map((item) => ({ variant: item.variant as Variant, quantity: item.count })));
@@ -50,18 +45,23 @@ const WishList: React.FC<Props> = ({
     router.push('/checkout');
   };
 
+  const fecthWishlists = async () => {
+    const list = await getWishlist(wishlistId);
+    setWishlist(list);
+  };
+
   useEffect(() => {
     (async () => {
       setIsLoading(true);
       try {
-        const list = await getWishlist(wishlistId);
-        setWishlist(list);
+        await fecthWishlists();
       } catch (e) {
         setError(e.message);
       } finally {
         setIsLoading(false);
       }
     })();
+    fecthWishlists();
   }, []);
 
   if (isLoading) {
@@ -113,7 +113,7 @@ const WishList: React.FC<Props> = ({
           </p>
           <p>
             <span className="text-sm font-bold">Store: </span>
-            {!!wishlist.store && <span>{wishlist.store.key}</span>}
+            {!!wishlist.store && <span>{wishlist.store.name || wishlist.store.key}</span>}
             {!wishlist.store?.key && <span>N/A</span>}
           </p>
           <p>
@@ -132,7 +132,7 @@ const WishList: React.FC<Props> = ({
         </button>
       </div>
 
-      {wishlist?.lineItems && <List items={wishlist.lineItems} removeLineItem={handleRemoveLineItem} />}
+      {wishlist?.lineItems && <List items={wishlist.lineItems} wishlistId={wishlistId} onUpdateList={fecthWishlists} />}
     </main>
   );
 };

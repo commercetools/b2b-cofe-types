@@ -6,21 +6,24 @@ import { DateHelpers } from 'helpers/dateHelpers';
 import { useFormat } from 'helpers/hooks/useFormat';
 import useMediaQuery from 'helpers/hooks/useMediaQuery';
 import { mobile } from 'helpers/utils/screensizes';
-import { useCart } from 'frontastic';
+import { useCart, useWishlist } from 'frontastic';
 import Image from 'frontastic/lib/image';
 import { LoadingIcon } from '../icons/loading';
 import Spinner from '../spinner';
 
 export interface Props {
   items?: LineItem[];
-  removeLineItem: (lineItem: LineItem) => void;
+  wishlistId: string;
+  onUpdateList: () => void;
 }
 
-const List: React.FC<Props> = ({ items, removeLineItem }) => {
+const List: React.FC<Props> = ({ items, wishlistId, onUpdateList }) => {
+  const { removeLineItem } = useWishlist();
   const [loading, setLoading] = useState<boolean>(true);
   const [isLargerThanMobile] = useMediaQuery(mobile);
   const [isAdding, setIsAdding] = useState<boolean[]>(Array.from(items, () => false));
   const [isDisabled, setIsDisabled] = useState(false);
+  const [isRemoving, setIsRemoving] = useState<boolean[]>(Array.from(items, () => false));
   //i18n messages
   const { formatMessage } = useFormat({ name: 'common' });
 
@@ -28,6 +31,13 @@ const List: React.FC<Props> = ({ items, removeLineItem }) => {
   const { addItem } = useCart();
 
   const goToProductPage = (itemUrl: string) => router.push(itemUrl);
+
+  const handleRemoveLineItem = async (lineItem: LineItem, i) => {
+    setIsRemoving(isRemoving.map((_, index) => index === i));
+    await removeLineItem(wishlistId, lineItem.lineItemId);
+    setIsRemoving(isRemoving.map(() => false));
+    onUpdateList();
+  };
 
   const handleAddToCart = async (item: LineItem, i) => {
     setIsAdding(isAdding.map((_, index) => index === i));
@@ -115,10 +125,11 @@ const List: React.FC<Props> = ({ items, removeLineItem }) => {
                     </button>
                     <button
                       type="button"
-                      onClick={() => removeLineItem(item)}
+                      onClick={() => handleRemoveLineItem(item, i)}
                       className="text-sm font-medium text-accent-400 hover:text-accent-500"
                     >
-                      <span>{formatMessage({ id: 'remove', defaultMessage: 'Remove' })}</span>
+                      {!isRemoving[i] && <span>{formatMessage({ id: 'remove', defaultMessage: 'Remove' })}</span>}
+                      {isRemoving[i] && <LoadingIcon className="h-4 w-4 animate-spin" />}
                     </button>
                   </div>
                 </div>
