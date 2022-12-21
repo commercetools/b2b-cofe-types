@@ -8,7 +8,7 @@
         "baseUrl": "./",
         "declaration": true,
         "paths": {
-            "@Types/*": ["b2b/*"],
+            "@Types/*": ["types/*"],
         },
         "sourceMap": true,
         "allowJs": true,
