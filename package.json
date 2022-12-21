@@ -9,7 +9,7 @@
         "build/types/**/*"
     ],
     "scripts": {
-        "build": "tsc",
+        "build": "rm -rf build && tsc",
         "ts-watch": "tsc -watch --noEmit",
         "format": "prettier --write \"**/*.ts\"",
         "fix": "prettier --write \"**/*.ts\""
