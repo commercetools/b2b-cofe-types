@@ -3,10 +3,8 @@
     "version": "1.0.1",
     "license": "MIT",
     "private": true,
-    "main": "build/index.js",
-    "types": "build/index.d.ts",
     "files": [
-        "build/types/**/*"
+        "build/**/*"
     ],
     "scripts": {
         "build": "rm -rf build && tsc",

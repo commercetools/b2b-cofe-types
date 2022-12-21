@@ -30,6 +30,6 @@
         "noEmit": false,
     },
     "include": [
-        "."
+        "./types"
     ]
 }
