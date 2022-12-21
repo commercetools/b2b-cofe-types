@@ -1,6 +1,6 @@
 // START: Generated extension imports
 // Please do not add any additional lines, will be removed during code generation!
-import commercetoolsExtension from './commerce-commercetools';
+import commercetoolsExtension from '@b2bdemo/CT';
 import adyenExtension from './payment-adyen';
 import contentfulExtensions from './content-contentful';
 

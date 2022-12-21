@@ -15,10 +15,10 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@Types/*": ["../backend/types/*"],
+      "@Types/*": ["node_modules/@b2bdemo/types/build/*"],
     },
     "incremental": true,
-    "typeRoots": ["./node_modules/@types", "./node_modules/@headlessui/react/dist/index.d.ts"],
+    "typeRoots": ["./node_modules/@types", "./node_modules/@headlessui/react/dist/index.d.ts", "./node_modules/@b2bdemo/types/build"],
   },
   "include": ["."],
   "exclude": ["node_modules"]

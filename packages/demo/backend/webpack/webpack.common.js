@@ -37,7 +37,7 @@ module.exports = {
   resolve: {
     extensions: ['.json', '.ts', '.js'],
     alias: {
-        '@Types': path.resolve(__dirname, '../types/'),
+        '@Types': path.resolve(__dirname, 'node_modules/@b2bdemo/types/build/'),
     }
   },
   output: {
