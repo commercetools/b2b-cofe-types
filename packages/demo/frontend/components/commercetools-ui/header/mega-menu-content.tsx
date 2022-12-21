@@ -25,16 +25,15 @@ const MegaMenuContent = ({ category, categoryIdx }) => {
                   aria-labelledby={`heading-${categoryIdx}`}
                   className="mt-6 space-y-6 sm:mt-4 sm:space-y-4"
                 >
-                  {subCategory.children &&
-                    subCategory.children.map((item) => (
-                      <li key={item.name} className="flex">
-                        <NextLink href={item.slug}>
-                          <a className="hover:text-gray-800">
-                            <Typography>{item.name}</Typography>
-                          </a>
-                        </NextLink>
-                      </li>
-                    ))}
+                  {subCategory?.children?.map((item) => (
+                    <li key={item.name} className="flex">
+                      <NextLink href={item.slug}>
+                        <a className="hover:text-gray-800">
+                          <Typography>{item.name}</Typography>
+                        </a>
+                      </NextLink>
+                    </li>
+                  ))}
                 </ul>
               </div>
             ))}
