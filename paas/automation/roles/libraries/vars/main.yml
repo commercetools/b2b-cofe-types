@@ -1,2 +1,0 @@
----
-root: "{{ web_dir }}/frontastic/paas/libraries/common"
