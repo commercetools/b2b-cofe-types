@@ -1,9 +1,0 @@
-# These files belong to Frontastic and should not be changed by anybody else.
-# At least Frontastic MUST approve pull requests when those files are changed.
-build.xml                   @FrontasticGmbH/development
-.customer_provision.yml     @FrontasticGmbH/development
-environment                 @FrontasticGmbH/development
-paas/                       @FrontasticGmbH/development
-.vm.yml                     @FrontasticGmbH/development
-b2bdemo                    @FrontasticGmbH/development
-b2bdemo_demo                     @FrontasticGmbH/development
