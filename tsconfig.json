@@ -1,0 +1,50 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "target": "ES6",
+        "lib": [
+            "es2019",
+        ],
+        "baseUrl": "./",
+        "declaration": true,
+        "paths": {
+            "@Types/*": ["node_modules/@b2bdemo/types/build/*"],
+        },
+        "sourceMap": true,
+        "allowJs": true,
+        "moduleResolution": "node",
+        "outDir": "./build",
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noImplicitAny": true,
+        "strictNullChecks": false,
+        "suppressImplicitAnyIndexErrors": true,
+        "removeComments": true,
+        "skipLibCheck": true,
+        "typeRoots": [
+            "node_modules/@types",
+            "node_modules/@commercetools/platform-sdk/dist/declarations/src/index.d.ts",
+            "node_modules/@b2bdemo/types/build/**/*"
+        ],
+        "types": [
+            "node",
+            "jest"
+        ],
+        "noUnusedLocals": false,
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "isolatedModules": true,
+        "noEmit": false,
+    },
+    "include": [
+        "./*"
+    ],
+    "exclude": [
+        "build",
+        "webpack",
+        "jest.config.js",
+        "_test/"
+    ]
+}
