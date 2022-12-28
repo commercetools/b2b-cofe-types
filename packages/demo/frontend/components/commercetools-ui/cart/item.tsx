@@ -115,11 +115,12 @@ const Item = ({ lineItem, goToProductPage, editItemQuantity, removeItem, isModif
           />
 
           <p className="td-other-details td-details__availability">
-            {!isPreBuyCart && (
+            {!isPreBuyCart && lineItem.variant.availability?.availableQuantity > 0 && (
               <>
                 <label>In Stock:</label> {lineItem.variant.availability?.availableQuantity}
               </>
             )}
+            {!isPreBuyCart && lineItem.variant.availability?.availableQuantity <= 0 && <label>Out of stock</label>}
             {isPreBuyCart && <>&nbsp;</>}
           </p>
         </td>

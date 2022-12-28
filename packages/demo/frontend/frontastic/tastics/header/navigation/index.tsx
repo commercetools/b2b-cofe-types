@@ -4,6 +4,7 @@ import { useAccount } from 'frontastic/provider';
 import React, { Fragment } from 'react';
 import MegaMenuContent from 'components/commercetools-ui/header/mega-menu-content';
 import NextLink from 'next/link';
+import { FlyingCartButton } from 'components/commercetools-ui/header/flying-cart-button';
 
 type Props = {
   data: any;
@@ -71,6 +72,13 @@ const NavigationTastic: React.FC<Props> = ({ data }) => {
                 )}
               </React.Fragment>
             ))}
+            {data.showQuickAdd && (
+              <div className="inline h-full flex-grow">
+                <span className={`text-md flex justify-end px-4 py-2 font-semibold ${data.textColor}`}>
+                  <FlyingCartButton />
+                </span>
+              </div>
+            )}
           </div>
         </Popover.Group>
       )}

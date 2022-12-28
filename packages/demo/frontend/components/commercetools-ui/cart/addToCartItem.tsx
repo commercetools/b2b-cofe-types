@@ -14,7 +14,7 @@ const getInitialLineItem = () => ({
   items: [],
   selectedVariant: null,
   selectedProduct: null,
-  selectedQuantity: 0,
+  selectedQuantity: 1,
 });
 
 interface Props {
@@ -58,10 +58,6 @@ const AddToCartItem: React.FC<Props> = ({ goToProductPage }) => {
     }
   };
 
-  const updateItemQuantity = async (event: ChangeEvent<HTMLInputElement>) => {
-    updateItem('selectedQuantity', event.target.value);
-  };
-
   const selectProductAsLineItem = async (product: Product) => {
     if (product.variants.length === 1) {
       await setLineItem({
@@ -89,15 +85,14 @@ const AddToCartItem: React.FC<Props> = ({ goToProductPage }) => {
 
   const getVariantName = (attributes: Record<string, any>) => {
     return Object.keys(attributes)
-      .map((key) => `${key}: ${attributes[key]}`)
+      .map((key) => {
+        if (typeof attributes[key] === 'object') {
+          return typeof attributes[key].label === 'undefined' ? null : `${key}: ${attributes[key].label}`;
+        }
+        return typeof attributes[key] === 'undefined' ? null : `${key}: ${attributes[key]}`;
+      })
+      .filter((item) => item)
       .join(', ');
-  };
-
-  const handleQuantityKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      addItemToCart();
-    }
   };
 
   const addItemToCart = async () => {
@@ -126,11 +121,10 @@ const AddToCartItem: React.FC<Props> = ({ goToProductPage }) => {
           {!!lineItem.items.length && !lineItem.selectedProduct && (
             <ol className="dynamic-cart-item__search absolute hidden">
               {lineItem.items.map((product) => (
-                <li
-                  className="dynamic-cart-item__search-item cursor-pointer border-b-2 bg-gray-100 py-1 px-2 hover:bg-gray-300"
-                  key={product.productId}
-                >
-                  <button onClick={() => selectProductAsLineItem(product)}>{product.slug}</button>
+                <li className="dynamic-cart-item__search-item" key={product.productId}>
+                  <button className="py-2" onClick={() => selectProductAsLineItem(product)}>
+                    {product.slug}
+                  </button>
                 </li>
               ))}
             </ol>
@@ -138,13 +132,15 @@ const AddToCartItem: React.FC<Props> = ({ goToProductPage }) => {
           {!!lineItem.items.length && !!lineItem.selectedProduct && (
             <ol className="dynamic-cart-item__search absolute hidden">
               {lineItem.selectedProduct.variants.map((variant) => (
-                <li
-                  className="dynamic-cart-item__search-item cursor-pointer border-b-2 bg-gray-100 py-1 px-2 hover:bg-gray-300"
-                  key={variant.id}
-                >
+                <li className="dynamic-cart-item__search-item" key={variant.id}>
                   <button onClick={() => selectVariantAsLineItem(variant)}>{getVariantName(variant.attributes)}</button>
                 </li>
               ))}
+            </ol>
+          )}
+          {!lineItem.items?.length && !isLoading && lineItemInputRef.current?.value.length >= 2 && (
+            <ol className={`dynamic-cart-item__search absolute hidden`}>
+              <li className="dynamic-cart-item__search-item">Nothing found</li>
             </ol>
           )}
         </td>
@@ -178,12 +174,17 @@ const AddToCartItem: React.FC<Props> = ({ goToProductPage }) => {
           </td>
           <td className="p-1">
             <input
-              value={lineItem.selectedVariant.availability?.availableQuantity || 0}
-              disabled
-              className="input input-primary disabled"
+              value={lineItem.selectedQuantity}
+              className="input input-primary"
+              onChange={(e) => setLineItem({ ...lineItem, selectedQuantity: +e.target.value })}
             />
             <p className="td-other-details td-details__availability">
-              <label>In Stock:</label> {lineItem.selectedVariant.availability.availableQuantity}
+              {lineItem.selectedVariant.availability?.availableQuantity > 0 && (
+                <>
+                  <label>In Stock:</label> {lineItem.selectedVariant.availability.availableQuantity}
+                </>
+              )}
+              {lineItem.selectedVariant.availability?.availableQuantity <= 0 && <label>Out of stock</label>}
             </p>
           </td>
           <td className="p-1_text p-1">{CurrencyHelpers.formatForCurrency(lineItem.selectedVariant.price)}</td>

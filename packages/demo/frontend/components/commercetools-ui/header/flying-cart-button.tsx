@@ -1,11 +1,11 @@
 import React from 'react';
-import { LightningBoltIcon } from '@heroicons/react/outline';
-import { useUIStateContext } from 'frontastic';
+import { useCart, useUIStateContext } from 'frontastic';
 
 export const FlyingCartButton: React.FC = () => {
-  const { toggleFlyingCart, isFlyingCartOpen } = useUIStateContext();
+  const { toggleFlyingCart } = useUIStateContext();
+  const { data } = useCart();
   return (
-    <button className="" onClick={() => toggleFlyingCart()}>
+    <button className="disabled:text-gray-400" onClick={() => toggleFlyingCart()} disabled={!data?.cartId}>
       <span>Quick Order</span>
       {/* <LightningBoltIcon className="h-6 w-6 shrink-0 text-white group-hover:text-white"></LightningBoltIcon> */}
     </button>
