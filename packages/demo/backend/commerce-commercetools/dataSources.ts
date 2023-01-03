@@ -32,7 +32,7 @@ export default {
           categories,
         },
       };
-    } catch(error) {
+    } catch (error) {
       console.log(error);
       return {
         dataSourcePayload: {
@@ -87,6 +87,18 @@ export default {
     return {
       dataSourcePayload: {
         organization: context.request.sessionData?.organization,
+      },
+    };
+  },
+  'b2b/associations': async (config: DataSourceConfiguration, context: DataSourceContext) => {
+    const businessUnitApi = new BusinessUnitApi(
+      context.frontasticContext,
+      context.request ? getLocale(context.request) : null,
+    );
+    const results = await businessUnitApi.getAssociatedBusinessUnits(context.request.sessionData?.account?.accountId);
+    return {
+      dataSourcePayload: {
+        associations: results,
       },
     };
   },

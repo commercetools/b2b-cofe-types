@@ -14,14 +14,14 @@ const IconBarTastic: React.FC<Props> = ({ data }) => {
   const { account } = useAccount();
   const { data: cart } = useCart();
   const organization = data.organization?.dataSource?.organization;
-  const organizationTree = data.tree?.dataSource?.tree;
+  const associations = data.associations?.dataSource?.associations;
   return (
     <div className={`flex h-full flex-row items-center justify-end ${data.bgColor}`}>
       {!!account && (
         <>
           <div className="flex flex-col">
             <span className="align-center inline-block">
-              {!data.isBUPickerHidden && <BusinessUnitDropdownTree tree={organizationTree} />}
+              {!data.isBUPickerHidden && <BusinessUnitDropdownTree tree={associations} />}
             </span>
             <span className="align-center inline-block">
               {!data.isStorePickerHidden && <StorePicker organization={organization} />}

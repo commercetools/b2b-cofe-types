@@ -9,14 +9,14 @@ const ContextBarTastic: React.FC<Props> = ({ data }) => {
   const { account } = useAccount();
 
   const organization = data.organization?.dataSource?.organization;
-  const organizationTree = data.tree?.dataSource?.tree;
+  const associations = data.associations?.dataSource?.associations;
   return (
     <div className={`${data.bgColor} h-full text-right`}>
       {!!account && (
         <div className="pt-4">
           {/* check styles on both when one is hidden */}
           <span className="align-center inline-block">
-            {!data.isBUPickerHidden && <BusinessUnitDropdownTree tree={organizationTree} />}
+            {!data.isBUPickerHidden && <BusinessUnitDropdownTree tree={associations} />}
           </span>
           <span className="align-center inline-block">
             {!data.isStorePickerHidden && <StorePicker organization={organization} />}

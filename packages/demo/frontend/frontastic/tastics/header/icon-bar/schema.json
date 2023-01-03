@@ -91,10 +91,10 @@
           "dataSourceType": "b2b/organization"
         },
         {
-          "label": "Organization Tree Info",
-          "field": "tree",
+          "label": "Organization Associations",
+          "field": "associations",
           "type": "dataSource",
-          "dataSourceType": "b2b/organization-tree"
+          "dataSourceType": "b2b/associations"
         }
       ]
     }
