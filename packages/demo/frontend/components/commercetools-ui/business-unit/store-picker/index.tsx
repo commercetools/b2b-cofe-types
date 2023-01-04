@@ -16,22 +16,10 @@ const StorePicker: React.FC<Props> = ({ organization }) => {
 
   const setStore = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     setIsLoading(true);
-    const distributionChannel = await setMyStore(event.target.value);
+    await setMyStore(event.target.value);
     getCart();
     setIsLoading(false);
-    router.replace(
-      {
-        pathname: router.pathname,
-        query: {
-          ...router.query, // list all the queries here
-          distributionChannelId: distributionChannel.id, // override the color property
-        },
-      },
-      undefined,
-      {
-        shallow: false,
-      },
-    );
+    router.push('/');
   };
 
   return (
