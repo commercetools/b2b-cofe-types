@@ -139,8 +139,9 @@ Use `git commit` and `git push`
 1. Commit the changes to the `origin` of your repo
 1. Commit the changes to `types` (git automatically pick the changes on `packages/<name>/types` and push them to this repo)
     ```
-    git subtree push --prefix packages/<name>/types types master
+    git subtree push --prefix packages/<name>/types types <new-branch-name>
     ```
+    Create a Pull Request from the <new-branch-name> to master in git@github.com:commercetools/b2b-cofe-types.git
 
 ## Extending CoFe without updating `types` repo
 1. Create `packages/<name>/commerce-types` dir and extend types from this repo
