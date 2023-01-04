@@ -14,4 +14,11 @@ export interface StoreKeyReference {
   id?: string;
   typeId: 'store';
   name?: string;
+  custom?: {
+    fileds: Record<string, object>;
+    type: {
+      typeId: string;
+      id: string;
+    };
+  };
 }

@@ -10,6 +10,7 @@ export interface Wishlist {
   description?: string;
   lineItems?: LineItem[];
   store?: Store;
+  shared?: string[];
 }
 
 export interface WishlistDraft {
