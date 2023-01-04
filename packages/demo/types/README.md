@@ -87,10 +87,6 @@ You can read a bit more about `git subtree` in [here](https://www.atlassian.com/
             "paths": {
                 "@Types/*": ["../types/types/*"],
             },
-            "typeRoots": [
-                ...
-                "../types/types"
-            ],
         }
     }
 
