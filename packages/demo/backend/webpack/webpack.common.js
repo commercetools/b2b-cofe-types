@@ -35,9 +35,10 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.json', '.ts', '.js'],
+    extensions: ['.json', '.ts', '.js', '.ts'],
     alias: {
-        '@Types': path.resolve(__dirname, '../types/'),
+        '@Types': path.resolve(__dirname, '../../types/types/'),
+        '@Extensions': path.resolve(__dirname, '../../extensions/'),
     }
   },
   output: {

@@ -1,9 +1,9 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types/src/ts/index';
 import { CreateSessionDTO, CreateSessionPayload, PaymentDetails } from '../Session';
 import AdyenApi from '../BaseApi';
-import { CartApi } from '../../commerce-commercetools/apis/CartApi';
-import { EmailApi } from '../../commerce-commercetools/apis/EmailApi';
-import { isReadyForCheckout } from '../../commerce-commercetools/utils/Cart';
+import { CartApi } from '@Extensions/commerce-commercetools/apis/CartApi';
+import { EmailApi } from '@Extensions/commerce-commercetools/apis/EmailApi';
+import { isReadyForCheckout } from '@Extensions/commerce-commercetools/utils/Cart';
 import { Guid } from '../utils/Guid';
 import { getLocale } from '../utils/Request';
 import { CartFetcher } from '../utils/CartFetcher';

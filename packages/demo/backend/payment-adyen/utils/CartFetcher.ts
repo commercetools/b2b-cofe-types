@@ -1,6 +1,6 @@
 import { ActionContext, Request } from '@frontastic/extension-types';
 import { Cart } from '@Types/cart/Cart';
-import { CartApi } from '../../commerce-commercetools/apis/CartApi';
+import { CartApi } from '@Extensions/commerce-commercetools/apis/CartApi';
 import { getLocale } from './Request';
 
 export class CartFetcher {
