@@ -1,0 +1,18 @@
+{
+    "name": "@b2bdemo/types",
+    "version": "1.0.1",
+    "license": "MIT",
+    "private": true,
+    "files": [
+        "build/**/*"
+    ],
+    "scripts": {
+        "build": "rm -rf build && tsc",
+        "ts-watch": "tsc -watch --noEmit",
+        "format": "prettier --write \"**/*.ts\"",
+        "fix": "prettier --write \"**/*.ts\""
+    },
+    "dependencies": {
+        "typescript": "^4.9.4"
+    }
+}

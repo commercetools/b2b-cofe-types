@@ -6,18 +6,14 @@
             "es2019",
         ],
         "baseUrl": "./",
+        "declaration": true,
         "paths": {
-            "@Types/*": [
-                "../types/types/*"
-            ],
-            "@Extensions/*": [
-                "../extensions/*"
-            ],
+            "@Types/*": ["types/*"],
         },
         "sourceMap": true,
         "allowJs": true,
         "moduleResolution": "node",
-        "outDir": "./",
+        "outDir": "./build",
         "forceConsistentCasingInFileNames": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
@@ -26,15 +22,6 @@
         "suppressImplicitAnyIndexErrors": true,
         "removeComments": true,
         "skipLibCheck": true,
-        "typeRoots": [
-            "node_modules/@types",
-            "node_modules/@commercetools/platform-sdk/dist/declarations/src/index.d.ts",
-            "../types/types"
-        ],
-        "types": [
-            "node",
-            "jest"
-        ],
         "noUnusedLocals": false,
         "resolveJsonModule": true,
         "allowSyntheticDefaultImports": true,
@@ -43,11 +30,6 @@
         "noEmit": false,
     },
     "include": [
-        "./*"
-    ],
-    "exclude": [
-        "node_modules/*",
-        "build",
-        "webpack",
+        "./types"
     ]
 }
