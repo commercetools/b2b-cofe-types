@@ -1,2 +1,0 @@
-[functions]
-  included_files = ["public/locales/**/*.json", "next-i18next.config.js"]

@@ -1,5 +1,0 @@
----
-dependencies:
-  - role: supervisord_daemon
-    configs:
-      - "api-hub_extensions"

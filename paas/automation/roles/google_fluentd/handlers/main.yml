@@ -1,6 +1,0 @@
----
-- name: Restart Google Fluentd
-  service:
-    name: "google-fluentd"
-    state: restarted
-  when: is_production or is_staging

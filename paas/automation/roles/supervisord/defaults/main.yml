@@ -1,4 +1,0 @@
----
-supervisord_conf_file: /etc/supervisor/supervisord.conf
-supervisord_service: supervisor
-customer: demo
