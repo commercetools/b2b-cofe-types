@@ -24,14 +24,6 @@ This repo works with [Types](https://github.com/commercetools/b2b-cofe-types) an
     types   git@github.com:commercetools/b2b-cofe-types.git (fetch)
     types   git@github.com:commercetools/b2b-cofe-types.git (push)
     ```
-1. Fetch code from Extensions into subtree
-    ```
-    git subtree add --prefix packages/demo/extensions extensions master --squash
-    ```
-1. Fetch code from Types into subtree
-    ```
-    git subtree add --prefix packages/demo/types types master --squash
-    ```
 1. Run the project
     ```
     frontastic init
@@ -45,6 +37,11 @@ This repo works with [Types](https://github.com/commercetools/b2b-cofe-types) an
 Imagine you want to re-write/change some code in `extensions` or `types`. There are 3 options to choose from:
 ### You know your new code can be used by others using the repos
 1. Commit and push the changes to the `origin`, like a normal commit
+1. (Optional) If you have never pulled from `estensions` or `types` repos, you should pull first
+    ```
+    git subtree pull --prefix packages/demo/extensions extensions master --squash
+    git subtree pull --prefix packages/demo/types types master --squash
+    ```
 1. Commit the changes to `extensions`. Git subtree can detect any changes in `package/demo/extensions` and push changes to the other repo
     ```
     git subtree push --prefix packages/demo/extensions extensions <new-branch-name>
