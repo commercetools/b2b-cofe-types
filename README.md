@@ -118,12 +118,7 @@ You can read a bit more about `git subtree` in [here](https://www.atlassian.com/
     git remote add extensions git@github.com:commercetools/b2b-cofe-extensions.git
     git remote add types git@github.com:commercetools/b2b-cofe-types.git
     ```
-1. Pull changes
-    ```
-    git subtree pull --prefix packages/<name>/extensions extensions master --squash
-    git subtree pull --prefix packages/<name>/types types master --squash
-    ```
-1. Add changes
+1. Add changes (Optional)
     ```
     git commit -m"<commit message>" && git push
     ```
@@ -133,6 +128,11 @@ Use `git commit` and `git push`
 
 ### Update types from a project using this repo as a subtree
 1. Commit the changes to the `origin` of your repo
+1. If you have never pulled from `estensions` or `types` repos, you should pull first
+    ```
+    git subtree pull --prefix packages/<name>/extensions extensions master --squash
+    git subtree pull --prefix packages/<name>/types types master --squash
+    ```
 1. Commit the changes to `types` (git automatically pick the changes on `packages/<name>/types` and push them to this repo)
     ```
     git subtree push --prefix packages/<name>/types types <new-branch-name>
