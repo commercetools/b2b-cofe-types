@@ -1,7 +1,7 @@
 # B2B Types
-This repo serves as a central place for CoFe extensions. This repo is coupled with [Extensions](https://github.com/commercetools/b2b-demo-extensions) repo.
+This repo serves as a central place for CoFe extensions. This repo is coupled with [Extensions](https://github.com/commercetools/b2b-cofe-extensions) repo.
 
-**This README file is only reflecting the changes you have to apply for types.** To see all the required modifications, please see [Extensions](https://github.com/commercetools/b2b-demo-extensions)
+**This README file is only reflecting the changes you have to apply for types.** To see all the required modifications, please see [Extensions](https://github.com/commercetools/b2b-cofe-extensions)
 
 ## How To Use
 In order to use this package in your FE/BE app in a way that you can have the latest changes, you can use `git subtree` command.
@@ -21,11 +21,11 @@ You can read a bit more about `git subtree` in [here](https://www.atlassian.com/
     ```
 1. Add `extensions` remote to your project
     ```
-    git remote add extensions git@github.com:commercetools/b2b-demo-extensions.git
+    git remote add extensions git@github.com:commercetools/b2b-cofe-extensions.git
     ```
 1. Add `types` remote to your project
     ```
-    git remote add types git@github.com:commercetools/b2b-demo-types.git
+    git remote add types git@github.com:commercetools/b2b-cofe-types.git
     ```
 1. Check if everything is in place
     ```sh
@@ -33,12 +33,12 @@ You can read a bit more about `git subtree` in [here](https://www.atlassian.com/
     ```
     Should respond like 
     ```sh
-    extensions      git@github.com:commercetools/b2b-demo-extensions.git (fetch)
-    extensions      git@github.com:commercetools/b2b-demo-extensions.git (push)
+    extensions      git@github.com:commercetools/b2b-cofe-extensions.git (fetch)
+    extensions      git@github.com:commercetools/b2b-cofe-extensions.git (push)
     origin  git@github.com:frontastic-developers/<your-repo-origin> (fetch)
     origin  git@github.com:frontastic-developers/<your-repo-origin> (push)
-    types   git@github.com:commercetools/b2b-demo-types.git (fetch)
-    types   git@github.com:commercetools/b2b-demo-types.git (push)
+    types   git@github.com:commercetools/b2b-cofe-types.git (fetch)
+    types   git@github.com:commercetools/b2b-cofe-types.git (push)
     ```
 1. Fetch code from this repo into subtree
     ```
@@ -119,8 +119,8 @@ You can read a bit more about `git subtree` in [here](https://www.atlassian.com/
     ```
 1. Add remotes
     ```
-    git remote add extensions git@github.com:commercetools/b2b-demo-extensions.git
-    git remote add types git@github.com:commercetools/b2b-demo-types.git
+    git remote add extensions git@github.com:commercetools/b2b-cofe-extensions.git
+    git remote add types git@github.com:commercetools/b2b-cofe-types.git
     ```
 1. Pull changes
     ```
@@ -139,7 +139,7 @@ Use `git commit` and `git push`
 1. Commit the changes to the `origin` of your repo
 1. Commit the changes to `types` (git automatically pick the changes on `packages/<name>/types` and push them to this repo)
     ```
-    git subtree push --prefix packages/demo/types types master
+    git subtree push --prefix packages/<name>/types types master
     ```
 
 ## Extending CoFe without updating `types` repo
