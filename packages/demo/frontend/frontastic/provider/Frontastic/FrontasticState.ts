@@ -29,7 +29,9 @@ import {
   updateLineItem,
   getWishlist,
   getAllWishlists,
+  getSharedWishlists,
   getStoreWishlists,
+  share,
   addToNewWishlist,
 } from '../../actions/wishlist';
 import { UseAdyen } from './UseAdyen';
@@ -79,9 +81,11 @@ export const getFrontasticState = (): FrontasticState => {
     useWishlist: {
       getWishlist,
       getAllWishlists,
+      getSharedWishlists,
       getStoreWishlists,
       addToNewWishlist,
       addToWishlist,
+      share,
       removeLineItem,
       updateLineItem,
     },

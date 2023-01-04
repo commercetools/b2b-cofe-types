@@ -5,12 +5,22 @@ export const getAllWishlists = async () => {
   return fetchApiHub(`/action/wishlist/getAllWishlists`, { method: 'GET' });
 };
 
+export const getSharedWishlists = async () => {
+  try {
+    const wishlists = await fetchApiHub(`/action/wishlist/getSharedWishlists`, { method: 'GET' });
+    return wishlists;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
 export const getStoreWishlists = async () => {
   try {
     const lists = await fetchApiHub(`/action/wishlist/getStoreWishlists`);
     return lists;
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
   }
 };
 
@@ -34,6 +44,17 @@ export const addToWishlist = async (wishlistId: string, sku: string, count = 1) 
     { method: 'POST' },
     { variant: { sku }, count },
   );
+};
+
+export const share = async (wishlistId: string, businessUnitKey: string): Promise<Wishlist> => {
+  try {
+    const wishlist = await fetchApiHub(`/action/wishlist/share?id=${wishlistId}&business-unit-key=${businessUnitKey}`, {
+      method: 'POST',
+    });
+    return wishlist;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const removeLineItem = async (wishlistId: string, lineItemId: string) => {

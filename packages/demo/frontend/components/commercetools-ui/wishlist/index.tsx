@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { Variant } from '@Types/product/Variant';
 import { Wishlist } from '@Types/wishlist/Wishlist';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { Reference } from 'helpers/reference';
 import { useCart, useWishlist } from 'frontastic';
 import { LoadingIcon } from '../icons/loading';
+import ShareButton from '../wishlists/shareButton';
 import EmptyWishlist from './empty_wishlist';
 import List from './list';
 
@@ -17,6 +19,7 @@ export interface Props {
   emptyStateCTALabel?: string;
   emptyStateCTALink?: Reference;
   wishlistId: string;
+  associations: BusinessUnit[];
 }
 
 const WishList: React.FC<Props> = ({
@@ -27,6 +30,7 @@ const WishList: React.FC<Props> = ({
   emptyStateCTALabel,
   emptyStateCTALink,
   wishlistId,
+  associations,
 }) => {
   const { getWishlist } = useWishlist();
   const { formatMessage: formatWishlistMessage } = useFormat({ name: 'wishlist' });
@@ -45,7 +49,7 @@ const WishList: React.FC<Props> = ({
     router.push('/checkout');
   };
 
-  const fecthWishlists = async () => {
+  const fecthWishlist = async () => {
     const list = await getWishlist(wishlistId);
     setWishlist(list);
   };
@@ -54,14 +58,14 @@ const WishList: React.FC<Props> = ({
     (async () => {
       setIsLoading(true);
       try {
-        await fecthWishlists();
+        await fecthWishlist();
       } catch (e) {
         setError(e.message);
       } finally {
         setIsLoading(false);
       }
     })();
-    fecthWishlists();
+    fecthWishlist();
   }, []);
 
   if (isLoading) {
@@ -121,18 +125,21 @@ const WishList: React.FC<Props> = ({
             <span>{wishlist.lineItems.length}</span>
           </p>
         </div>
-        <button
-          onClick={addItemsToCart}
-          type="button"
-          disabled={isAddingAll}
-          className="button button-primary flex flex-row items-center"
-        >
-          Order purchase list
-          {isAddingAll && <LoadingIcon className="ml-4 h-4 w-4 animate-spin" />}
-        </button>
+        <div className="flex flex-row justify-between">
+          <button
+            onClick={addItemsToCart}
+            type="button"
+            disabled={isAddingAll}
+            className="button button-primary flex flex-row items-center"
+          >
+            Order purchase list
+            {isAddingAll && <LoadingIcon className="ml-4 h-4 w-4 animate-spin" />}
+          </button>
+          <ShareButton associations={associations} wishlist={wishlist} reload={fecthWishlist} />
+        </div>
       </div>
 
-      {wishlist?.lineItems && <List items={wishlist.lineItems} wishlistId={wishlistId} onUpdateList={fecthWishlists} />}
+      {wishlist?.lineItems && <List items={wishlist.lineItems} wishlistId={wishlistId} onUpdateList={fecthWishlist} />}
     </main>
   );
 };

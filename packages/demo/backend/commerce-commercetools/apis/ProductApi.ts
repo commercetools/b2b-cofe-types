@@ -218,7 +218,7 @@ export class ProductApi extends BaseApi {
     const { items }: { items: any[] } = await this.queryCategories({ rootCategoryId, limit: 500 });
 
     let categories: Category[] = [];
-    if(rootCategoryId) {
+    if (rootCategoryId) {
       categories = items.filter((item: Category) => item.parentId == rootCategoryId);
     } else {
       categories = items.filter((item: Category) => !item.ancestors?.length);
@@ -263,7 +263,7 @@ export class ProductApi extends BaseApi {
         where.push(`parent(id="${categoryQuery.parentId}")`);
       }
 
-      if(categoryQuery.rootCategoryId) {
+      if (categoryQuery.rootCategoryId) {
         where.push(`ancestors(id="${categoryQuery.rootCategoryId}")`);
       }
       const methodArgs = {

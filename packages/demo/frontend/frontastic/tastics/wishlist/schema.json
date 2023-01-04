@@ -44,6 +44,17 @@
           "required": true
         }
       ]
+    },
+    {
+      "name": "Data source",
+      "fields": [
+        {
+          "label": "Organization Associations",
+          "field": "associations",
+          "type": "dataSource",
+          "dataSourceType": "b2b/associations"
+        }
+      ]
     }
   ]
 }

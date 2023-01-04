@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { Variant } from '@Types/product/Variant';
-import { LineItem } from '@Types/wishlist/LineItem';
-import { Wishlist } from '@Types/wishlist/Wishlist';
+import React from 'react';
+import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
+import useHash from 'helpers/hooks/useHash';
 import { Reference } from 'helpers/reference';
-import { useCart, useWishlist } from 'frontastic';
-import { LoadingIcon } from '../icons/loading';
-import EmptyWishlist from '../wishlist/empty_wishlist';
+import PersonalLists from './personalLists';
+import SharedLists from './sharedLists';
 export interface Props {
   pageTitle?: string;
   emptyStateImage?: { media: any } | any;
@@ -15,6 +11,11 @@ export interface Props {
   emptyStateSubtitle?: string;
   emptyStateCTALabel?: string;
   emptyStateCTALink?: Reference;
+  associations: BusinessUnit[];
+}
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ');
 }
 
 const Wishlists: React.FC<Props> = ({
@@ -24,110 +25,85 @@ const Wishlists: React.FC<Props> = ({
   emptyStateSubtitle,
   emptyStateCTALabel,
   emptyStateCTALink,
+  associations,
 }) => {
-  const { getAllWishlists } = useWishlist();
-  const { addItems } = useCart();
-  const router = useRouter();
+  const hash = useHash();
 
-  const [wishlists, setWishlists] = useState<Wishlist[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isAdding, setIsAdding] = useState<boolean[]>([]);
-  const [isDisabled, setIsDisabled] = useState(false);
+  const tabs = [
+    { name: 'Personal purchase lists', href: '#' },
+    { name: 'Shared purchase lists with me', href: '#shared' },
+  ];
 
-  const addItemsToCart = async (lineitems: LineItem[], i: number) => {
-    setIsAdding(isAdding.map((_, index) => index === i));
-    await addItems(lineitems.map((item) => ({ variant: item.variant as Variant, quantity: item.count })));
-    setIsAdding(isAdding.map(() => false));
-    router.push('/checkout');
+  const mapping = {
+    '#': PersonalLists,
+    '#shared': SharedLists,
   };
 
-  useEffect(() => {
-    setIsDisabled(isAdding.some((item) => item));
-  }, [isAdding]);
+  //tabs change (mobile only)
+  const handleTabChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    window.location.hash = e.target.value;
+  };
 
-  useEffect(() => {
-    (async () => {
-      setIsLoading(true);
-      const lists = await getAllWishlists();
-      setWishlists(lists);
-      setIsLoading(false);
-      setIsAdding(Array.from(lists, () => false));
-    })();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="text-center">
-        <div className="mt-4 inline-block">
-          <LoadingIcon className="h-4 w-4 animate-spin" />
-        </div>
-      </div>
-    );
-  }
-
-  if (!wishlists?.length)
-    return (
-      <EmptyWishlist
-        pageTitle={pageTitle}
-        title={emptyStateTitle}
-        subtitle={emptyStateSubtitle}
-        ctaLabel={emptyStateCTALabel}
-        ctaLink={emptyStateCTALink}
-        image={emptyStateImage}
-      />
-    );
+  //current rendered content
+  const Content = mapping[hash];
 
   return (
-    <main className="mx-auto max-w-2xl px-2 pt-20 pb-24 sm:px-4 lg:max-w-7xl lg:px-8">
-      <h1 className="pb-12 text-center text-3xl font-extrabold tracking-tight text-gray-900 dark:text-light-100 sm:text-4xl">
-        Purchase Lists
-      </h1>
-      <div>
-        <ol>
-          {wishlists.map((wishlist, i) => (
-            <li
-              key={wishlist.wishlistId}
-              className="flex cursor-pointer flex-row items-end justify-between border-b-2 py-1"
-            >
-              <Link href={`/wishlist/${wishlist.wishlistId}`}>
-                <div>
-                  <p>
-                    <span className="text-sm font-bold">Purchase list name: </span>
-                    <span>{wishlist.name}</span>
-                  </p>
-                  <p>
-                    <span className="text-sm font-bold">Description: </span>
-                    <span>{wishlist.description}</span>
-                  </p>
-                  <p>
-                    <span className="text-sm font-bold">Store: </span>
-                    {!!wishlist.store && <span>{wishlist.store.key}</span>}
-                    {!wishlist.store?.key && <span>N/A</span>}
-                  </p>
-                  <p>
-                    <span className="text-sm font-bold">Items: </span>
-                    <span>{wishlist.lineItems.length}</span>
-                  </p>
-                </div>
-              </Link>
-              <div className="text-right">
-                <Link href={`/wishlist/${wishlist.wishlistId}`}>
-                  <span className="rounded-md bg-accent-400 px-4 py-3 text-sm text-white">View purchase list</span>
-                </Link>
-                <button
-                  onClick={() => addItemsToCart(wishlist.lineItems, i)}
-                  disabled={isDisabled || wishlist.lineItems?.length === 0}
-                  className="button button-primary flex flex-row items-center"
+    <div className="w-full">
+      <div className="py-6">
+        {/* Tabs */}
+        <div className="lg:hidden">
+          <label htmlFor="selected-tab" className="sr-only">
+            Select a tab
+          </label>
+          <select
+            id="selected-tab"
+            name="selected-tab"
+            className="mt-1 block w-full rounded-md border-gray-300 py-2 pr-10 pl-3 text-base focus:border-accent-400 focus:outline-none focus:ring-accent-400 sm:text-sm"
+            defaultValue={tabs.find((tab) => tab.href === hash)?.name}
+            onChange={handleTabChange}
+          >
+            {tabs.map((tab) => (
+              <option key={tab.name} value={tab.href}>
+                {tab.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="hidden lg:block">
+          <div className="border-b border-gray-200">
+            <nav className="-mb-px flex space-x-8">
+              {tabs.map((tab) => (
+                <a
+                  key={tab.name}
+                  href={tab.href}
+                  className={classNames(
+                    tab.href === hash
+                      ? 'border-accent-400 text-accent-400'
+                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-light-100',
+                    'whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium',
+                  )}
                 >
-                  Order purchase list
-                  {isAdding[i] && <LoadingIcon className="ml-4 h-4 w-4 animate-spin" />}
-                </button>
-              </div>
-            </li>
-          ))}
-        </ol>
+                  {tab.name}
+                </a>
+              ))}
+            </nav>
+          </div>
+        </div>
+        {Content && (
+          <Content
+            {...{
+              pageTitle,
+              emptyStateImage,
+              emptyStateTitle,
+              emptyStateSubtitle,
+              emptyStateCTALabel,
+              emptyStateCTALink,
+              associations,
+            }}
+          />
+        )}
       </div>
-    </main>
+    </div>
   );
 };
 

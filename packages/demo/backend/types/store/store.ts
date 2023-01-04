@@ -15,10 +15,10 @@ export interface StoreKeyReference {
   typeId: 'store';
   name?: string;
   custom?: {
-    fileds: Record<string, object>
+    fileds: Record<string, object>;
     type: {
-        typeId: string,
-        id: string
-    }
+      typeId: string;
+      id: string;
+    };
   };
 }

@@ -91,6 +91,9 @@ configuration:
     orderCustomType: lulu-order
     storeCustomField: is-pre-buy-store
     orderCustomField: is-created-from-pre-buy-store
+  wishlistSharing:
+    wishlistSharingCustomType: b2b-list
+    wishlistSharingCustomField: business-unit-keys
 data: {  }
 languages:
   - en_GB

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import WishList from 'components/commercetools-ui/wishlist';
 import { useRouter } from 'next/router';
+import WishList from 'components/commercetools-ui/wishlist';
 import Wishlists from 'components/commercetools-ui/wishlists';
 
 const WishlistTastic = ({ data }) => {
   const router = useRouter();
 
   const [match, setMatch] = useState(null);
+  const associations = data.associations?.dataSource?.associations;
 
   useEffect(() => {
     setMatch(router.asPath.match(/^\/wishlist\/(.*)/));
@@ -21,6 +22,7 @@ const WishlistTastic = ({ data }) => {
         emptyStateSubtitle={data.emptyStateSubtitle}
         emptyStateCTALabel={data.emptyStateCTALabel}
         emptyStateCTALink={data.emptyStateCTALink}
+        associations={associations}
       />
     );
   }
@@ -34,6 +36,7 @@ const WishlistTastic = ({ data }) => {
       emptyStateCTALabel={data.emptyStateCTALabel}
       emptyStateCTALink={data.emptyStateCTALink}
       wishlistId={match[1]}
+      associations={associations}
     />
   );
 };
