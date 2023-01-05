@@ -33,6 +33,14 @@ This repo works with [Types](https://github.com/commercetools/b2b-cofe-types) an
 ### Update your code
 1. Commit and push the changes to the `origin`, like a normal commit
 
+## Fetch updates (Pull) from `types` or `extensions`
+If there are some new updates in one of the remotes and they don't exist in `master` branch, you can run one of the following
+```
+git subtree pull --prefix packages/demo/extensions extensions master --squash
+OR
+git subtree pull --prefix packages/demo/types types master --squash
+```
+Running these commands will create 2 (or 4) commits in your current branch which you have to push or merge to master.
 ## Extend or change behavior of code in `extensions` or `types`
 Imagine you want to re-write/change some code in `extensions` or `types`. There are 3 options to choose from:
 ### You know your new code can be used by others using the repos
