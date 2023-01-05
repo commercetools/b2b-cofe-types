@@ -91,7 +91,7 @@ You can read a bit more about `git subtree` in [here](https://www.atlassian.com/
     }
 
     ```
-1. Modify `packages/<name>/backend/package.json`
+1. Modify `packages/<name>/frontend/package.json`
     ```json
     {
         ...
