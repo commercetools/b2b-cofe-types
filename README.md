@@ -45,7 +45,7 @@ Running these commands will create 2 (or 4) commits in your current branch which
 Imagine you want to re-write/change some code in `extensions` or `types`. There are 3 options to choose from:
 ### You know your new code can be used by others using the repos
 1. Commit and push the changes to the `origin`, like a normal commit
-1. (Optional) If you have never pulled from `estensions` or `types` repos, you should pull first
+1. (Optional) If you have never pulled from `extensions` or `types` repos, you should pull first
     ```
     git subtree pull --prefix packages/demo/extensions extensions master --squash
     git subtree pull --prefix packages/demo/types types master --squash
