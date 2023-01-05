@@ -1,10 +1,11 @@
+import React, { Fragment } from 'react';
+import Head from 'next/head';
+import NextLink from 'next/link';
 import { Popover, Transition } from '@headlessui/react';
+import { FlyingCartButton } from 'components/commercetools-ui/header/flying-cart-button';
+import MegaMenuContent from 'components/commercetools-ui/header/mega-menu-content';
 import Typography from 'components/commercetools-ui/typography';
 import { useAccount } from 'frontastic/provider';
-import React, { Fragment } from 'react';
-import MegaMenuContent from 'components/commercetools-ui/header/mega-menu-content';
-import NextLink from 'next/link';
-import { FlyingCartButton } from 'components/commercetools-ui/header/flying-cart-button';
 
 type Props = {
   data: any;
@@ -20,6 +21,9 @@ const NavigationTastic: React.FC<Props> = ({ data }) => {
   const navigation = data?.categories?.dataSource || { categories: [] };
   return (
     <div className={`${data.bgColor}`}>
+      <Head>
+        <title>commercetools Composable Frontend</title>
+      </Head>
       {/* <HeaderMenu open={open} setOpen={setOpen} links={[]} navigation={navigation} /> */}
 
       {/* Mega menus */}
@@ -73,7 +77,7 @@ const NavigationTastic: React.FC<Props> = ({ data }) => {
               </React.Fragment>
             ))}
             {data.showQuickAdd && (
-              <div className="inline h-full flex-grow">
+              <div className="inline h-full grow">
                 <span className={`text-md flex justify-end px-4 py-2 font-semibold ${data.textColor}`}>
                   <FlyingCartButton />
                 </span>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { CheckIcon, XIcon } from '@heroicons/react/outline';
-import { DateHelpers } from 'helpers/dateHelpers';
 
 interface QuoteData {
   isAvailable: boolean;
