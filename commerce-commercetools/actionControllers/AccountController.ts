@@ -232,6 +232,8 @@ export const login: ActionHook = async (request: Request, actionContext: ActionC
         ...request.sessionData,
         account,
         organization,
+        // @ts-ignore
+        rootCategoryId: organization.store?.custom?.fields?.rootCategory?.id,
       },
     };
   } catch (e) {

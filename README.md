@@ -85,10 +85,6 @@ You can read a bit more about `git subtree` in [here](https://www.atlassian.com/
             "paths": {
                 "@Types/*": ["../types/types/*"],
             },
-            "typeRoots": [
-                ...
-                "../types/types"
-            ],
         }
     }
 
@@ -137,12 +133,7 @@ You can read a bit more about `git subtree` in [here](https://www.atlassian.com/
     git remote add extensions git@github.com:commercetools/b2b-cofe-extensions.git
     git remote add types git@github.com:commercetools/b2b-cofe-types.git
     ```
-1. Pull changes
-    ```
-    git subtree pull --prefix packages/<name>/extensions extensions master --squash
-    git subtree pull --prefix packages/<name>/types types master --squash
-    ```
-1. Add changes
+1. Add changes (Optional)
     ```
     git commit -m"<commit message>" && git push
     ```
@@ -152,10 +143,17 @@ Use `git commit` and `git push`
 
 ### Update extensions from a project using this repo as a subtree
 1. Commit the changes to the `origin` of your repo
+1. If you have never pulled from `estensions` or `types` repos, you should pull first
+    ```
+    git subtree pull --prefix packages/<name>/extensions extensions master --squash
+    git subtree pull --prefix packages/<name>/types types master --squash
+    ```
 1. Commit the changes to `extensions`
+    
     ```
-    git subtree push --prefix packages/<name>/extensions extensions master
+    git subtree push --prefix packages/<name>/extensions extensions <new-branch-name>
     ```
+    Create a Pull Request from the <new-branch-name> to master in git@github.com:commercetools/b2b-cofe-extensions.git
 
 ## Extending CoFe without updating `extensions` repo
 1. Create `packages/<name>/backend/commerce/index.ts` and create/override new extensions as needed.
@@ -184,3 +182,18 @@ Use `git commit` and `git push`
     const extensionsToMerge = [commercetoolsExtension, adyenExtension, contentfulExtensions, CommerceExtensions] as Array<ExtensionRegistry>;
 
     ```
+
+## variables to set
+1. project.yml`
+```
+smtp:
+    ...
+preBuy:
+    storeCustomType: lulu-store // name of the custom type on the store
+    orderCustomType: lulu-order // name of the custom type on the cart/order
+    storeCustomField: is-pre-buy-store // name of the field in the custome type. boolean field
+    orderCustomField: is-created-from-pre-buy-store // boolean field in the custom type
+wishlistSharing:
+    wishlistSharingCustomType: b2b-list
+    wishlistSharingCustomField: business-unit-keys // string(set) list of business units that can access this wishlist
+```
