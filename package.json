@@ -2,7 +2,7 @@
   "name": "b2bdemo",
   "scripts": {
     "preinstall": "node preinstall.min.js",
-    "fix": "cd packages/demo/backend && yarn fix && cd ../frontend && yarn fix"
+    "fix": "cd packages/demo/backend && yarn fix && cd ../frontend && yarn fix && cd ../extensions && yarn fix"
   },
   "private": true
 }

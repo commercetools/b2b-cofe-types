@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BusinessTypes } from 'helpers/hooks/useAccount';
 import { useFormat } from 'helpers/hooks/useFormat';
 import Redirect from 'helpers/redirect';
 import { Reference, ReferenceLink } from 'helpers/reference';
@@ -9,6 +10,21 @@ export interface RegisterProps {
   logo?: NextFrontasticImage;
   loginLink?: Reference;
 }
+
+const businessTypes = [
+  {
+    label: 'Pharmaceuticals',
+    value: BusinessTypes.Pharmaceuticals,
+  },
+  {
+    label: 'Office supply',
+    value: BusinessTypes.OfficeSupply,
+  },
+  {
+    label: 'Others',
+    value: BusinessTypes.Others,
+  },
+];
 
 const Register: React.FC<RegisterProps> = ({ logo, loginLink }) => {
   //i18n messages
@@ -28,6 +44,7 @@ const Register: React.FC<RegisterProps> = ({ logo, loginLink }) => {
     company: '',
     lastName: '',
     firstName: '',
+    businessType: null,
   });
 
   //error
@@ -40,7 +57,7 @@ const Register: React.FC<RegisterProps> = ({ logo, loginLink }) => {
   const [loading, setLoading] = useState(false);
 
   //handle text input change
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
@@ -74,6 +91,7 @@ const Register: React.FC<RegisterProps> = ({ logo, loginLink }) => {
         password: data.password,
         company: data.company,
         confirmed: true,
+        businessType: data.businessType,
       });
       if (!response.accountId) {
         setError(
@@ -139,18 +157,41 @@ const Register: React.FC<RegisterProps> = ({ logo, loginLink }) => {
                   />
                 </div>
               </div>
-              <div>
-                <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-light-100">
-                  {formatMessage({ id: 'company', defaultMessage: 'Company' })}
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="company"
-                    name="company"
-                    required
-                    className="block w-full appearance-none rounded-md border border-gray-300 py-2 px-3 shadow-sm placeholder:text-gray-400 focus:border-accent-400 focus:outline-none focus:ring-accent-400 sm:text-sm"
-                    onChange={handleChange}
-                  />
+              <div className="flex flex-row">
+                <div className="basis-1/2">
+                  <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-light-100">
+                    {formatMessage({ id: 'company', defaultMessage: 'Company' })}
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      id="company"
+                      name="company"
+                      required
+                      className="block w-full appearance-none rounded-md border border-gray-300 py-2 px-3 shadow-sm placeholder:text-gray-400 focus:border-accent-400 focus:outline-none focus:ring-accent-400 sm:text-sm"
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+                <div className="ml-2 basis-1/2">
+                  <label htmlFor="businessType" className="block text-sm font-medium text-gray-700 dark:text-light-100">
+                    {formatMessage({ id: 'businessType', defaultMessage: 'Business Type' })}
+                  </label>
+                  <div className="mt-1 w-full">
+                    <select
+                      id="businessType"
+                      name="businessType"
+                      required
+                      className="input input-primary w-full"
+                      onChange={handleChange}
+                    >
+                      <option value={null} disabled selected></option>
+                      {businessTypes.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
               <div>

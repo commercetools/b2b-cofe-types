@@ -8,6 +8,18 @@ import { fetchApiHub, ResponseError } from 'frontastic/lib/fetch-api-hub';
 import { UseAccount } from 'frontastic/provider/Frontastic/UseAccount';
 import { createStore } from '../../frontastic/actions/stores';
 
+export enum BusinessTypes {
+  Pharmaceuticals = 'pharmaceuticals',
+  OfficeSupply = 'officeSupply',
+  Others = 'others',
+}
+
+const BusinessTypeToCategoryMap = {
+  [BusinessTypes.Pharmaceuticals]: '02171b4a-f869-42ac-9de9-81fd446f144f',
+  [BusinessTypes.OfficeSupply]: '49a0132e-3993-4186-a1e5-03e19ed5b1e5',
+  [BusinessTypes.Others]: '1e50afe7-4d56-4576-b76d-f6239201b570',
+};
+
 export interface GetAccountResult {
   loggedIn: boolean;
   account?: Account;
@@ -30,6 +42,7 @@ export interface RegisterAccount extends UpdateAccount {
   confirmed?: boolean;
   billingAddress?: Address;
   shippingAddress?: Address;
+  businessType?: BusinessTypes;
 }
 
 export const useAccount = (): UseAccount => {
@@ -95,7 +108,10 @@ export const useAccount = (): UseAccount => {
     } catch {
       const response = await fetchApiHub('/action/account/register', { method: 'POST' }, acc);
       try {
-        const store = await createStore(account);
+        const store = await createStore({
+          ...account,
+          rootCategoryId: BusinessTypeToCategoryMap[account.businessType],
+        });
         fetchApiHub('/action/business-unit/create', { method: 'POST' }, { account, customer: response, store });
         return response;
       } catch (error) {
