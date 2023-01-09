@@ -87,13 +87,16 @@ configuration:
     sender: no-reply@frontastic.cloud
     client_host: 'https://demo-b2bdemo.frontastic.io.netlify.app'
   preBuy:
-    storeCustomType: lulu-store
+    storeCustomType: b2bstore
     orderCustomType: lulu-order
     storeCustomField: is-pre-buy-store
     orderCustomField: is-created-from-pre-buy-store
   wishlistSharing:
     wishlistSharingCustomType: b2b-list
     wishlistSharingCustomField: business-unit-keys
+  storeContext:
+    storeCustomType: b2bstore
+    rootCategoryCustomField: rootCategory
 data: {  }
 languages:
   - en_GB

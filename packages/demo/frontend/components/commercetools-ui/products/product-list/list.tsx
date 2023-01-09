@@ -21,7 +21,9 @@ const List: React.FC<Props> = ({ products, filtering, isPreview, previewURL }) =
   return (
     <div className="mx-auto max-w-2xl pt-8 pb-16 lg:max-w-7xl lg:pt-4">
       <Head>
-        <title>{formatProductMessage({ id: 'products', defaultMessage: 'Products' })} | commercetools Composable Frontend</title>
+        <title>
+          {formatProductMessage({ id: 'products', defaultMessage: 'Products' })} | commercetools Composable Frontend
+        </title>
       </Head>
       <h2 className="sr-only">{formatProductMessage({ id: 'products', defaultMessage: 'Products' })}</h2>
       <div
