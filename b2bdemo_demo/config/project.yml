@@ -97,6 +97,7 @@ configuration:
   storeContext:
     storeCustomType: b2bstore
     rootCategoryCustomField: rootCategory
+    defaultRootCategoryId: 1e50afe7-4d56-4576-b76d-f6239201b570
 data: {  }
 languages:
   - en_GB

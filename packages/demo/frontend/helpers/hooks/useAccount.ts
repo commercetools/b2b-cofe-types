@@ -94,9 +94,13 @@ export const useAccount = (): UseAccount => {
       });
     } catch {
       const response = await fetchApiHub('/action/account/register', { method: 'POST' }, acc);
-      const store = await createStore(account);
-      fetchApiHub('/action/business-unit/create', { method: 'POST' }, { account, customer: response, store });
-      return response;
+      try {
+        const store = await createStore(account);
+        fetchApiHub('/action/business-unit/create', { method: 'POST' }, { account, customer: response, store });
+        return response;
+      } catch (error) {
+        throw error;
+      }
     }
     if (!!sameBusinessUnit) {
       throw new Error(`An account for the company ${account.company} already exists`);
