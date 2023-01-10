@@ -1,11 +1,13 @@
-# B2B Extensions
-This repo serves as a central place for CoFe extensions. This repo is coupled with [Types](https://github.com/commercetools/b2b-cofe-types) repo
+# B2B Types
+This repo serves as a central place for CoFe extensions. This repo is coupled with [Extensions](https://github.com/commercetools/b2b-cofe-extensions) repo.
+
+**This README file is only reflecting the changes you have to apply for types.** To see all the required modifications, please see [Extensions](https://github.com/commercetools/b2b-cofe-extensions)
 
 ## How To Use
 In order to use this package in your FE/BE app in a way that you can have the latest changes, you can use `git subtree` command.
 You can read a bit more about `git subtree` in [here](https://www.atlassian.com/git/tutorials/git-subtree) or [here](https://gist.github.com/SKempin/b7857a6ff6bddb05717cc17a44091202)
 
-### Adding B2B extensions to a new CoFe project
+### Adding B2B types to a new CoFe project
 #### Prerequisites
 1. You have a working CoFe env and access to git repo
 1. Little or no modification is done in `packages/<name>/backend/commerce-commercetools`. All changes you have done under this dir will be removed unless you cherry-pick them after the process.
@@ -89,11 +91,6 @@ You can read a bit more about `git subtree` in [here](https://www.atlassian.com/
     }
 
     ```
-1. Modify `packages/<name>/backend/index.ts`
-    ```ts
-    import commercetoolsExtension from '@Extensions/index';
-    ...
-    ```
 1. Modify `packages/<name>/frontend/package.json`
     ```json
     {
@@ -104,18 +101,6 @@ You can read a bit more about `git subtree` in [here](https://www.atlassian.com/
         }
     }
 
-    ```
-1. Update imports in backend
-
-    Some imports in `packages/<name>/backend` were using relative paths to access apis. Update these paths using the new `@Extensions` alias
-    ```ts
-    packages/<name>/backend/payment-adyen/actionControllers/AdyenController.ts
-    
-    ...
-    import { CartApi } from '@Extensions/commerce-commercetools/apis/CartApi';
-    import { EmailApi } from '@Extensions/commerce-commercetools/apis/EmailApi';
-    import { isReadyForCheckout } from '@Extensions/commerce-commercetools/utils/Cart';
-    ...
     ```
 3. Add changes to repo
     ```
@@ -138,71 +123,21 @@ You can read a bit more about `git subtree` in [here](https://www.atlassian.com/
     git commit -m"<commit message>" && git push
     ```
 
-### Update extensions from a clone of this repo
+### Update types from a clone of this repo
 Use `git commit` and `git push` 
 
-### Update extensions from a project using this repo as a subtree
+### Update types from a project using this repo as a subtree
 1. Commit the changes to the `origin` of your repo
 1. If you have never pulled from `estensions` or `types` repos, you should pull first
     ```
     git subtree pull --prefix packages/<name>/extensions extensions master --squash
     git subtree pull --prefix packages/<name>/types types master --squash
     ```
-1. Commit the changes to `extensions`
-    
+1. Commit the changes to `types` (git automatically pick the changes on `packages/<name>/types` and push them to this repo)
     ```
-    git subtree push --prefix packages/<name>/extensions extensions <new-branch-name>
+    git subtree push --prefix packages/<name>/types types <new-branch-name>
     ```
-    Create a Pull Request from the <new-branch-name> to master in git@github.com:commercetools/b2b-cofe-extensions.git
+    Create a Pull Request from the <new-branch-name> to master in git@github.com:commercetools/b2b-cofe-types.git
 
-## Extending CoFe without updating `extensions` repo
-1. Create `packages/<name>/backend/commerce/index.ts` and create/override new extensions as needed.
-
-    Here `updateLineItem` endpoint in the cart controller is overwritten
-
-    ```ts
-    packages/<name>/backend/commerce/index.ts
-
-    export default {
-        'actions': {
-            cart: {
-                updateLineItem: () => {
-                    /// new code
-                }
-            }
-        }
-    } as ExtensionRegistry
-    ```
-1. Merge with other extensions
-    `packages/<name>/backend/index.ts`
-    ```ts
-    ...
-    import CommerceExtensions from './commerce';
-    ...
-    const extensionsToMerge = [commercetoolsExtension, adyenExtension, contentfulExtensions, CommerceExtensions] as Array<ExtensionRegistry>;
-
-    ```
-
-## variables to set
-In order to use specific features you can set the following variables in `project.yml` file
-1. project.yml`
-```yml
-smtp:
-    ...
-// to enable pre-buy feature, a custom type is set on the store that distribute pre-buy products and 
-// a custom type is set on the cart/order object to distinguish regular orders from pre-buys
-preBuy:
-    storeCustomType: b2bstore // name of the custom type on the store
-    orderCustomType: lulu-order // name of the custom type on the cart/order
-    storeCustomField: is-pre-buy-store // name of the field in the custome type. boolean field
-    orderCustomField: is-created-from-pre-buy-store // boolean field in the custom type
-// share purchase lists between associates in a business unit
-wishlistSharing:
-    wishlistSharingCustomType: b2b-list
-    wishlistSharingCustomField: business-unit-keys // string(set) list of business units that can access this wishlist
-// to enable custom navigation for specific stores and filter products based on the rootCategory
-storeContext:
-    storeCustomType: b2bstore
-    rootCategoryCustomField: rootCategory
-    defaultRootCategoryId: <id>
-```
+## Extending CoFe without updating `types` repo
+1. Create `packages/<name>/commerce-types` dir and extend types from this repo

@@ -1,18 +1,18 @@
 {
     "compilerOptions": {
-        "module": "ESNext",
-        "target": "ES6",
+        "module": "esnext",
+        "target": "es2019",
         "lib": [
             "es2019",
         ],
         "baseUrl": "./",
         "declaration": true,
         "paths": {
-            "@Types/*": ["../types/types/*"],
+            "@Types/*": ["types/*"],
         },
         "sourceMap": true,
         "allowJs": true,
-        "moduleResolution": "Node",
+        "moduleResolution": "node",
         "outDir": "./build",
         "forceConsistentCasingInFileNames": true,
         "noImplicitReturns": true,
@@ -22,14 +22,6 @@
         "suppressImplicitAnyIndexErrors": true,
         "removeComments": true,
         "skipLibCheck": true,
-        "typeRoots": [
-            "node_modules/@types",
-            "node_modules/@commercetools/platform-sdk/dist/declarations/src/index.d.ts"
-        ],
-        "types": [
-            "node",
-            "jest"
-        ],
         "noUnusedLocals": false,
         "resolveJsonModule": true,
         "allowSyntheticDefaultImports": true,
@@ -38,12 +30,6 @@
         "noEmit": false,
     },
     "include": [
-        "./*"
-    ],
-    "exclude": [
-        "build",
-        "webpack",
-        "jest.config.js",
-        "_test/"
+        "./types"
     ]
 }
