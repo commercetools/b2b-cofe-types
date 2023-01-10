@@ -1,3 +1,0 @@
----
-- name: "Restart Tideways Daemon"
-  service: name=tideways-daemon state=restarted

@@ -1,14 +1,28 @@
-# B2B demo
-This repo works with [Types](https://github.com/commercetools/b2b-cofe-types) and [Extensions](https://github.com/commercetools/b2b-cofe-extensions) repos as subtrees
+# B2B Extensions
+This repo serves as a central place for CoFe extensions. This repo is coupled with [Types](https://github.com/commercetools/b2b-cofe-types) repo
 
-## First time cloning this repo
-1. Clone this repo
+## How To Use
+In order to use this package in your FE/BE app in a way that you can have the latest changes, you can use `git subtree` command.
+You can read a bit more about `git subtree` in [here](https://www.atlassian.com/git/tutorials/git-subtree) or [here](https://gist.github.com/SKempin/b7857a6ff6bddb05717cc17a44091202)
+
+### Adding B2B extensions to a new CoFe project
+#### Prerequisites
+1. You have a working CoFe env and access to git repo
+1. Little or no modification is done in `packages/<name>/backend/commerce-commercetools`. All changes you have done under this dir will be removed unless you cherry-pick them after the process.
+
+#### Steps
+1. Remove `commerce-commercetools/` dir from `packages/<name>/backend`
+1. Remove `types/` dir from `packages/<name>/`
+1. Commit changes
     ```
-    git clone git@github.com:frontastic-developers/customer-b2bdemo.git
+    git add . && git commit -m"remove built-in extensions and types" 
     ```
-1. Add remotes
+1. Add `extensions` remote to your project
     ```
     git remote add extensions git@github.com:commercetools/b2b-cofe-extensions.git
+    ```
+1. Add `types` remote to your project
+    ```
     git remote add types git@github.com:commercetools/b2b-cofe-types.git
     ```
 1. Check if everything is in place
@@ -24,44 +38,124 @@ This repo works with [Types](https://github.com/commercetools/b2b-cofe-types) an
     types   git@github.com:commercetools/b2b-cofe-types.git (fetch)
     types   git@github.com:commercetools/b2b-cofe-types.git (push)
     ```
-1. Run the project
+1. Fetch code from this repo into subtree
     ```
-    frontastic init
-    frontastic install
-    frontastic run
+    git subtree add --prefix packages/<name>/extensions extensions master --squash
     ```
-### Update your code
-1. Commit and push the changes to the `origin`, like a normal commit
+1. Fetch code from Types repo into subtree
+    ```
+    git subtree add --prefix packages/<name>/types types master --squash
+    ```
 
-## Fetch updates (Pull) from `types` or `extensions`
-If there are some new updates in one of the remotes and they don't exist in `master` branch, you can run one of the following
-```
-git subtree pull --prefix packages/demo/extensions extensions master --squash
-OR
-git subtree pull --prefix packages/demo/types types master --squash
-```
-Running these commands will create 2 (or 4) commits in your current branch which you have to push or merge to master.
-## Extend or change behavior of code in `extensions` or `types`
-Imagine you want to re-write/change some code in `extensions` or `types`. There are 3 options to choose from:
-### You know your new code can be used by others using the repos
-1. Commit and push the changes to the `origin`, like a normal commit
-1. (Optional) If you have never pulled from `extensions` or `types` repos, you should pull first
+1. Modify `packages/<name>/backend/webpack/webpack.common.js` to use `types` and `extensions` repo
+    ```js
+    export default {
+        ...
+        resolve: {
+            extensions: ['.json', '.ts', '.js', '.ts'],
+            alias: {
+                '@Types': path.resolve(__dirname, '../../types/types/'),
+                '@Extensions': path.resolve(__dirname, '../../extensions/'),
+            }
+        },
+    }
     ```
-    git subtree pull --prefix packages/demo/extensions extensions master --squash
-    git subtree pull --prefix packages/demo/types types master --squash
+1. Modify `packages/<name>/backend/tsconfig.json` to use `types` and `extensions` repo
+    ```json
+    {
+        "compilerOptions": {
+            ...
+            "paths": {
+                "@Types/*": ["../types/types/*"],
+                "@Extensions/*" : ["../extensions/*"],
+            },
+            "typeRoots": [
+                ...
+                "../types/types"
+            ],
+        }
+    }
+
     ```
-1. Commit the changes to `extensions`. Git subtree can detect any changes in `package/demo/extensions` and push changes to the other repo
+1. Modify `packages/<name>/frontend/tsconfig.json` to use `types` and `extensions` repo
+    ```json
+    {
+        "compilerOptions": {
+            ...
+            "paths": {
+                "@Types/*": ["../types/types/*"],
+            },
+        }
+    }
+
     ```
-    git subtree push --prefix packages/demo/extensions extensions <new-branch-name>
+1. Modify `packages/<name>/backend/index.ts`
+    ```ts
+    import commercetoolsExtension from '@Extensions/index';
+    ...
+    ```
+1. Modify `packages/<name>/frontend/package.json`
+    ```json
+    {
+        ...
+        "scripts": {
+            "postinstall": "cd ../types && yarn install && cd ../extensions && yarn install",
+            ...
+        }
+    }
+
+    ```
+1. Update imports in backend
+
+    Some imports in `packages/<name>/backend` were using relative paths to access apis. Update these paths using the new `@Extensions` alias
+    ```ts
+    packages/<name>/backend/payment-adyen/actionControllers/AdyenController.ts
+    
+    ...
+    import { CartApi } from '@Extensions/commerce-commercetools/apis/CartApi';
+    import { EmailApi } from '@Extensions/commerce-commercetools/apis/EmailApi';
+    import { isReadyForCheckout } from '@Extensions/commerce-commercetools/utils/Cart';
+    ...
+    ```
+3. Add changes to repo
+    ```
+    git commit -m"<commit message>" && git push
+    ```
+1. `frontastic install`    
+
+### Clone a project already using this repo
+1. Clone the repo
+    ```
+    git clone <url>
+    ```
+1. Add remotes
+    ```
+    git remote add extensions git@github.com:commercetools/b2b-cofe-extensions.git
+    git remote add types git@github.com:commercetools/b2b-cofe-types.git
+    ```
+1. Add changes (Optional)
+    ```
+    git commit -m"<commit message>" && git push
+    ```
+
+### Update extensions from a clone of this repo
+Use `git commit` and `git push` 
+
+### Update extensions from a project using this repo as a subtree
+1. Commit the changes to the `origin` of your repo
+1. If you have never pulled from `estensions` or `types` repos, you should pull first
+    ```
+    git subtree pull --prefix packages/<name>/extensions extensions master --squash
+    git subtree pull --prefix packages/<name>/types types master --squash
+    ```
+1. Commit the changes to `extensions`
+    
+    ```
+    git subtree push --prefix packages/<name>/extensions extensions <new-branch-name>
     ```
     Create a Pull Request from the <new-branch-name> to master in git@github.com:commercetools/b2b-cofe-extensions.git
-1. Commit the changes to `types`. Git subtree can detect any changes in `package/demo/types` and push changes to the other repo
-    ```
-    git subtree push --prefix packages/demo/types types <new-branch-name>
-    ```
-    Create a Pull Request from the <new-branch-name> to master in git@github.com:commercetools/b2b-cofe-types.git
 
-## Your new code is for your own usecase AND you still want to receive updates from other repos
+## Extending CoFe without updating `extensions` repo
 1. Create `packages/<name>/backend/commerce/index.ts` and create/override new extensions as needed.
 
     Here `updateLineItem` endpoint in the cart controller is overwritten
@@ -86,30 +180,29 @@ Imagine you want to re-write/change some code in `extensions` or `types`. There 
     import CommerceExtensions from './commerce';
     ...
     const extensionsToMerge = [commercetoolsExtension, adyenExtension, contentfulExtensions, CommerceExtensions] as Array<ExtensionRegistry>;
-    ```
-1. You can pull changes from extensions repo at any time without modifying your changes.
-    ```
-    git subtree pull --prefix packages/demo/extensions extensions master --squash
-    git subtree pull --prefix packages/demo/types types master --squash
 
     ```
 
-## Your new code is for your own usecase and you don't want any updates from other repos
-
-If you're not planning to get updates from `extensions` or `types` repos or push updates there (two optional sections above), you can go ahead and directly change code in those directories. You just have to remember never use  `git subtree push` or `git subtree pull` commands.
-
-
-### variables to set
+## variables to set
+In order to use specific features you can set the following variables in `project.yml` file
 1. project.yml`
-```
+```yml
 smtp:
     ...
+// to enable pre-buy feature, a custom type is set on the store that distribute pre-buy products and 
+// a custom type is set on the cart/order object to distinguish regular orders from pre-buys
 preBuy:
-    storeCustomType: lulu-store // name of the custom type on the store
+    storeCustomType: b2bstore // name of the custom type on the store
     orderCustomType: lulu-order // name of the custom type on the cart/order
     storeCustomField: is-pre-buy-store // name of the field in the custome type. boolean field
     orderCustomField: is-created-from-pre-buy-store // boolean field in the custom type
+// share purchase lists between associates in a business unit
 wishlistSharing:
     wishlistSharingCustomType: b2b-list
-    wishlistSharingCustomField: business-unit-keys // string(set)
+    wishlistSharingCustomField: business-unit-keys // string(set) list of business units that can access this wishlist
+// to enable custom navigation for specific stores and filter products based on the rootCategory
+storeContext:
+    storeCustomType: b2bstore
+    rootCategoryCustomField: rootCategory
+    defaultRootCategoryId: <id>
 ```
