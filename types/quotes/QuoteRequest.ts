@@ -48,4 +48,5 @@ export interface QuoteRequest {
   readonly businessUnit?: BusinessUnitResourceIdentifier;
   staged?: StagedQuote;
   quoted?: Quote;
+  highlight?: boolean;
 }

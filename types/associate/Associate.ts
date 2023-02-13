@@ -1,16 +1,30 @@
-import { Account, CustomerReference } from '../account/Account';
-
-export enum AssociateRole {
-  Admin = 'Admin',
-  Buyer = 'Buyer',
-}
+import { Account } from '../account/Account';
 
 interface AssociateCustomerReference extends Partial<Account> {
   id: string;
   typeId?: string;
 }
 
+export interface AssociateRole {
+    id: string;
+    key: string;
+    buyerAssignable: boolean;
+    name?: string;
+}
+
+export interface AssociateRoleAssignment {
+  associateRole: {
+    id?: string;
+    key?: string;
+    typeId?: 'associate-role';
+  };
+}
+
 export interface Associate {
-  roles: AssociateRole[] | string[];
+  /**
+   * @deprecated roles
+   */
+  roles?: string[];
   customer: AssociateCustomerReference;
+  associateRoleAssignments?: AssociateRoleAssignment[];
 }
